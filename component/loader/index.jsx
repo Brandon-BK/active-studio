@@ -24,7 +24,7 @@ export const Loader = ({ loading, loadingOnModal }) => {
     >
       <BeatLoader
         color={color}
-        // loading={loading}
+        loading={loading}
         cssOverride={override}
         size={70}
       />

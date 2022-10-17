@@ -42,6 +42,7 @@ const Shows = () => {
         setShows(res.data)
         console.log(res)
         allShows = res.data
+        setLoading(false)
     }
 
     const handleTimeFilterClick = () => {
