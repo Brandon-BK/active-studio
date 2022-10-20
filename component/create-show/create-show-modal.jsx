@@ -75,7 +75,7 @@ export default function CreateShowModal() {
 
   //THE CREATE SHOWS ENDPOINT
 
-  const endpoint = 'https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Stage/create-shows' 
+  const endpoint = 'https://p6x7b95wcd.execute-api.us-east-2.amazonaws.com/cognito_pool/create-shows' 
   //const endpoint = 'http://127.0.0.1:3000/create-shows'
   
   useEffect(async() =>{
