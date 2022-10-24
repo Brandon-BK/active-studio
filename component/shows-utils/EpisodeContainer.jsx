@@ -17,7 +17,8 @@ const EpisodeContainer = ({
   files, 
   setFiles,
   videoFiles, 
-  setVideoFiles
+  setVideoFiles,
+  episode
 }) => {
   return (
     <Draggable
@@ -82,6 +83,7 @@ const EpisodeContainer = ({
                   setSync = {setSync}
                   index = {index}
                   episodes = {episodes}
+                  episode = {episode}
                   files = {files}
                   setFiles = {setFiles}
                   videoFiles = {videoFiles}

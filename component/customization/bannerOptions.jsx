@@ -1,18 +1,20 @@
 import * as React from "react";
 
 import Menu from "@mui/material/Menu";
+import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "@mui/material/Modal";
-import { Backdrop, Box, Typography, Button, Fade } from "@mui/material";
+import ShareIcon from "@mui/icons-material/Share";
+
+import { Backdrop, Box, Typography, Fade } from "@mui/material";
 import { ModalLoader } from "../loader";
-import { AppContext } from "../context/AppContext";
-import { API_INSTANCE } from "../../app-config/index.";
-import { useRouter } from "next/router";
-import EditIcon from "@mui/icons-material/Edit";
-import EditEpisodeModal from "./edit-episode-modal";
+import { Edit } from "@mui/icons-material";
+import ShareComponent from "../shows-utils/ShareComponent";
+import EditShowModal from "../shows-utils/EditShow";
+
 const modalStyle = {
   position: "absolute",
   background: "#111",
@@ -30,27 +32,27 @@ const modalStyle = {
   p: 2,
 };
 
-export default function EpisodeOptions({
+export default function BannerOptions({
+  show,
   title,
-  setSync,
-  sync,
-  index,
-  episodes,
-  episode,
-  files,
-  setFiles, 
-  videoFiles, 
-  setVideoFiles 
+  img,
+  fetchAgain,
+  setFetchAgain,
+  loadingOnModal,
+  setLoadingOnModal,
 }) {
-  const { singleShowData, showJson, setShowJson } =
-    React.useContext(AppContext);
-    console.log({episode})
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [openModal, setOpenModal] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [openEditModal, setOpenEditModal] = React.useState(false);
+  const [shareLink, setShareLink] = React.useState("");
 
-  const router = useRouter();
+  const generateShareLink = () => {
+    const newLink = "https://www.activetvonline.co.za/shows/" + title.replace(/ /g, "-")
+    setShareLink(newLink)
+    console.log(shareLink)
+  }
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -58,7 +60,7 @@ export default function EpisodeOptions({
     setAnchorEl(null);
   };
 
-  const handleModalOpen = () => {
+  const handleDelete = () => {
     setAnchorEl(null);
     setOpenModal(true);
   };
@@ -66,70 +68,36 @@ export default function EpisodeOptions({
     setOpenModal(false);
   };
 
-  //EDIT FUNCTION
-  const [openEPModal, setOpenEPModal] = React.useState(false);
-  const openEpisodeModal = () => {
-    setOpenEPModal(true);
-  };
+  const handleShare = () => {};
   //DELETE FUNCTION
   const handleDeleteClick = async () => {
-    const prevEpisodes = episodes;
+    setLoadingOnModal(true);
+    const showTitle = title.replace(/ /g, "-");
+    //const deleteEndpoint = `http://127.0.0.1:3000/delete-show/${showTitle}`
 
-    setLoading(true);
+    //const deleteEndpoint = `${API_INSTANCE}/delete-show/${showTitle}`;
+    const deleteEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/delete-show/${showTitle}`;
 
-    const deleteEndpoint = `${API_INSTANCE}/delete-episode`;
-
-    //const deleteEndpoint = 'http://127.0.0.1:3000/delete-episode'
+    console.log("endpoint :", deleteEndpoint);
 
     try {
       console.log(title);
 
       console.log("deleting...");
-
-      const deleteEpisodeConfig = {
-        method: "Delete",
-        url: deleteEndpoint,
-        data: JSON.stringify({ showTitle: singleShowData.Title, title }),
-      };
-      console.log("deleteData:", deleteEpisodeConfig.data);
-
-      const response = await axios(deleteEpisodeConfig);
-      console.log(response);
-      const { deleteSignedUrl } = response.data;
-      console.log({ deleteSignedUrl });
-      const newJson = {
-        ...showJson,
-        episodes: prevEpisodes,
-      };
-      newJson.episodes.splice(index, 1);
-      const jsonDataConfig = {
-        method: "put",
-        url: deleteSignedUrl,
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        data: JSON.stringify(newJson, null, 2),
-      };
-      //prevEpisodes.splice(index,1)
-      console.log("deleteData22:", jsonDataConfig.data);
-      await axios(jsonDataConfig);
-
-      setLoading(false);
-
+      const response = await axios.delete(deleteEndpoint);
+      console.log(deleteEndpoint);
       //,{header:{'Content-Type' : 'application/json'}});
       console.log("RESPONSE:", response);
       setAnchorEl(null);
-      setSync(!sync);
+      setFetchAgain(!fetchAgain);
       setOpenModal(false);
-      console.log("DELETED!!!!");
     } catch (error) {
       console.log("endpoint :", deleteEndpoint);
 
       console.log("DELETE ERROR:", error);
-      setLoading(false);
+      
     }
-    setLoading(false);
+    setLoadingOnModal(false);
   };
 
   return (
@@ -154,37 +122,28 @@ export default function EpisodeOptions({
       >
         {/* <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem> */}
+
         <MenuItem
-          onClick={openEpisodeModal}
-          sx={{ display: "flex", alignItems: "center" }}
+          onClick={() => generateShareLink()}
+          sx={{ display: "flex", alignItems: "center" , padding:'0' }}
         >
-          <EditIcon sx={{ marginRight: "4px" }} />
-          Edit
+          <ShareComponent shareLink={shareLink} img={img} />
         </MenuItem>
         <MenuItem
-          onClick={handleModalOpen}
+          onClick={handleDelete}
           sx={{ display: "flex", alignItems: "center" }}
         >
-          <DeleteIcon sx={{ marginRight: "4px" }} />
-          Delete
+          <div style={{ width:'100%' }}>
+            <Button sx={{ color:"#eee" }}>
+              <DeleteIcon sx={{ color:"#eee" , marginRight: "4px" }} />
+              Delete
+            </Button>
+          </div>
         </MenuItem>
+       
       </Menu>
 
-        {/* EDIT EPISODE MODAL */}
       {/* DELETE CONFIRMATION PROMPT */}
-      <EditEpisodeModal 
-        open = {openEPModal}
-        setOpen = {setOpenEPModal}
-        files = {files}
-         setFiles = {setFiles}
-         videoFiles = {videoFiles}
-         setVideoFiles = {setVideoFiles}
-         episode = {episode} 
-          episodes = {episodes}
-          sync = {sync}
-          setSync = {setSync}
-          index = {index}
-      />
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -199,7 +158,7 @@ export default function EpisodeOptions({
         <Fade in={openModal}>
           <Box style={modalStyle}>
             <Box sx={{ margin: "0 10px", position: "relative" }}>
-              <ModalLoader action="deleting" loadingOnModal={loading} />
+              <ModalLoader action="deleting" loadingOnModal={loadingOnModal} />
               <Typography
                 id="transition-modal-title"
                 variant="h6"

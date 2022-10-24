@@ -278,6 +278,7 @@ const EpisodesPage = ({show}) => {
                         img={MEDIA_URL_INSTANCE+`${showTitleQuery}/episodes/${episode.Title}/large-${episode.thumbnailFilename}`}
                         video = {MEDIA_URL_INSTANCE+`${showTitleQuery}/episodes/${episode.Title}/${episode.videoFileName}`}
                         episodes = {episodes}
+                        episode = {episode}
                         files = {files}
                         setFiles = {setFiles}
                         videoFiles = {videoFiles}
