@@ -4,6 +4,8 @@ import RouterIdicator from "../state/context/RouterIdicator";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AppContext } from "../component/context/AppContext";
 import { useEffect, useRef, useState } from "react";
+import UsersScreen from "../component/usersPage/UsersScreen";
+import BasicModal from "../component/usersPage/BasicModel";
 
 const darkTheme = createTheme({
   palette: {

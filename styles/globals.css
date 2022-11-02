@@ -1,3 +1,9 @@
+ .active-tv-font {
+  /* margin-top: 8px;
+  transform: scale(.8); */
+  font-family: "ArcadeFont", cursive !important;
+}
+
 html,
 body {
   padding: 0;

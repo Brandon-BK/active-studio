@@ -227,7 +227,6 @@ export default function CreateShowModal() {
                 <MenuItem>Free Show</MenuItem>
               </Select>
               </Box>
-              <hr style={{ width: "100px", margin: "10px 0" }} />
             </Box>
             <Typography variant="p" sx={{ fontSize: "11px", margin: "0 10px" }}>
               <b>NOTE :</b> ONLY SHOWS WITH VIDEOS UNDERNEATH THEM ARE VISIBLE
