@@ -48,16 +48,18 @@ const BasicModal = () => {
             height={115}
           />
           <Typography
-            style={{ color: "#ffffff", marginTop: "6px" }}
+            style={{ color: "#ffffff", marginTop: "6px", fontSize: '10px' }}
             id="modal-modal-title"
             variant="h6"
             component="h2"
+            className="active-tv-font"
           >
             Michee Bakanda
           </Typography>
           <Typography
             id="modal-modal-description"
-            sx={{ marginTop: "6px", color: "#ffffff" }}
+            sx={{ marginTop: "6px", color: "#ffffff", fontSize: '10px' }}
+            className="active-tv-font"
           >
             Last Paid 26 December 2009
           </Typography>
@@ -75,9 +77,11 @@ const BasicModal = () => {
             }}
           >
             <Typography
+            className="active-tv-font"
               sx={{
                 color: "#ffffff",
                 marginTop: "8px",
+                fontSize:'8px'
               }}
             >
               EMAIL:
@@ -102,9 +106,11 @@ const BasicModal = () => {
             }}
           >
             <Typography
+            className="active-tv-font"
               sx={{
                 color: "#ffffff",
                 marginTop: "8px",
+                fontSize:'8px'
               }}
             >
               Tier Access Type:
@@ -129,9 +135,11 @@ const BasicModal = () => {
             }}
           >
             <Typography
+            className="active-tv-font"
               sx={{
                 color: "#ffffff",
                 marginTop: "8px",
+                fontSize: '8px'
               }}
             >
               Produce That Points:
