@@ -25,9 +25,9 @@ const Shows = () => {
   const [selectedShowType, setSelectedShowType] = useState(
     "Active Tv Originals"
   );
-    
+
   const [filterTime, setFilterTime] = useState(false);
-    
+
   const [fetchAgain, setFetchAgain] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -44,7 +44,7 @@ const Shows = () => {
     return first - second;
     // return new Date(x.timestamp) < new Date(y.timestamp) ? 1 : -1
   });
-        
+
   const getData = async () => {
     try {
       setLoading(true);
@@ -72,7 +72,7 @@ const Shows = () => {
     getData();
     console.log("boom")
   }, [fetchAgain]);
-        
+
   console.log(shows.sort((a, b) => a.Title.localeCompare(b.Title)));
   console.log(sortByTime);
 
@@ -199,7 +199,7 @@ const Shows = () => {
               const replacedHeight = newIframe.replace("560", "100%");
               const replacedWidth = replacedHeight.replace("315", "100%");
               return (
-                
+
                 <IframeContainer
                 key={index}
                 embedCode={replacedWidth}
@@ -215,7 +215,7 @@ const Shows = () => {
                 loadingOnModal={loadingOnModal}
                 setLoadingOnModal={setLoadingOnModal}
               />
-    
+
               );
             })}
           </Grid>

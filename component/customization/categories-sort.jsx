@@ -1,49 +1,55 @@
 import { Box, Select, MenuItem, Typography, Grid, Button } from "@mui/material";
-import { useState } from "react";
-import { ModalLoader } from "../loader";
+import axios from "axios";
+import { useState, useContext , useEffect } from "react";
+import { API_INSTANCE } from "../../app-config/index.";
+import { AppConfigContext } from "../context/AppConfigContext";
+
 export const CategoriesSort = () => {
+  const { configuration , setConfiguration } = useContext(AppConfigContext);
+
+  const { sortCategories, setCatergorySizeAndType } = configuration;
   const [multiSelected, setMultiSelected] = useState("");
-  const [sortedCategories, setSortedCategories] = useState({
-    1: { option: "Popular Now", height: "S", width: "LG" },
-    2: { option: "Latest Shows", height: "S", width: "LG" },
-    3: { option: "Free To Watch", height: "S", width: "LG" },
-    4: { option: "Active TV Originals", height: "S", width: "LG" },
-    5: { option: "Featured Shows", height: "S", width: "LG" }
-  });
-  const [loading,setLoading] = useState(false)
-  let sortedValues = Object.values(sortedCategories);
+  const [sizeAndTypeCategories, setSizeAndTypeCategories] = useState(setCatergorySizeAndType);
+
+  let sortedValues = Object.values(sizeAndTypeCategories);
+  // console.log(setCatergorySizeAndType);
   let pop = 0;
   let lat = 0;
   let free = 0;
   let originals = 0;
-  let featured = 0;
+  let Favourites = 0;
 
-  const Categories = [
-    "Popular Now",
+  const CategoriesOptions = [
+    "Popular Shows",
     "Active TV Originals",
     "Free To Watch",
     "Latest Shows",
-    "Featured Shows"
+    "Favourites"
   ];
 
-  const CategoriesSizes = ["S", "MD", "LG"];
+  useEffect(()=>{
+    setConfiguration({...configuration , setCatergorySizeAndType: sizeAndTypeCategories});
+    console.log(configuration)
+  },[sizeAndTypeCategories]);
+
+
+  const CategoriesSizes = ["SM", "MD", "LG"];
 
   const handleConfirm = async () => {
-    setLoading(true)
-    sortedValues = Object.values(sortedCategories);
+    sortedValues = Object.values(sizeAndTypeCategories);
 
     sortedValues.map((item) => {
-      console.log(item);
-      if (item === "Popular Now") {
+      // console.log(item);
+      if (item.categoryName === "Popular Now") {
         pop++;
-      } else if (item === "Latest Shows") {
+      } else if (item.categoryName === "Latest Shows") {
         lat++;
-      } else if (item === "Free To Watch") {
+      } else if (item.categoryName === "Free To Watch") {
         free++;
-      } else if (item === "Active TV Originals") {
+      } else if (item.categoryName === "Active TV Originals") {
         originals++;
-      } else if (item === "Featured Shows") {
-        featured++;
+      } else if (item.categoryName === "Favourites") {
+        Favourites++;
       }
     });
 
@@ -63,15 +69,17 @@ export const CategoriesSort = () => {
       console.log("Active TV Originals Selected Twice...");
       setMultiSelected("Active TV Originals");
     }
-    if (featured > 1) {
-      console.log("Featured Shows Selected Twice...");
-      setMultiSelected("Featured Shows");
+    if (Favourites > 1) {
+      console.log("Favourites Selected Twice...");
+      setMultiSelected("Favourites");
     }
 
-    await setTimeout(() => {
-      console.log('done')
-    }, 15000)
-    //setLoading(false)
+    if(pop , lat , free , originals , Favourites === 1){
+      const postRes = await axios.post(`${API_INSTANCE}/post-config/12`);
+      const putConfig = await axios.put(postRes.data.configJson , JSON.stringify(configuration))
+      console.log(postRes)
+      console.log(putConfig)
+    }
   };
 
   return (
@@ -83,7 +91,6 @@ export const CategoriesSort = () => {
         padding: "8px 32px"
       }}
     >
-      <ModalLoader loadingOnModal={loading} action = 'Uploading configuration' />
       <Typography sx={{ fontSize: "32px" }}>
         Sort Order of Categories
       </Typography>
@@ -91,409 +98,98 @@ export const CategoriesSort = () => {
         Current Order of Categories
       </Typography>
 
-      {sortedValues.map((item, index) => (
+      {CategoriesOptions.map((item, index) => (
         <Typography key={index} sx={{ fontSize: "16px" }}>
-          {index + 1 + "."} {item.option}
+          {index + 1 + "."} {item}
         </Typography>
       ))}
 
       <Grid container>
-        <Grid
-          item
-          xs={12}
-          md={4}
-          lg={2.4}
-          sx={{
-            minHeight: "80px",
-            background: "",
-            padding: "6px 0px",
-            margin: "18px 0"
-          }}
-        >
-          <Typography sx={{ fontSize: "21px" }}>1st Category</Typography>
-          <Select
-            value={sortedCategories[1]["option"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {Categories.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({
-                    ...sortedCategories,
-                    1: { ...sortedCategories[1], option: item }
-                  });
-                }}
-              >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
+        {sizeAndTypeCategories.map((item, sizeAndTypeIndex) => {
+          let iterationText = "";
+          let formattedIndex = sizeAndTypeIndex + 1;
+          if (sizeAndTypeIndex + 1 === 1) iterationText = "1st";
+          if (sizeAndTypeIndex + 1 === 2) iterationText = "2nd";
+          if (sizeAndTypeIndex + 1 === 3) iterationText = "3th";
+          if (sizeAndTypeIndex + 1 === 4) iterationText = "4th";
+          if (sizeAndTypeIndex + 1 === 5) iterationText = "5th";
 
-          <Typography sx={{ fontSize: "16px" }}>
-            1st Category Width Size{" "}
-          </Typography>
-          <Select
-            value={sortedCategories[1]["width"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {CategoriesSizes.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({
-                    ...sortedCategories,
-                    1: { ...sortedCategories[1], width: item }
-                  });
-                }}
+          // console.log(item);
+          return (
+            <Grid key={sizeAndTypeIndex} item xs={12} md={6} lg={4} sx={{       margin:'21px 0' ,     minHeight: "80px",
+          }}>
+              <Typography sx={{ fontSize: "21px" }}>
+                {iterationText} Category
+              </Typography>
+              <Select
+                value={item.categoryName}
+                sx={{ width: "90%", margin: "8px 0" , border:multiSelected === item.categoryName ?  "3px solid red" : "none"  }}
               >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
+                {CategoriesOptions.map((newCategory, index) => (
+                  <MenuItem
+                  key={index}
+                  value={newCategory}
+                  onClick={() => {
+                    let newArr = [...sizeAndTypeCategories];
+                    newArr[sizeAndTypeIndex]["categoryName"] = newCategory;
+                    setSizeAndTypeCategories(newArr)
+                    }}
+                  >
+                    {newCategory}
+                  </MenuItem>
+                ))}
+              </Select>
 
-          <Typography sx={{ fontSize: "16px" }}>
-            1st Category Height Size
-          </Typography>
-          <Select
-            value={sortedCategories[1]["height"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {CategoriesSizes.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({
-                    ...sortedCategories,
-                    1: { ...sortedCategories[1], height: item }
-                  });
-                }}
+              <Typography sx={{ fontSize: "16px" }}>
+                {iterationText} Category Height Size
+              </Typography>
+              <Select
+                value={item.height.toUpperCase()}
+                sx={{ width: "90%", margin: "8px 0" }}
               >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          md={4}
-          lg={2.4}
-          sx={{
-            minHeight: "80px",
-            background: "",
-            padding: "6px 0px",
-            margin: "18px 0"
-          }}
-        >
-          <Typography sx={{ fontSize: "21px" }}>2nd Category</Typography>
-          <Select
-            value={sortedCategories[2]["option"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {Categories.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({
-                    ...sortedCategories,
-                    2: { ...sortedCategories[2], option: item }
-                  });
-                }}
+                {CategoriesSizes.map((heightSize, index) => (
+                 <MenuItem
+                 key={index}
+                 value={heightSize}
+                 onClick={() => {
+                   let newArr = [...sizeAndTypeCategories];
+                   newArr[sizeAndTypeIndex]["height"] = heightSize;
+                   setSizeAndTypeCategories(newArr);
+                 }}
+               >
+                 {heightSize}
+               </MenuItem>
+                ))}
+              </Select>
+              <Typography sx={{ fontSize: "16px" }}>
+                {iterationText} Category width Size
+              </Typography>
+              <Select
+                value={item.width.toUpperCase()}
+                sx={{ width: "90%", margin: "8px 0" }}
               >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <Typography sx={{ fontSize: "16px" }}>
-            2nd Category Width Size{" "}
-          </Typography>
-          <Select
-            value={sortedCategories[2]["width"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {CategoriesSizes.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({
-                    ...sortedCategories,
-                    2: { ...sortedCategories[2], width: item }
-                  });
-                }}
-              >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <Typography sx={{ fontSize: "16px" }}>
-            2nd Category Height Size
-          </Typography>
-          <Select
-            value={sortedCategories[2]["height"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {CategoriesSizes.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({
-                    ...sortedCategories,
-                    2: { ...sortedCategories[2], height: item }
-                  });
-                }}
-              >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          md={4}
-          lg={2.4}
-          sx={{
-            minHeight: "80px",
-            background: "",
-            padding: "6px 0px",
-            margin: "18px 0"
-          }}
-        >
-          <Typography sx={{ fontSize: "21px" }}>3rd Category</Typography>
-          <Select
-            value={sortedCategories[3]["option"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {Categories.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({ ...sortedCategories, 3: item });
-                }}
-              >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <Typography sx={{ fontSize: "16px" }}>
-            3rd Category Width Size{" "}
-          </Typography>
-          <Select
-            value={sortedCategories[3]["width"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {CategoriesSizes.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({
-                    ...sortedCategories,
-                    3: { ...sortedCategories[3], width: item }
-                  });
-                }}
-              >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <Typography sx={{ fontSize: "16px" }}>
-            3rd Category Height Size
-          </Typography>
-          <Select
-            value={sortedCategories[3]["height"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {CategoriesSizes.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({
-                    ...sortedCategories,
-                    3: { ...sortedCategories[3], height: item }
-                  });
-                }}
-              >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          md={4}
-          lg={2.4}
-          sx={{
-            minHeight: "80px",
-            background: "",
-            padding: "6px 0px",
-            margin: "18px 0"
-          }}
-        >
-          <Typography sx={{ fontSize: "21px" }}>4th Category</Typography>
-          <Select
-            value={sortedCategories[4]["option"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {Categories.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({ ...sortedCategories, 4: item });
-                }}
-              >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <Typography sx={{ fontSize: "16px" }}>
-            4th Category Width Size{" "}
-          </Typography>
-          <Select
-            value={sortedCategories[4]["width"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {CategoriesSizes.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({
-                    ...sortedCategories,
-                    4: { ...sortedCategories[4], width: item }
-                  });
-                }}
-              >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <Typography sx={{ fontSize: "16px" }}>
-            4th Category Height Size
-          </Typography>
-          <Select
-            value={sortedCategories[4]["height"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {CategoriesSizes.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({
-                    ...sortedCategories,
-                    4: { ...sortedCategories[4], height: item }
-                  });
-                }}
-              >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          md={4}
-          lg={2.4}
-          sx={{
-            minHeight: "80px",
-            background: "",
-            padding: "6px 0px",
-            margin: "18px 0"
-          }}
-        >
-          <Typography sx={{ fontSize: "21px" }}>5th Category</Typography>
-          <Select
-            value={sortedCategories[5]["option"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {Categories.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({ ...sortedCategories, 5: item });
-                }}
-              >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <Typography sx={{ fontSize: "16px" }}>
-            5th Category Width Size{" "}
-          </Typography>
-          <Select
-            value={sortedCategories[5]["width"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {CategoriesSizes.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({
-                    ...sortedCategories,
-                    5: { ...sortedCategories[5], width: item }
-                  });
-                }}
-              >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <Typography sx={{ fontSize: "16px" }}>
-            5th Category Height Size
-          </Typography>
-          <Select
-            value={sortedCategories[5]["height"]}
-            sx={{ width: "90%", margin: "8px 0" }}
-          >
-            {CategoriesSizes.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item}
-                onClick={() => {
-                  setSortedCategories({
-                    ...sortedCategories,
-                    5: { ...sortedCategories[5], height: item }
-                  });
-                }}
-              >
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
-
+                {CategoriesSizes.map((widthSize, index) => (
+                  <MenuItem
+                  key={index}
+                  value={widthSize}
+                  onClick={() => {
+                    let newArr = [...sizeAndTypeCategories];
+                    newArr[sizeAndTypeIndex]["width"] = widthSize;
+                    setSizeAndTypeCategories(newArr);
+                  }}
+                >
+                  {widthSize}
+                </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+          );
+        })}
         <Grid
           item
           xs={12}
           sx={{
-            minHeight: "80px",
+            minHeight: "100%",
             background: "",
             padding: "6px 32px",
             margin: "18px 0",

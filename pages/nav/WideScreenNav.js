@@ -15,7 +15,7 @@ const WideScreenNav = () => {
                 }}
             >
                 <img
-                    src="https://cdn.watchcorridor.com/assets/logo_short.svg"
+                    src="https://www.activetvonline.co.za/static/media/logo.718a6dab.png"
                     alt=""
                     style={{
                         height: "100%",

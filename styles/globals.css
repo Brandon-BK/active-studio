@@ -3,6 +3,18 @@
   transform: scale(.8); */
   font-family: "ArcadeFont", cursive !important;
 }
+#filled-basic{
+  padding: 6px;
+}
+
+@font-face {
+  font-family: 'ArcadeFont';
+  src: url('../font/ARCADE_N.TTF') format('tff'),
+       url('../font/ARCADE_N.TTF') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-size: small;
+ }
 
 html,
 body {
