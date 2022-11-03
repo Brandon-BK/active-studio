@@ -18,6 +18,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import HandymanIcon from "@mui/icons-material/Handyman";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const drawerWidth = 240;
 
@@ -61,6 +62,11 @@ const tabs = [
     title: "GREENLIGHT",
     route: "/greenlight",
     icon: <LocalMoviesIcon />,
+  },
+  {
+    title: "USERS PAGE",
+    route: "/basicModal",
+    icon: <AccountCircleIcon />,
   },
 
 ];
