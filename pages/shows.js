@@ -41,7 +41,7 @@ const Shows = () => {
   const sortByTime = shows.sort((x, y) => {
     const first = new Date(x.timestamp);
     const second = new Date(y.timestamp);
-    return first - second;
+    // return first - second;
     // return new Date(x.timestamp) < new Date(y.timestamp) ? 1 : -1
   });
 
