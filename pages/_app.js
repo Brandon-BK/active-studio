@@ -10,7 +10,6 @@ import {
   AppConfigContext,
   initialConfigState,
 } from "../component/context/AppConfigContext";
-import BasicModal from "../component/usersPage/BasicModel";
 
 const darkTheme = createTheme({
   palette: {

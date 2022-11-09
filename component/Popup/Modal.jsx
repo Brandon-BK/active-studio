@@ -196,7 +196,7 @@ export default function CreateShowModal({
           filename : showDetails.file.name,
           //this should be pulled from context
           episodes : [],
-          description : description
+          description : description,
         
         episodes: [],
         description: description,
@@ -545,6 +545,7 @@ export default function CreateShowModal({
                                 return (
                                   <MenuItem
                                     onClick={() =>  setExtraInfo({...extraInfo , visibility:item })}
+                           
           </Box>
         </Fade>
       </Modal>
