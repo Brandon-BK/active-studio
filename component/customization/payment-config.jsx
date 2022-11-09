@@ -13,6 +13,7 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { API_INSTANCE } from "../../app-config/index.";
 import { AppConfigContext } from "../context/AppConfigContext";
 import { Edit } from "@mui/icons-material";
+import { ModalLoader } from "../loader";
 
 export const PaymentConfig = () => {
   const { configuration, setConfiguration } = useContext(AppConfigContext);
@@ -23,6 +24,9 @@ export const PaymentConfig = () => {
 
   const priceInput0 = useRef(null);
   const priceInput1 = useRef(null);
+  
+  const [loading,setLoading] = useState(false)
+
   const handleEditPrice = (priceInput) => {
     // alert("clicked");
     priceInput.current.focus();
@@ -51,10 +55,12 @@ export const PaymentConfig = () => {
   };
 
   const handleConfirm = async () => {
+    setLoading(true)
     const postRes = await axios.post(`${API_INSTANCE}/post-config/12`);
     const putConfig = await axios.put(postRes.data.configJson , JSON.stringify(configuration))
     console.log(postRes)
     console.log(putConfig)
+    setLoading(false)
   };
 
   return (
@@ -66,6 +72,11 @@ export const PaymentConfig = () => {
         justifyContent: "center"
       }}
     >
+      <ModalLoader
+            loadingOnModal={loading}
+            action="Uploading Payment Information"
+            height="100%"
+          />
       <Grid container spacing={6}>
         {paymentConfigData.map((paymentItem, index) => {
           return (

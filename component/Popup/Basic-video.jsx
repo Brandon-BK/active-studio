@@ -48,7 +48,7 @@ const absolute = {
 };
 
 function Previews(props) {
-  console.log('KRRRR',props.videoFiles[0].path)
+  console.log('KRRRR',props.videoFiles[0]?.path)
   const handleCheck = (e) => {
     console.log(e.target.value);
   };

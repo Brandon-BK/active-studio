@@ -67,9 +67,9 @@ export default function ShowOptions({
   const handleModalClose = () => {
     setOpenModal(false);
   };
-    
+
   const handleShare = () => {};
-  //DELETE FUNCTION 
+  //DELETE FUNCTION
   const handleDeleteClick = async () => {
     setLoadingOnModal(true);
     const showTitle = title.replace(/ /g, "-");
@@ -114,7 +114,6 @@ export default function ShowOptions({
         onClick={handleClick}
         cursor="pointer"
       />
-      
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

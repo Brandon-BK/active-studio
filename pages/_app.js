@@ -28,7 +28,6 @@ function MyApp({ Component, pageProps }) {
     likes: "",
     EpisodeCount: "",
     lastUpdated: "",
-    lastUpdated: "",
   });
 
   const DisplayShowDetails = (
@@ -48,6 +47,11 @@ function MyApp({ Component, pageProps }) {
       lastUpdated: lastUpdated,
     });
   };
+
+  const [singleShowData, setSingleShowData] = useState(JSON.stringify({}));
+  const [showJsonData, setShowJsonData] = useState({});
+  const [showJson, setShowJson] = useState({});
+  const [bannerSync,setBannerSync] = useState(false)
 
   const getConfig = async () => {
     const request = await axios.get(`${API_INSTANCE}/get-config`);
@@ -69,7 +73,18 @@ function MyApp({ Component, pageProps }) {
   return (
     <AppConfigContext.Provider value={{ configuration, setConfiguration }}>
       <AppContext.Provider
-        value={{ showsDetails, setShowsDetails, DisplayShowDetails }}
+        value={{
+          showsDetails,
+          setShowsDetails,
+          DisplayShowDetails,
+          singleShowData,
+          setSingleShowData,
+          showJsonData,
+          setShowJsonData,
+          showJson,
+           setShowJson,
+           bannerSync,setBannerSync
+        }}
       >
         <RouterIdicator />
         <ThemeProvider theme={darkTheme}>

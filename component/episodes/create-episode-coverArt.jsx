@@ -85,7 +85,7 @@ const CreateEpisodeCoverArt = (props)=> {
 
   return (
     <section className="container" style={container}>
-      <div {...getRootProps({ className: "dropzone" }) } style={{width:'32%'}}>
+      <div {...getRootProps({ className: "dropzone" }) } style={{width:'100%'}}>
         <input
           {...getInputProps()}
           onChange={() => {

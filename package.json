@@ -18,6 +18,7 @@
     "browser-image-compression": "^2.0.0",
     "class-name-prop": "^3.0.0",
     "framer-motion": "^4.1.17",
+    "html-dom-parser": "^3.1.2",
     "moment": "^2.29.1",
     "next": "^12.2.5",
     "node-vibrant": "^3.2.1-alpha.1",
@@ -28,7 +29,8 @@
     "react-player": "^2.10.1",
     "react-spinners": "^0.13.4",
     "react-spinners-kit": "^1.9.1",
-    "seamless-iframe": "^0.1.3-rc2",
+    "sanitize-html": "^2.7.1",
+    "seamless-iframe": "^0.1.3",
     "styled-components": "^5.3.0",
     "uuid": "^8.3.2"
   },

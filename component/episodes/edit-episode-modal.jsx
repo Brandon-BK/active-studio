@@ -53,14 +53,14 @@ export default function editEpisodeModal({
   const handleCreate = () => setBool(true);
 
   // receive input values from show name and show description
-  const [name, SetName] = useState("");
-  const [description, SetDescription] = useState("");
+  const [name, SetName] = useState(episode.Title);
+  const [description, SetDescription] = useState(episode.description);
   const [imagecover, SetImageCover] = useState("");
 
   //episode info stored in state
 
-  const [author, setAuthor] = useState("");
-  const [seasonNum, setSeasonNum] = useState(1);
+  const [author, setAuthor] = useState(episode.author);
+  const [seasonNum, setSeasonNum] = useState(episode.seasonNum);
 
   //modal loader state
   const [loading, setLoading] = useState(false);
@@ -89,7 +89,7 @@ export default function editEpisodeModal({
           Title: episode.Title,
           showTitle: singleShowData.Title.replace(/ /g, "-"), //this must be the show title,(not episode)
           
-          thumbnailFilename: showDetails.file.name,
+          thumbnailFilename: files[0]?.name,
           //videoFileName: videoFiles[0].name,
           description: description,
           timestamp: timestamp,
@@ -142,15 +142,19 @@ export default function editEpisodeModal({
         console.log({THE_DATA:JSON.parse(jsonDataConfig.data)})
         await axios(jsonDataConfig);
 
-        if (files[0]){
+        
           //posting the thumbnail
         const { largeCoverArt } = response.data;
 
-        console.log("posting thumbnail....");
-        await axios.put(largeCoverArt, files[0], {
-          "Content-Type": "image/jpeg",
-        });
+        if (files.length){
+          console.log("posting thumbnail....");
+        
+          await axios.put(largeCoverArt, files[0], {
+            "Content-Type": "image/jpeg",
+          });
         }
+        
+        
 
         //posting the video file
 //        const { episodeVideoSignedUrl } = response.data;
@@ -172,7 +176,7 @@ export default function editEpisodeModal({
         console.log("create episode error:", error);
       }
     } else {
-      alert(description + author + episodes);
+      alert('no changes detected');
     }
   };
 
@@ -227,7 +231,7 @@ export default function editEpisodeModal({
                   files={files}
                   handleSetFiles={handleSetFiles}
                   img={"logo.svg"}
-                />
+                />    
                 {/* <Box sx={{border:'1px solid red',width:'100%',height:'400px',margin:'20px 0px'}}>
                 <BasicVideo
                   videoFiles={videoFiles}
@@ -289,7 +293,7 @@ export default function editEpisodeModal({
                   <input
                     type="number"
                     min={1}
-                    placeHolder="SEASON NUMBER"
+                    placeHolder={`SEASON NUMBER (${episode.seasonNum})`}
                     onChange={(e) => setSeasonNum(e.target.value)}
                     style={{
                   

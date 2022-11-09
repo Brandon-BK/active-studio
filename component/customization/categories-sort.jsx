@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState, useContext , useEffect } from "react";
 import { API_INSTANCE } from "../../app-config/index.";
 import { AppConfigContext } from "../context/AppConfigContext";
+import { ModalLoader } from "../loader";
 
 export const CategoriesSort = () => {
   const { configuration , setConfiguration } = useContext(AppConfigContext);
@@ -35,7 +36,9 @@ export const CategoriesSort = () => {
 
   const CategoriesSizes = ["SM", "MD", "LG"];
 
+  const [loading,setLoading] = useState(false)
   const handleConfirm = async () => {
+    setLoading(true)
     sortedValues = Object.values(sizeAndTypeCategories);
 
     sortedValues.map((item) => {
@@ -80,6 +83,7 @@ export const CategoriesSort = () => {
       console.log(postRes)
       console.log(putConfig)
     }
+    setLoading(false)
   };
 
   return (
@@ -91,6 +95,13 @@ export const CategoriesSort = () => {
         padding: "8px 32px"
       }}
     >
+      <ModalLoader
+       loadingOnModal={loading}
+        action = 'UPDATING'
+        height='100%'
+        bottom = '10%'
+        right = '-5%' 
+        />
       <Typography sx={{ fontSize: "32px" }}>
         Sort Order of Categories
       </Typography>
@@ -118,6 +129,7 @@ export const CategoriesSort = () => {
           return (
             <Grid key={sizeAndTypeIndex} item xs={12} md={6} lg={4} sx={{       margin:'21px 0' ,     minHeight: "80px",
           }}>
+            
               <Typography sx={{ fontSize: "21px" }}>
                 {iterationText} Category
               </Typography>
