@@ -7,14 +7,33 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ShowOptions from "../shows-utils/showOptions";
 import BannerOptions from "./bannerOptions";
 import CreateBanner from "./create-banner";
-import { AppConfigContext } from "../context/AppConfigContext";
-
+import axios from 'axios'
+import { API_INSTANCE } from "../../app-config/index.";
+import { AppContext } from "../context/AppContext";
 const UploadBanners = () => {
 
-  const { configuration } = React.useContext(AppConfigContext);
+  const {bannerSync,setBannerSync} = React.useContext(AppContext)
+  const [loadingOnModal,setLoadingOnModal] = React.useState(false)
+  const [ImagesArr,setImagesArr] = React.useState([])
+  const [sync,setSync] = React.useState(false)
+  // const ImagesArr = [
+  //   "https://images.pexels.com/photos/2698473/pexels-photo-2698473.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+  //   "https://images.pexels.com/photos/3039036/pexels-photo-3039036.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+  //   "https://images.pexels.com/photos/2559749/pexels-photo-2559749.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+  //   "https://images.pexels.com/photos/1604849/pexels-photo-1604849.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  //   "https://images.pexels.com/photos/1652555/pexels-photo-1652555.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  //   "https://images.pexels.com/photos/767276/pexels-photo-767276.jpeg?auto=compress&cs=tinysrgb&w=1600",
 
-  const { banners } = configuration
-  console.log(banners)
+  // ];
+
+  React.useEffect(()=>{
+    async function getImages(){
+      
+      const response = await axios.get(API_INSTANCE + '/get-config')
+      setImagesArr(response.data.BannerImageUrls)
+    }
+    getImages()
+  },[bannerSync])
 
   return (
     <Box
@@ -47,7 +66,7 @@ const UploadBanners = () => {
             Current Banners
           </Typography>
           <Grid container spacing={3}>
-            {banners.map((img, index) => {
+            {ImagesArr.map((img, index) => {
               return (
                 <Grid item md={3}>
                 <Box
@@ -71,7 +90,13 @@ const UploadBanners = () => {
                     }}
                   >
                     <BannerOptions
-                      bannerInfo={{title:"banner" + index+1, img , index}}                      
+                      show={""}
+                      title={"Banner 1"}
+                      img={""}
+                      fetchAgain={""}
+                      setFetchAgain={""}
+                      loadingOnModal={""}
+                      setLoadingOnModal={setLoadingOnModal}
                     />
                   </Box>
                 </Box>

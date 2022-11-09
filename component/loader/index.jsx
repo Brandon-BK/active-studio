@@ -24,7 +24,7 @@ export const Loader = ({ loading, loadingOnModal }) => {
     >
       <BeatLoader
         color={color}
-        // loading={loading}
+        loading={loading}
         cssOverride={override}
         size={70}
       />
@@ -32,7 +32,7 @@ export const Loader = ({ loading, loadingOnModal }) => {
   );
 };
 
-export const ModalLoader = ({ loadingOnModal, action,height }) => {
+export const ModalLoader = ({ loadingOnModal, action,height,top,left,right,bottom }) => {
   let [color, setColor] = useState("#ffffff");
 
   const override = {
@@ -51,6 +51,10 @@ export const ModalLoader = ({ loadingOnModal, action,height }) => {
     height: height,
     alignItems: "center",
     justifyContent: "center",
+    top,
+    left,
+    right,
+    bottom
     
   };
 

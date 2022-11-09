@@ -10,7 +10,6 @@ import {
   AppConfigContext,
   initialConfigState,
 } from "../component/context/AppConfigContext";
-import BasicModal from "../component/usersPage/BasicModel";
 
 const darkTheme = createTheme({
   palette: {
@@ -28,7 +27,6 @@ function MyApp({ Component, pageProps }) {
     img: "",
     likes: "",
     EpisodeCount: "",
-    lastUpdated: "",
     lastUpdated: "",
   });
 
@@ -50,6 +48,11 @@ function MyApp({ Component, pageProps }) {
     });
   };
 
+  const [singleShowData, setSingleShowData] = useState(JSON.stringify({}));
+  const [showJsonData, setShowJsonData] = useState({});
+  const [showJson, setShowJson] = useState({});
+  const [bannerSync,setBannerSync] = useState(false)
+
   const getConfig = async () => {
     const request = await axios.get(`${API_INSTANCE}/get-config`);
     const configRequest = await axios.get(request.data.configJsonData);
@@ -70,7 +73,18 @@ function MyApp({ Component, pageProps }) {
   return (
     <AppConfigContext.Provider value={{ configuration, setConfiguration }}>
       <AppContext.Provider
-        value={{ showsDetails, setShowsDetails, DisplayShowDetails }}
+        value={{
+          showsDetails,
+          setShowsDetails,
+          DisplayShowDetails,
+          singleShowData,
+          setSingleShowData,
+          showJsonData,
+          setShowJsonData,
+          showJson,
+           setShowJson,
+           bannerSync,setBannerSync
+        }}
       >
         <RouterIdicator />
         <ThemeProvider theme={darkTheme}>

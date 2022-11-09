@@ -34,18 +34,23 @@ const modalStyle = {
   p: 2,
 };
 
-export default function ShowOptions({ bannerInfo }) {
+export default function BannerOptions({
+  show,
+  title,
+  img,
+  fetchAgain,
+  setFetchAgain,
+  loadingOnModal,
+  setLoadingOnModal,
+}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [openModal, setOpenModal] = React.useState(false);
   const [openEditModal, setOpenEditModal] = React.useState(false);
   const [shareLink, setShareLink] = React.useState("");
-  const { configuration  , setConfiguration} = React.useContext(AppConfigContext);
-
-  const { banners } = configuration
 
   const generateShareLink = () => {
-    const newLink = "https://www.activetvonline.co.za/shows/" + bannerInfo.title.replace(/ /g, "-")
+    const newLink = "https://www.activetvonline.co.za/shows/" + title.replace(/ /g, "-")
     setShareLink(newLink)
     console.log(shareLink)
   }
@@ -67,18 +72,34 @@ export default function ShowOptions({ bannerInfo }) {
 
   const handleShare = () => {};
   //DELETE FUNCTION
-  const handleDeleteClick = async (img) => {
-    let tempBanners = banners.filter((item)=> {
-      return item !== img
-    })
-    setConfiguration({...configuration , banners:tempBanners});
-    
-    // console.log(configuration);
-    const postRes = await axios.post(`${API_INSTANCE}/post-config/12`);
-    const putConfig = await axios.put(postRes.data.configJson , JSON.stringify(configuration))
-    console.log(postRes)
-    console.log(putConfig)
-    setAnchorEl(false);
+  const handleDeleteClick = async () => {
+    setLoadingOnModal(true);
+    const showTitle = title.replace(/ /g, "-");
+    //const deleteEndpoint = `http://127.0.0.1:3000/delete-show/${showTitle}`
+
+    //const deleteEndpoint = `${API_INSTANCE}/delete-show/${showTitle}`;
+    const deleteEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/delete-show/${showTitle}`;
+
+    console.log("endpoint :", deleteEndpoint);
+
+    try {
+      console.log(title);
+
+      console.log("deleting...");
+      const response = await axios.delete(deleteEndpoint);
+      console.log(deleteEndpoint);
+      //,{header:{'Content-Type' : 'application/json'}});
+      console.log("RESPONSE:", response);
+      setAnchorEl(null);
+      setFetchAgain(!fetchAgain);
+      setOpenModal(false);
+    } catch (error) {
+      console.log("endpoint :", deleteEndpoint);
+
+      console.log("DELETE ERROR:", error);
+      
+    }
+    setLoadingOnModal(false);
   };
 
   return (
@@ -108,10 +129,10 @@ export default function ShowOptions({ bannerInfo }) {
           onClick={() => generateShareLink()}
           sx={{ display: "flex", alignItems: "center" , padding:'0' }}
         >
-          <ShareComponent shareLink={shareLink} img={bannerInfo.img} />
+          <ShareComponent shareLink={shareLink} img={img} />
         </MenuItem>
         <MenuItem
-          onClick={() => handleDeleteClick(bannerInfo.img)}
+          onClick={handleDelete}
           sx={{ display: "flex", alignItems: "center" }}
         >
           <div style={{ width:'100%' }}>
@@ -125,7 +146,7 @@ export default function ShowOptions({ bannerInfo }) {
       </Menu>
 
       {/* DELETE CONFIRMATION PROMPT */}
-      {/* <Modal
+      <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         BackdropComponent={Backdrop}
@@ -139,7 +160,7 @@ export default function ShowOptions({ bannerInfo }) {
         <Fade in={openModal}>
           <Box style={modalStyle}>
             <Box sx={{ margin: "0 10px", position: "relative" }}>
-              <ModalLoader action="deleting" loadingOnModal={""} />
+              <ModalLoader action="deleting" loadingOnModal={loadingOnModal} />
               <Typography
                 id="transition-modal-title"
                 variant="h6"
@@ -190,7 +211,7 @@ export default function ShowOptions({ bannerInfo }) {
             </Box>
           </Box>
         </Fade>
-      </Modal> */}
+      </Modal>
     </div>
   );
 }

@@ -55,8 +55,8 @@ const EpisodesPage = ({show}) => {
   const router  = useRouter()
 
   //thumbnail and video file state
-  const [files, setFiles] = useState([{name:''}]);
-  const [videoFiles,setVideoFiles] = useState([{name:''}])
+  const [files, setFiles] = useState([]);
+  const [videoFiles,setVideoFiles] = useState([])
 
   const showTitleQuery = router.query.id
 
@@ -96,7 +96,7 @@ const EpisodesPage = ({show}) => {
   const handleCloseSpeedDail = () => setOpenSpeedDail(false);
 
   
-
+  
   
   return (
     <Box sx={{ color: "#fff", background: "red" }}>
@@ -132,7 +132,7 @@ const EpisodesPage = ({show}) => {
           <Box
             sx={{
               ...styles.showsImg,
-              background: `url(${singleShowData.CoverArtLarge})`,
+              background: `url(${singleShowData?.CoverArtLarge})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -149,7 +149,7 @@ const EpisodesPage = ({show}) => {
                 fontWeight={"bold"}
                 letterSpacing={2}
               >
-                {singleShowData.Title}
+                {singleShowData?.Title}
               </Typography>
             </Box>
             <Box sx={{ ...styles.episodeContent }}>
@@ -162,7 +162,7 @@ const EpisodesPage = ({show}) => {
                 Description :
               </Typography>
               <Typography color="#999" variant="p" fontSize={14} marginLeft={1}>
-                {singleShowData.description}
+                {singleShowData?.description}
               </Typography>
             </Box>
             <Box sx={{ ...styles.episodeContent }}>
@@ -175,7 +175,7 @@ const EpisodesPage = ({show}) => {
                 Last-updated :
               </Typography>
               <Typography color="#999" variant="p" fontSize={14} marginLeft={1}>
-                {singleShowData.timestamp}
+                {singleShowData?.timestamp}
               </Typography>
             </Box>
             <Box sx={{ ...styles.episodeContent }}>
@@ -189,7 +189,7 @@ const EpisodesPage = ({show}) => {
               </Typography>
               <Typography color="#999" variant="p" fontSize={14} marginLeft={1}>
                 {/* {showsDetails.visibility} */}
-                {singleShowData.visibility ? 'public' : 'private'}
+                {singleShowData?.visibility ? 'public' : 'private'}
               </Typography>
             </Box>
             <Box
@@ -251,7 +251,11 @@ const EpisodesPage = ({show}) => {
                   // ref="provided.innerRef"
                   sx={{ height: "90%", overflowY: "auto" }}
                 >
-                  {episodes
+                    
+                  {
+                    !episodes.length ? 
+                    <h1 style={{color:'white',textAlign : 'center'}}>THIS SHOW HAS NO EPISODES YET</h1> :
+                  episodes
                     .filter((val) => {
                       if (searchTerm == "") {
                         return val;
@@ -271,7 +275,7 @@ const EpisodesPage = ({show}) => {
                         key = {index}
                         index={index}
                         title={episode.Title}
-                        showTitle = {singleShowData.Title}
+                        showTitle = {singleShowData?.Title}
                         sync = {sync}
                         setSync = {setSync}
                         description={episode.description}

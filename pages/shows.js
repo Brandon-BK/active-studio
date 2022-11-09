@@ -157,7 +157,7 @@ const Shows = () => {
         loadingOnModal={loadingOnModal}
         setLoadingOnModal={setLoadingOnModal}
       />
-    
+
       <GuideBar />
       {/* <Loader loading={loading} /> */}
       <Typography variant="h5" sx={{ padding: "0 16px ", margin: "12px 0" }}>
@@ -199,7 +199,7 @@ const Shows = () => {
               const replacedHeight = newIframe.replace("560", "100%");
               const replacedWidth = replacedHeight.replace("315", "100%");
               return (
-
+                
                 <IframeContainer
                 key={index}
                 embedCode={replacedWidth}
@@ -215,7 +215,7 @@ const Shows = () => {
                 loadingOnModal={loadingOnModal}
                 setLoadingOnModal={setLoadingOnModal}
               />
-
+    
               );
             })}
           </Grid>

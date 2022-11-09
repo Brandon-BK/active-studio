@@ -22,10 +22,11 @@ const style = {
   transform: "translate(-50%, -50%)",
   bgcolor: "#111",
   border: "2px solid #fff",
-
-  overflow: "scroll",
+  
+  //overflow: "scroll",
   padding: "20px 0",
-
+  height : '90vh',
+  width : '600px',
   boxShadow: 24,
   color: "white",
   p: 2,
@@ -63,7 +64,7 @@ export default function EpisodeModal({
   //modal loader state
   const [loading, setLoading] = useState(false);
   
-  const router = useRouter()
+  
   //CREATE EPISODE BUTTON HANDLER
   const handleSubmit = async (e) => {
     //e.preventDefault();
@@ -87,7 +88,7 @@ export default function EpisodeModal({
           Title: name.replace(/ /g, "-"),
           showTitle: singleShowData.Title.replace(/ /g, "-"), //this must be the show title,(not episode)
           thumbnailFilename: showDetails.file.name,
-          videoFileName: videoFiles[0].name,
+          videoFileName: videoFiles[0]?.name,
           description: description,
           timestamp: timestamp,
           author,
@@ -210,7 +211,7 @@ export default function EpisodeModal({
               VISIBLE TO THE PUBLIC
             </Typography>
 
-            <Box sx={{ display: "flex", overFlow: "scroll" }}>
+            <Box sx={{ display: "flex",  }}>
               <Box style={{ height: "100%", width: "50%", padding: "10px" }}>
                 <CreateEpisodeCoverArt
                   files={files}
@@ -311,7 +312,7 @@ export default function EpisodeModal({
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
-                marginTop: "40px",
+                marginTop: "20px",
                 width: "100%",
               }}
             >
@@ -320,7 +321,7 @@ export default function EpisodeModal({
                 color="error"
                 sx={{
                   "&:hover": { background: "red", color: "white" },
-                  marginTop: "120px",
+                  marginTop: "50px",
                 }}
                 onClick={handleClose}
               >
@@ -332,7 +333,7 @@ export default function EpisodeModal({
                 variant="outlined"
                 sx={{
                   "&:hover": { backgroundColor: "darkgreen", color: "white" },
-                  marginTop: "120px",
+                  marginTop: "50px",
                 }}
                 onClick={handleSubmit}
               >
