@@ -8,41 +8,37 @@ const thumbsContainer = {
   width: "100%",
   height: "100%",
   background: "#222",
-  justifyContent:'center'
+  
 };
 
 const thumb = {
   borderRadius: 2,
-  marginRight: 8,
-  width: "100%",
+  width : '100%',
   height: "100%",
-  boxSizing: "border-box",
-  display:'flex',
-  justifyContent:'center'
-
 };
 
 const thumbInner = {
-  display: "flex",
-  minWidth: 0,
-  width: "50%",
+  width: "100%",
   height: "100%",
-  // overflow: 'auto',
 };
 
 const img = {
   display: "block",
   width: "100%",
   height: "100%",
-  objectFit: "cover",
+  objectFit : 'cover'
 };
 const container = {
-  // overflow:"auto"
+  display : 'flex',
+  justifyContent : 'center',
+  alignItems : 'center',
+  marginBottom:'20px',
+  height : '200px'
 };
 
 const absolute = {
   position: "absolute",
-  background: "red",
+  
 };
 
 const CreateEpisodeCoverArt = (props)=> {
@@ -89,14 +85,14 @@ const CreateEpisodeCoverArt = (props)=> {
 
   return (
     <section className="container" style={container}>
-      <div {...getRootProps({ className: "dropzone" })}>
+      <div {...getRootProps({ className: "dropzone" }) } style={{width:'100%'}}>
         <input
           {...getInputProps()}
           onChange={() => {
             handleCheck;
           }}
         />
-        <p style={{ fontSize: "12px", texttransform: "uppercase" }}>
+        {/* <p style={{ fontSize: "12px", texttransform: "uppercase" }}>
           Drag 'n' drop the show cover image
         </p>
         <p
@@ -107,8 +103,8 @@ const CreateEpisodeCoverArt = (props)=> {
           }}
         >
           Accepted files TYPES : jpeg/jpg{" "}
-        </p>
-        <div style={{ height: "200px", width: "100%",background:'blue',display:'flex',justifyContent:'center',alignItems:'center', padding: "0 0 10px 0" }}>
+        </p> */}
+        <div style={{height:'200px', width: "100%",display:'flex',alignItems:'center'  }}>
           <aside style={thumbsContainer}>{thumbs}</aside>
         </div>
       </div>

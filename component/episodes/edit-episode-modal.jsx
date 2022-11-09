@@ -22,7 +22,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   bgcolor: "#111",
   border: "2px solid #fff",
-
+  height : '90vh',
   overflow: "scroll",
   padding: "20px 0",
 
@@ -41,6 +41,8 @@ export default function editEpisodeModal({
   videoFiles,
   setVideoFiles,
   episodes,
+  episode,
+  index
 }) {
   const { singleShowData, setShowJsonData, showJson ,setShowJson } =
     React.useContext(AppContext);
@@ -51,14 +53,14 @@ export default function editEpisodeModal({
   const handleCreate = () => setBool(true);
 
   // receive input values from show name and show description
-  const [name, SetName] = useState("");
-  const [description, SetDescription] = useState("");
+  const [name, SetName] = useState(episode.Title);
+  const [description, SetDescription] = useState(episode.description);
   const [imagecover, SetImageCover] = useState("");
 
   //episode info stored in state
 
-  const [author, setAuthor] = useState("");
-  const [seasonNum, setSeasonNum] = useState(1);
+  const [author, setAuthor] = useState(episode.author);
+  const [seasonNum, setSeasonNum] = useState(episode.seasonNum);
 
   //modal loader state
   const [loading, setLoading] = useState(false);
@@ -66,11 +68,11 @@ export default function editEpisodeModal({
   const router = useRouter()
   //CREATE EPISODE BUTTON HANDLER
   const handleSubmit = async (e) => {
-    //e.preventDefault();
+    e.preventDefault();
     console.log(sync);
 
     // awesome code
-    if ((name, description, author)) {
+    if ((description, author,episodes)) {
       try {
         setLoading(true);
         
@@ -84,10 +86,11 @@ export default function editEpisodeModal({
         const timestamp = date.toLocaleString();
 
         const EpisodeObject = {
-          Title: name.replace(/ /g, "-"),
+          Title: episode.Title,
           showTitle: singleShowData.Title.replace(/ /g, "-"), //this must be the show title,(not episode)
-          thumbnailFilename: showDetails.file.name,
-          videoFileName: videoFiles[0].name,
+          
+          thumbnailFilename: files[0]?.name,
+          //videoFileName: videoFiles[0].name,
           description: description,
           timestamp: timestamp,
           author,
@@ -116,6 +119,10 @@ export default function editEpisodeModal({
   
         //posting the json data
         console.log("posting json data...");
+        const updatedEpisode = {...episode,...EpisodeObject}
+        episodes[index] = updatedEpisode
+        console.log({index})
+        console.log('THE EPISODES:',episodes,'UPDATED EPISODE',updatedEpisode)
         const jsonDataConfig = {
           method: "put",
           url: showMetaDataSignedUrl,
@@ -126,31 +133,38 @@ export default function editEpisodeModal({
           data: JSON.stringify(
             {
               ...showJson,
-              episodes: [...episodes, EpisodeObject],
+              episodes: [...episodes],
             },
             null,
             2
           ),
         };
+        console.log({THE_DATA:JSON.parse(jsonDataConfig.data)})
         await axios(jsonDataConfig);
 
-        //posting the thumbnail
+        
+          //posting the thumbnail
         const { largeCoverArt } = response.data;
 
-        console.log("posting thumbnail....");
-        await axios.put(largeCoverArt, files[0], {
-          "Content-Type": "image/jpeg",
-        });
+        if (files.length){
+          console.log("posting thumbnail....");
+        
+          await axios.put(largeCoverArt, files[0], {
+            "Content-Type": "image/jpeg",
+          });
+        }
+        
+        
 
         //posting the video file
-        const { episodeVideoSignedUrl } = response.data;
+//        const { episodeVideoSignedUrl } = response.data;
 
         //posting video....
-        console.log("posing video...");
-        await axios.put(episodeVideoSignedUrl, videoFiles[0], {
-          "Content-Type": "video/mp4",
-        });
-        console.log(sync);
+        // console.log("posing video...");
+        // await axios.put(episodeVideoSignedUrl, videoFiles[0], {
+        //   "Content-Type": "video/mp4",
+        // });
+         console.log(sync);
 
         setLoading(false);
         setOpen(false);
@@ -162,7 +176,7 @@ export default function editEpisodeModal({
         console.log("create episode error:", error);
       }
     } else {
-      alert("insert data");
+      alert('no changes detected');
     }
   };
 
@@ -211,33 +225,35 @@ export default function editEpisodeModal({
             </Typography>
             </Box>
 
-            <Box sx={{ overFlow: "scroll",height:'50vh' }}>
-              <Box style={{ height: "100%",padding: "10px" }}>
+            <Box sx={{ overFlow: "scroll" }}>
+              <Box style={{padding: "10px", }}>
                 <CreateEpisodeCoverArt
                   files={files}
                   handleSetFiles={handleSetFiles}
                   img={"logo.svg"}
-                />
-                <Box sx={{background:'red',width:'100%'}}>
+                />    
+                {/* <Box sx={{border:'1px solid red',width:'100%',height:'400px',margin:'20px 0px'}}>
                 <BasicVideo
                   videoFiles={videoFiles}
                   handleSetVideoFiles={handleSetVideoFiles}
                   img={"logo.svg"}
                 ></BasicVideo>
-                </Box>
+
+
+                </Box> */}
                 
               </Box>
-              <Box></Box>
+            
               <Box
                 style={{
                   height: "100%",
-                  width: "50%",
+                  width: "100%",
                   padding: "10px",
-                  marginTop: "50px",
+                
                 }}
               >
                 <form onSubmit={handleSubmit}>
-                  {/* <input
+                  <input
                     style={{
                       height: "50px",
                       width: "100%",
@@ -245,16 +261,18 @@ export default function editEpisodeModal({
                       display: "flex",
                       alignItems: "center",
                       padding: "10px ",
-                      color: "white",
+                      
                       border: "none",
                     }}
-                    placeholder="EPISODE NAME"
+                    placeholder={`TITLE : ${episode.Title}`}
+                    disabled
                     onChange={(e) => SetName(e.target.value)}
-                  /> */}
-                  {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p>  */}
+                  /> 
+                  {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p> */} 
 
                   <textarea
-                    placeholder="EPISODE DESCRIPTION"
+                    placeholder={`EPISODE DESCRIPTION : ${episode.description}`}
+                    type= "text"
                     onChange={(e) => SetDescription(e.target.value)}
                     style={{
                       border: "none",
@@ -272,13 +290,13 @@ export default function editEpisodeModal({
                   >
                     {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW DESCRIPTION'}</p>  */}
                   </textarea>
-                  {/* <input
+                  <input
                     type="number"
                     min={1}
-                    placeHolder="SEASON NUMBER"
+                    placeHolder={`SEASON NUMBER (${episode.seasonNum})`}
                     onChange={(e) => setSeasonNum(e.target.value)}
                     style={{
-                      border: "none",
+                  
                       width: "100%",
                       height: "34px",
                       padding: "10px 0",
@@ -290,10 +308,10 @@ export default function editEpisodeModal({
                       padding: "10px",
                       color: "white",
                     }}
-                  /> */}
+                  />
                   <input
                     type="text"
-                    placeHolder="Author"
+                    placeHolder={`AUTHOR : ${episode.author}`}
                     required
                     onChange={(e) => setAuthor(e.target.value)}
                     style={{
@@ -304,7 +322,7 @@ export default function editEpisodeModal({
                       alignItems: "center",
                       padding: "10px ",
                       color: "white",
-                      border: "none",
+                      
                       margin: "20px 0px",
                     }}
                   />
@@ -315,7 +333,7 @@ export default function editEpisodeModal({
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
-                marginTop: "40px",
+                marginTop: "20px",
                 width: "100%",
               }}
             >
@@ -324,7 +342,7 @@ export default function editEpisodeModal({
                 color="error"
                 sx={{
                   "&:hover": { background: "red", color: "white" },
-                  marginTop: "120px",
+                  marginTop: "40px",
                 }}
                 onClick={handleClose}
               >
@@ -336,11 +354,11 @@ export default function editEpisodeModal({
                 variant="outlined"
                 sx={{
                   "&:hover": { backgroundColor: "darkgreen", color: "white" },
-                  marginTop: "120px",
+                  marginTop: "40px",
                 }}
                 onClick={handleSubmit}
               >
-                create
+                update
               </Button>
             </Box>
           </Box>

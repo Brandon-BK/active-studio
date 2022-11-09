@@ -94,7 +94,7 @@ function CreateShow(props) {
           }}
         />
         <p style={{ fontSize: "12px", textTransform: "uppercase" }}>
-          Drag 'n' drop the show cover image
+          Drag 'n' drop the show {props.media_type}
         </p>
         <p
           style={{
@@ -103,9 +103,9 @@ function CreateShow(props) {
             margin: "10px 0 5px 0",
           }}
         >
-          Accepted files TYPES : jpeg/jpg{" "}
+          Accepted files TYPES : {props.accepted_type}
         </p>
-        <div style={{ height: "200px", width: "100%", padding: "0 0 10px 0" }}>
+        <div style={{ height: "250px", width: "100%", padding: "0 0 10px 0" }}>
           <aside style={thumbsContainer}>{thumbs}</aside>
         </div>
       </div>

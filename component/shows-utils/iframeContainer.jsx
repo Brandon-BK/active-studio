@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Grid } from "@mui/material";
 import { Box, Button } from "@mui/material";
 import { useState } from "react";
@@ -10,49 +10,51 @@ import { AppContext } from "../../component/context/AppContext";
 import ListIcon from "@mui/icons-material/List";
 import Link from "next/link";
 import axios from "axios";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import DeleteIcon from '@mui/icons-material/Delete';
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { API_INSTANCE } from "../../app-config/index.";
 import ShowOptions from "./showOptions";
+import Iframe from "./Iframe";
 
-const ShowContainer = ({
+const IframeContainer = ({
   show,
   title,
-  img,
+  embedCode,
   description,
-  time,
-  likes,
-  link,
-  count,
   lastUpdated,
   fetchAgain,
   setFetchAgain,
-  loading,setLoading,
-  loadingOnModal,setLoadingOnModal
+  loading,
+  setLoading,
+  loadingOnModal,
+  setLoadingOnModal,
 }) => {
-  const [visibility, setVisibility] = useState(show.visible === undefined ? false : show.visible ); //boolean type to toggle through public and private
+  const [visibility, setVisibility] = useState(
+    show.visible === undefined ? false : show.visible
+  ); //boolean type to toggle through public and private
   const [buttonType, setbuttonType] = useState("success"); //boolean type to toggle through public and private
-  const { showsDetails,singleShowData, setSingleShowData, DisplayShowDetails,metadata,
-  setShowJsonData,
-  } =
+  const { showsDetails, setShowDetails, DisplayShowDetails } =
     useContext(AppContext);
 
   const timestamp = lastUpdated.replace("T", " ");
   const updatedTimestamp = timestamp.replace("Z", " ").split(".")[0];
 
-  
   const toggleVisibility = async () => {
     // setVisibility(visibility ? false : true);
     setVisibility(!visibility);
-    console.log(show)
-    const showData = { ...show, visible: visibility , timestamp: new Date().toLocaleString() };
-    console.log(showData)
+    console.log(show);
+    const showData = {
+      ...show,
+      visible: visibility,
+      timestamp: new Date().toLocaleString(),
+    };
+    console.log(showData);
 
     var config = {
-      method: 'POST',
+      method: "POST",
       // url: `${API_INSTANCE}/create-shows`,
-      url: `${API_INSTANCE}/create-shows` ,
-      data: JSON.stringify(showData)
+      url: `${API_INSTANCE}/create-shows`,
+      data: JSON.stringify(showData),
     };
     // const res = await axios(config)
     // console.log(res)
@@ -63,48 +65,12 @@ const ShowContainer = ({
     }
   };
 
-  
-  const handleShowClick = async () => {
-  }
-
   return (
     <Grid container sx={styles.container}>
       <Grid sx={{ ...styles.items, justifyContent: "flex-start" }} item md={6}>
-        <Link href={{
-          pathname : "/shows_episode/" + show.Title,
-          query : show.Title,
-          
-        }} >
-          <a style={{ height: "100%" }}>
-            <Box
-              onClick={handleShowClick}
-              sx={{
-                border: "1px solid #484747",
-                height: "100%",
-                width: "150px",
-                backgroundImage: `url(${img})`,
-                backgroundSize: "cover",
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            >
-              <Box
-                sx={{
-                  height: "100%",
-                  width: "40%",
-                  display: "flex",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                  background: "rgba(1,1,1,.7)",
-                  alignItems: "center",
-                }}
-              >
-                {count}
-                <ListIcon />
-              </Box>
-            </Box>
-          </a>
-        </Link>
+        <Box sx={{ ...styles.iframe }}>
+          <Iframe iframe={embedCode} />
+        </Box>
         <Box sx={styles.showsContent}>
           <Typography color="#ececec">{title}</Typography>
           <Typography sx={{ ...styles.descriptionBox }} color="#4e4e4e">
@@ -141,66 +107,57 @@ const ShowContainer = ({
         </Typography>
       </Grid>
       <Grid sx={{ ...styles.items }} item md={2}>
-        {/* OPTIONS ICON */
-        }
         <Box>
-          <ShowOptions 
+          <ShowOptions
             title={title}
-            img={img}
             show={show}
-            fetchAgain = {fetchAgain}
-            setFetchAgain = {setFetchAgain}
-            loading = {loading}
-            setLoading = {setLoading}
-            loadingOnModal = {loadingOnModal}
-            setLoadingOnModal = {setLoadingOnModal}
-           />
+            fetchAgain={fetchAgain}
+            setFetchAgain={setFetchAgain}
+            loading={loading}
+            setLoading={setLoading}
+            loadingOnModal={loadingOnModal}
+            setLoadingOnModal={setLoadingOnModal}
+          />
           {/* <MoreHorizIcon 
             //onClick={()=>handleDeleteClick(title)} cursor='pointer' sx={{fontSize:'28px'}}
           /> */}
         </Box>
-        </Grid>
+      </Grid>
     </Grid>
   );
 };
-export default ShowContainer;
+export default IframeContainer;
 
 const styles = {
   container: {
     width: "100%",
-    //  marginTop:'20px',
     border: "1px solid #222",
   },
-  // showsImgCover: {
-  //   border: "1px solid #484747",
-  //   height: "100%",
-  //   width: "150px",
-  //   backgroundImage: img,
-  // },
+
   items: {
     minHeight: "100px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     padding: "5px 15px",
-    // display:'flex',
-    // alignItems:'center',
-    // justifyContent:'center',
   },
-  img: {
-    height: "90px",
-    width: "100%",
-    objectFit: "cover",
+  iframe: {
+    height: "100%",
+    width: {
+      md: "200px",
+      lg: "100%",
+    },
   },
   showsContent: {
     height: "100%",
-    width: {xs:"300px" , md:'100%'},
+    width: { xs: "300px", md: "100%" },
     display: "flex",
     flexDirection: "column",
     padding: "20px",
     overflow: "hidden",
     position: "relative",
-    display: "inline-block",
+    display: "flex",
+    justifyContent:'center',
     margin: "0 5px 0 5px",
     textDecoration: "none",
     textOverflow: "ellipsis",
@@ -208,7 +165,7 @@ const styles = {
     color: " #000",
   },
   descriptionBox: {
-    width:{ xs: "140px" , md:'200px'},
+    width: { xs: "140px", md: "200px" },
     padding: "0",
     overflow: "hidden",
     position: "relative",
