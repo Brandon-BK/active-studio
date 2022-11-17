@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
-import UsersScreen from "./UsersScreen"
+import UsersProfile from "./UsersProfile"
 
 const style = {
   position: "absolute",
@@ -30,8 +30,8 @@ const BasicModal = () => {
 
   return (
     <div>
-      <Box onClick={handleOpen}>
-        <UsersScreen />
+      <Box onClick={handleOpen} sx={{width:'180px'}}>
+        <UsersProfile />
       </Box>
       <Modal
         open={open}

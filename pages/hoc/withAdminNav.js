@@ -59,8 +59,8 @@ const tabs = [
     icon: <LocalMoviesIcon />,
   },
   {
-    title: "USERS PAGE",
-    route: "/usersPage",
+    title: "USERS",
+    route: "/users",
     icon: <AccountCircleIcon />,
   },
 

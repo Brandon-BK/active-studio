@@ -34,9 +34,9 @@ const container = {
   },
 };
 
-const UsersScreen = () => {
+const UsersProfile = () => {
   return (
-    <Box sx={{paddingTop: '40px',paddingLeft: '20px', width:'200px', marginLeft: 2.5}}>
+    <Box sx={{ width:'180px', marginLeft: 2.5, display:'flex', justifyContent:'center'}}>
       <Grid container spacing={2} columns={12}>
         <Grid
           xs={12}
@@ -69,4 +69,4 @@ const UsersScreen = () => {
   );
 };
 
-export default UsersScreen;
+export default UsersProfile;
