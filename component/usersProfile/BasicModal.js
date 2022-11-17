@@ -4,8 +4,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
-import UsersScreen from "../component/usersPage/UsersScreen";
-import withAdminNav from "./hoc/withAdminNav";
+import UsersScreen from "./UsersScreen"
 
 const style = {
   position: "absolute",
@@ -172,4 +171,4 @@ const BasicModal = () => {
   );
 };
 
-export default withAdminNav(BasicModal)
+export default BasicModal

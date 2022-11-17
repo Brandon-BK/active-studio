@@ -60,7 +60,7 @@ const tabs = [
   },
   {
     title: "USERS PAGE",
-    route: "/basicModal",
+    route: "/usersPage",
     icon: <AccountCircleIcon />,
   },
 

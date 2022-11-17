@@ -36,7 +36,7 @@ const container = {
 
 const UsersScreen = () => {
   return (
-    <Box sx={{paddingTop: '40px',paddingLeft: '20px', width:'200px', marginLeft: 5}}>
+    <Box sx={{paddingTop: '40px',paddingLeft: '20px', width:'200px', marginLeft: 2.5}}>
       <Grid container spacing={2} columns={12}>
         <Grid
           xs={12}
