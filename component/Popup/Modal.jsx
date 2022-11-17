@@ -217,13 +217,6 @@ export default function CreateShowModal({
       const timestamp = date.toLocaleString();
 
       const data = JSON.stringify({
-<<<<<<< HEAD
-          Title: name.replace(/ /g,'-'),
-          filename : showDetails.file.name,
-          //this should be pulled from context
-          episodes : [],
-          description : description,
-=======
         Title: name.replace(/ /g, "-"),
         filename: showDetails.file.name,
         //this should be pulled from context
@@ -231,7 +224,6 @@ export default function CreateShowModal({
         timestamp: timestamp,
         visibility: extraInfo.visibility,
 
->>>>>>> master
         
         episodes: [],
         description: description,
@@ -708,10 +700,6 @@ export default function CreateShowModal({
                               {["Public", "Private"].map((item, index) => {
                                 return (
                                   <MenuItem
-<<<<<<< HEAD
-                                    onClick={() =>  setExtraInfo({...extraInfo , visibility:item })}
-                           
-=======
                                     onClick={() =>
                                       setExtraInfo({
                                         ...extraInfo,
@@ -769,7 +757,6 @@ export default function CreateShowModal({
                 </Grid>
               </Box>
             )}
->>>>>>> master
           </Box>
         </Fade>
       </Modal>

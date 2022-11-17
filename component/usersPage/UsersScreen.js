@@ -36,22 +36,16 @@ const container = {
 
 const UsersScreen = () => {
   return (
-    <Box
-      sx={{
-        background: "#121212",
-        height: "100vh",
-        width: "100%",
-        // overflowY: "auto",
-        padding: "60px",
-      }}
-    >
+    <Box sx={{paddingTop: '40px',paddingLeft: '20px', width:'200px', marginLeft: 5}}>
       <Grid container spacing={2} columns={12}>
         <Grid
           xs={12}
           md={6}
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            // justifyContent: "center",
+            alignItems: "center",
+            padding: 0,
           }}
         >
           <Box sx={container}>
@@ -62,7 +56,12 @@ const UsersScreen = () => {
                 style={img}
               />
             </Box>
-            <Typography className="active-tv-font" sx={{ color: "white", fontSize: '9px' }}>User name</Typography>
+            <Typography
+              className="active-tv-font"
+              sx={{ color: "white", fontSize: "9px" }}
+            >
+              User name
+            </Typography>
           </Box>
         </Grid>
       </Grid>

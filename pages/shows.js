@@ -45,6 +45,7 @@ const Shows = () => {
     // return new Date(x.timestamp) < new Date(y.timestamp) ? 1 : -1
   });
 
+  const endpoint = `https://p6x7b95wcd.execute-api.us-east-2.amazonaws.com/Prod/get-shows`;
   const getData = async () => {
     try {
       setLoading(true);
