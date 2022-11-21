@@ -5,7 +5,7 @@ import BasicModal from '../component/usersProfile/BasicModal';
 
 const usersPage = () => {
   return (
-    <Box sx={{padding: '40px 0px 0px 20px', overflowY: 'auto'}}>
+    <Box sx={{padding: '40px 0px 0px 20px'}}>
       <BasicModal />
     </Box>
   )
