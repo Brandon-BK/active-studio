@@ -34,7 +34,7 @@ const container = {
   },
 };
 
-const UsersProfile = () => {
+const UsersProfile = ({user}) => {
   return (
     <Box sx={{ width:'180px', marginLeft: 2.5, display:'flex', justifyContent:'center'}}>
       <Grid container spacing={2} columns={12}>
@@ -60,7 +60,7 @@ const UsersProfile = () => {
               className="active-tv-font"
               sx={{ color: "white", fontSize: "9px" }}
             >
-              User name
+              {user.email}
             </Typography>
           </Box>
         </Grid>

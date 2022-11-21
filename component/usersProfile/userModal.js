@@ -23,7 +23,7 @@ const style = {
   flexDirection: "column",
 };
 
-const BasicModal = () => {
+const UserModal = ({user}) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -31,7 +31,7 @@ const BasicModal = () => {
   return (
     <div>
       <Box onClick={handleOpen} sx={{width:'180px'}}>
-        <UsersProfile />
+        <UsersProfile user={user} />
       </Box>
       <Modal
         open={open}
@@ -170,4 +170,4 @@ const BasicModal = () => {
   );
 };
 
-export default BasicModal
+export default UserModal
