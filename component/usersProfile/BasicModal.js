@@ -57,7 +57,7 @@ const BasicModal = () => {
           </Typography>
           <Typography
             id="modal-modal-description"
-            sx={{ marginBottom:"8px", color: "#ffffff", fontSize: '10px' }}
+            sx={{ marginBottom:"16px", color: "#ffffff", fontSize: '10px' }}
             className="active-tv-font"
           >
             Last Paid 26 December 2009
@@ -75,14 +75,14 @@ const BasicModal = () => {
             className="active-tv-font"
               sx={{
                 color: "#ffffff",
-                marginBottom:"8px",
+                marginBottom:"4px",
                 fontSize:'8px'
               }}
             >
               EMAIL:
             </Typography>
             <TextField
-              sx={{ background: "white", width: "100%",marginBottom:"8px",color:"black" }}
+              sx={{ background: "white", width: "100%",marginBottom:"16px",color:"black" }}
               id="filled-basic"
             />
           </Box>
@@ -101,14 +101,14 @@ const BasicModal = () => {
             className="active-tv-font"
               sx={{
                 color: "#ffffff",
-                marginBottom:"8px",
+                marginBottom:"4px",
                 fontSize:'8px'
               }}
             >
               Tier Access Type:
             </Typography>
             <TextField
-              sx={{ background: "white", width: "100%",marginBottom:"8px",color:"black" }}
+              sx={{ background: "white", width: "100%",marginBottom:"16px",color:"black" }}
               id="filled-basic"
             />
           </Box>
@@ -127,14 +127,14 @@ const BasicModal = () => {
             className="active-tv-font"
               sx={{
                 color: "#ffffff",
-                marginBottom:"8px",
+                marginBottom:"4px",
                 fontSize: '8px'
               }}
             >
               Produce That Points:
             </Typography>
             <TextField
-              sx={{ background: "white", width: "100%",marginBottom:"8px",color:"black" }}
+              sx={{ background: "white", width: "100%",marginBottom:"16px",color:"black" }}
               id="filled-basic"
             />
           </Box>
@@ -144,7 +144,6 @@ const BasicModal = () => {
               width: "100%",
               display: "flex",
               justifyContent: "space-between",
-              mt: 2,
             }}
           >
             <Button
