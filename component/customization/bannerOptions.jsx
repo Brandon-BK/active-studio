@@ -16,7 +16,7 @@ import { Edit } from "@mui/icons-material";
 import ShareComponent from "../shows-utils/ShareComponent";
 import EditShowModal from "../shows-utils/EditShow";
 import { API_INSTANCE } from "../../app-config/index.";
-
+// import { ModalLoader } from "../loader";
 const modalStyle = {
   position: "absolute",
   background: "#111",
@@ -35,13 +35,13 @@ const modalStyle = {
 };
 
 export default function BannerOptions({
-  show,
+  imgUrl,
   title,
   img,
-  fetchAgain,
-  setFetchAgain,
   loadingOnModal,
   setLoadingOnModal,
+  setBannerSync,
+  bannerSync
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -62,44 +62,32 @@ export default function BannerOptions({
     setAnchorEl(null);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     setAnchorEl(null);
     setOpenModal(true);
+    
   };
   const handleModalClose = () => {
     setOpenModal(false);
   };
-
+  
   const handleShare = () => {};
   //DELETE FUNCTION
   const handleDeleteClick = async () => {
     setLoadingOnModal(true);
-    const showTitle = title.replace(/ /g, "-");
-    //const deleteEndpoint = `http://127.0.0.1:3000/delete-show/${showTitle}`
-
-    //const deleteEndpoint = `${API_INSTANCE}/delete-show/${showTitle}`;
-    const deleteEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/delete-show/${showTitle}`;
-
-    console.log("endpoint :", deleteEndpoint);
-
-    try {
-      console.log(title);
-
-      console.log("deleting...");
-      const response = await axios.delete(deleteEndpoint);
-      console.log(deleteEndpoint);
-      //,{header:{'Content-Type' : 'application/json'}});
-      console.log("RESPONSE:", response);
-      setAnchorEl(null);
-      setFetchAgain(!fetchAgain);
-      setOpenModal(false);
-    } catch (error) {
-      console.log("endpoint :", deleteEndpoint);
-
-      console.log("DELETE ERROR:", error);
+    const endpoint = 'http://127.0.0.1:3000/delete-banner-image'
+    try{
+      const response = await axios(endpoint,{method : 'DELETE',data : JSON.stringify({key : imgUrl})})
+      console.log('banner delete response',response)
+      setBannerSync(!bannerSync)
+      setLoadingOnModal(false)
+      setOpenModal(false)
       
+    }catch(err){
+      setLoadingOnModal(false)
+      console.log('banner error',err)
     }
-    setLoadingOnModal(false);
+    
   };
 
   return (
@@ -146,6 +134,7 @@ export default function BannerOptions({
       </Menu>
 
       {/* DELETE CONFIRMATION PROMPT */}
+      
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

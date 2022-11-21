@@ -18,7 +18,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import HandymanIcon from "@mui/icons-material/Handyman";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
-
+import ChurchIcon from '@mui/icons-material/Church';
 const drawerWidth = 240;
 
 const tabs = [
@@ -57,6 +57,11 @@ const tabs = [
     route: "/greenlight",
     icon: <LocalMoviesIcon />,
   },
+  {
+    title : 'ACTIVE CHURCH',
+    route: "/active-church-studio",
+    icon : <ChurchIcon />
+  }
 
 ];
 

@@ -68,7 +68,7 @@ const UploadBanners = () => {
           <Grid container spacing={3}>
             {ImagesArr.map((img, index) => {
               return (
-                <Grid item md={3}>
+                <Grid item md={3} key={index}>
                 <Box
                   sx={{
                     width: "100%",
@@ -90,13 +90,13 @@ const UploadBanners = () => {
                     }}
                   >
                     <BannerOptions
-                      show={""}
-                      title={"Banner 1"}
-                      img={""}
-                      fetchAgain={""}
-                      setFetchAgain={""}
-                      loadingOnModal={""}
+                      
+                      title={`Banner ${index+1}`}
                       setLoadingOnModal={setLoadingOnModal}
+                      imgUrl = {img}
+                      bannerSync = {bannerSync}
+                      setBannerSync = {setBannerSync}
+                      loadingOnModal = {loadingOnModal}
                     />
                   </Box>
                 </Box>

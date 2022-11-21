@@ -51,12 +51,12 @@ const Shows = () => {
       console.log("fetching data....");
       const res = await axios.get(`${API_INSTANCE}/get-shows`);
       const freeShowsResponse = await axios.get(
-        `${API_INSTANCE}/get-shows`
+        `${API_INSTANCE}/get-free-shows`
       );
       console.log("Fetched sucessfully fetched!!!!!",shows);
       setLoading(false);
       setShows(res.data);
-      setFreeShows(freeShowsResponse.data);
+     setFreeShows(freeShowsResponse.data);
     } catch (err) {
       console.log(err);
       setLoading(true);
