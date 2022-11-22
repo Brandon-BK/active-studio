@@ -1,6 +1,6 @@
 import React from 'react'
 import Box from "@mui/material/Box";
-import withAdminNav from "./hoc/withAdminNav";
+import withAdminNav from "./../component/hoc/withAdminNav";
 import UserModal from '../component/usersProfile/userModal';
 import axios from "axios";
 

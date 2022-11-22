@@ -1,5 +1,5 @@
 import React from 'react'
-import withAdminNav from "./hoc/withAdminNav";
+import withAdminNav from "./../component/hoc/withAdminNav";
 
 
 const signin = () => {

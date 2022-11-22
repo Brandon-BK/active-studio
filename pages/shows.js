@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import withAdminNav from "./hoc/withAdminNav";
+import withAdminNav from "./../component/hoc/withAdminNav";
 import TransitionsModal from "../component/Popup/Modal";
 import ShowContainer from "../component/shows-utils/ShowContainer";
 import { useEffect, useState } from "react";

@@ -1,5 +1,5 @@
 import { Box , Grid,Button , Paper , Typography , CircularProgress } from "@mui/material";
-import withAdminNav from "./hoc/withAdminNav";
+import withAdminNav from "./../component/hoc/withAdminNav";
 import React from "react";
 import axios from"axios";
 import LaunchIcon from '@mui/icons-material/Launch';

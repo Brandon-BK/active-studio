@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import withAdminNav from "./hoc/withAdminNav";
+import withAdminNav from "./../component/hoc/withAdminNav";
 import * as React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
