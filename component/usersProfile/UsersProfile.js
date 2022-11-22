@@ -21,31 +21,39 @@ const img = {
 };
 
 const container = {
-  height: "180px",
-  width: "200px",
+  height: "200px",
   flexDirection: "column",
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
+  cursor: "pointer",
+  paddingBottom: '5px',
   "&:hover": {
     transform: "scale(1.05)",
     transition: "0.2s",
-    cursor: "pointer",
   },
 };
 
-const UsersProfile = () => {
+const UsersProfile = ({ user }) => {
   return (
-    <Box sx={{ width:'180px', marginLeft: 2.5, display:'flex', justifyContent:'center'}}>
+    <Box
+      sx={{
+        width: "180px",
+        marginLeft: 2.5,
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
       <Grid container spacing={2} columns={12}>
         <Grid
           xs={12}
-          md={6}
+          md={12}
+          lg={12}
           sx={{
             display: "flex",
-            // justifyContent: "center",
             alignItems: "center",
             padding: 0,
+            width:'100%',
           }}
         >
           <Box sx={container}>
@@ -58,9 +66,9 @@ const UsersProfile = () => {
             </Box>
             <Typography
               className="active-tv-font"
-              sx={{ color: "white", fontSize: "9px" }}
+              sx={{ color: "white", fontSize: "7px" }}
             >
-              User name
+              {user.email}
             </Typography>
           </Box>
         </Grid>
