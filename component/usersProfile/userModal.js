@@ -47,13 +47,13 @@ const UserModal = ({user}) => {
             height={115}
           />
           <Typography
-            style={{ color: "#ffffff", marginBottom:"8px", fontSize: '10px' }}
+            style={{ color: "#ffffff", marginBottom:"8px", fontSize: '9px' }}
             id="modal-modal-title"
-            variant="h6"
+            // variant="h6"
             component="h2"
             className="active-tv-font"
           >
-            Michee Bakanda
+           {user.email}
           </Typography>
           <Typography
             id="modal-modal-description"
