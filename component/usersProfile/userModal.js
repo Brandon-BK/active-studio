@@ -53,7 +53,7 @@ const UserModal = ({user}) => {
             component="h2"
             className="active-tv-font"
           >
-            Michee Bakanda
+            {user.email}
           </Typography>
           <Typography
             id="modal-modal-description"
