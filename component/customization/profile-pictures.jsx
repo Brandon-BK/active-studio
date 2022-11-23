@@ -10,7 +10,7 @@ import CreateBanner from "./create-banner";
 import axios from 'axios'
 import { API_INSTANCE } from "../../app-config/index.";
 import { AppContext } from "../context/AppContext";
-const UploadBanners = () => {
+const ProfilePictures = () => {
 
   const {bannerSync,setBannerSync} = React.useContext(AppContext)
   const [loadingOnModal,setLoadingOnModal] = React.useState(false)
@@ -20,10 +20,11 @@ const UploadBanners = () => {
   React.useEffect(()=>{
     async function getImages(){
       
-      const response = await axios.get(API_INSTANCE + '/get-config')
-      setImagesArr(response.data.BannerImageUrls)
+      const response = await axios.get(API_INSTANCE + '/get-profile-pictures')
+      setImagesArr(response.data.profilePictureUrls)
     }
     getImages()
+
   },[bannerSync])
 
   return (
@@ -54,21 +55,22 @@ const UploadBanners = () => {
           }}
         >
           <Typography sx={{ fontSize: "32px", margin: "12px 0" }}>
-            Current Banners
+            Profile Pictures
           </Typography>
           <Grid container spacing={3}>
-            {ImagesArr.map((img, index) => {
+            {ImagesArr.slice(1).map((img, index) => {
               return (
                 <Grid item md={3}>
                 <Box
                   sx={{
                     width: "100%",
-                    height: "200px",
+                    height: "250px",
                     backgroundImage: `url("${img}")`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     display: "flex",
                     margin: "0 8px",
+                    // borderRadius:"50%",
                     justifyContent: "flex-end"
                   }}
                 >
@@ -105,4 +107,4 @@ const UploadBanners = () => {
   );
 };
 
-export default UploadBanners;
+export default ProfilePictures;
