@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import withAdminNav from "./hoc/withAdminNav";
+import withAdminNav from "./../component/hoc/withAdminNav";
 import TransitionsModal from "../component/Popup/Modal";
 import ShowContainer from "../component/shows-utils/ShowContainer";
 import { useEffect, useState } from "react";
@@ -45,6 +45,7 @@ const Shows = () => {
     // return new Date(x.timestamp) < new Date(y.timestamp) ? 1 : -1
   });
 
+  const endpoint = `https://p6x7b95wcd.execute-api.us-east-2.amazonaws.com/Prod/get-shows`;
   const getData = async () => {
     try {
       setLoading(true);

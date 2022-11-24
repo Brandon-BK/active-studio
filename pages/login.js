@@ -1,6 +1,6 @@
 import React from 'react'
 import Login from '../component/Login&&Signin/Login';
-import withAdminNav from "./hoc/withAdminNav";
+import withAdminNav from "./../component/hoc/withAdminNav";
 
 
 const login = () => {

@@ -51,10 +51,10 @@ const ShowContainer = ({
     var config = {
       method: 'POST',
       // url: `${API_INSTANCE}/create-shows`,
-      url: `${API_INSTANCE}/create-shows` ,
-      data: JSON.stringify(showData)
+      url: `${API_INSTANCE}/edit-shows` ,
+      data: JSON.stringify(visibility)
     };
-    // const res = await axios(config)
+    const res = await axios(config)
     // console.log(res)
     if (visibility) {
       setbuttonType("success");

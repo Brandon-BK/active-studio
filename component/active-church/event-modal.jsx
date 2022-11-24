@@ -11,7 +11,7 @@ import {
 import MainEventsForm from "./main-event-form";
 import UcEventsForm from "./uc-events-form";
 
-function EventModal({ open, setOpen,eventTypes }) {
+function EventModal({ open, setOpen,eventTypes,index,sync,setSync }) {
   const [eventType, setEventType] = React.useState("Main Event");
   return (
     <Modal
@@ -33,30 +33,10 @@ function EventModal({ open, setOpen,eventTypes }) {
                 : "Upcload upcoming events that will be occuring for the Active Church."}{" "}
             </Typography>
           </Stack>
-          <Select
-            // onChange={handleShowType}
-            sx={{ padding: "0px 0", margin: 0 }}
-            // variant
-            value={eventType}
-            ariaLabel="Event-Type"
-            label="Event-Type"
-            placeholder="Event-Type"
-          >
-            {["Main Event", "Upcoming Events"].map((item, index) => {
-              return (
-                <MenuItem
-                  onClick={() => setEventType(item)}
-                  key={index}
-                  value={item}
-                >
-                  {item}
-                </MenuItem>
-              );
-            })}
-          </Select>
+          
         </Box>
         <hr style={{ width: "100px", margin: "10px 0" }} />
-        {eventType == "Main Event" ? <MainEventsForm  setOpen = {setOpen} eventTypes = {eventTypes} /> : <UcEventsForm />}
+        {eventType == "Main Event" ? <MainEventsForm sync={sync} setSync={setSync} index={index} setOpen = {setOpen} eventTypes = {eventTypes} /> : <UcEventsForm />}
       </Box>
       
     </Modal>

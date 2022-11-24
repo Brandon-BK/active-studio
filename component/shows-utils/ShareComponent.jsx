@@ -13,8 +13,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ShareComponent({ shareLink , img }) {
-  const [open, setOpen] = React.useState(false);
+export default function ShareComponent({ shareLink , img, open , setOpen }) {
+  
   const [copySuccess, setCopySuccess] = useState("");
   const textAreaRef = useRef(null);
 
@@ -38,10 +38,7 @@ export default function ShareComponent({ shareLink , img }) {
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      <Button sx={{ margin:"0 auto !important" , width:'100%' }} variant="" onClick={handleClickOpen}>
-        <ShareIcon sx={{ marginRight: "4px" }} />
-        Share
-      </Button>
+      
       <Dialog
         sx={{ width: "100%" }}
         open={open}

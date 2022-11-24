@@ -70,7 +70,7 @@ export default function CreateShowModal() {
 
   //THE CREATE SHOWS ENDPOINT
 
-  const endpoint = 'https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Stage/create-shows' 
+  const endpoint = 'https://p6x7b95wcd.execute-api.us-east-2.amazonaws.com/cognito_pool/create-shows' 
   //const endpoint = 'http://127.0.0.1:3000/create-shows'
   
   useEffect(async() =>{
@@ -227,7 +227,6 @@ export default function CreateShowModal() {
                 <MenuItem>Free Show</MenuItem>
               </Select>
               </Box>
-              <hr style={{ width: "100px", margin: "10px 0" }} />
             </Box>
             <Typography variant="p" sx={{ fontSize: "11px", margin: "0 10px" }}>
               <b>NOTE :</b> ONLY SHOWS WITH VIDEOS UNDERNEATH THEM ARE VISIBLE

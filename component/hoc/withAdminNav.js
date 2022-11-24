@@ -19,6 +19,8 @@ import HandymanIcon from "@mui/icons-material/Handyman";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
 import ChurchIcon from '@mui/icons-material/Church';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 const drawerWidth = 240;
 
 const tabs = [
@@ -61,7 +63,11 @@ const tabs = [
     title : 'ACTIVE CHURCH',
     route: "/active-church-studio",
     icon : <ChurchIcon />
-  }
+  },{
+    title: "USERS",
+    route: "/users",
+    icon: <AccountCircleIcon />,
+  },
 
 ];
 
