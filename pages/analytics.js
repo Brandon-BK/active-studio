@@ -1,4 +1,4 @@
-import { Box , Grid,Button , Paper , Typography , CircularProgress } from "@mui/material";
+import { Box , Grid,Button , TextField , MenuItem ,Paper , Typography , CircularProgress } from "@mui/material";
 import withAdminNav from "./../component/hoc/withAdminNav";
 import React from "react";
 import axios from"axios";
@@ -7,6 +7,7 @@ import LaunchIcon from '@mui/icons-material/Launch';
 const Analytics = () => {
     const [shows , setShows ] = React.useState([]); 
     const [users , setUsers ] = React.useState([]);
+    const [progressValue , setProgressValue ] = React.useState(100);
     const monthlySubscribers = users.filter((user) => {
         if(user.subscriptionType === "Monthly"){
             return user
@@ -42,6 +43,10 @@ const Analytics = () => {
         setUsers(results.users)
     },[]);
 
+    const handleChange = (val) => {
+        setProgressValue(val)
+    }
+
     return (
         <Box
         sx={{
@@ -50,12 +55,19 @@ const Analytics = () => {
             padding:'5rem'
         }}
         >
-
+        <TextField sx={{ margin:'21px 0' }} label="Show Progress By" fullWidth select value={progressValue} >
+        <MenuItem onClick={()=> handleChange(100)} value="100" > 100</MenuItem>
+        <MenuItem onClick={()=> handleChange(1000)} value="100" > 1000</MenuItem>
+        </TextField>
         <Grid container>
          <Grid item xs={12} lg={4} sx={{ height:'50vh' , border:'5px solid #111' }}>
             <Paper sx={{  display:'flex', flexDirection:'column' , alignItems:'center',justifyContent:'space-evenly' ,width:'100%' , height:'100%' , padding:'12px 21px' }}>
             <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-            <CircularProgress size={"12.5rem"} variant="determinate" value={users.length + 80} sx={{scale:3, color:'rgb(80, 200, 120)'}} />
+            <CircularProgress size={"12.5rem"} variant="determinate" value={Number(users.length/progressValue)} sx={{scale:3, color:'rgb(80, 200, 120)' ,  width: "100px",
+        height: "100px",
+        borderRadius: "100%",
+        boxShadow: "inset 0 0 0px 11px gray",
+        backgroundColor: "transparent",}} />
             <Box
             sx={{
               top: 0,
@@ -82,7 +94,7 @@ const Analytics = () => {
           </Grid>            <Grid item xs={12} lg={4} sx={{ height:'50vh' , border:'5px solid #111' }}>
           <Paper sx={{  display:'flex', flexDirection:'column' , alignItems:'center',justifyContent:'space-evenly' ,width:'100%' , height:'100%' , padding:'12px 21px' }}>
           <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-          <CircularProgress size={"12.5rem"} variant="determinate" value={100} sx={{scale:3 , color:'rgba(255,191,0)'}} />
+          <CircularProgress size={"12.5rem"} variant="determinate" value={Number(monthlySubscribers/progressValue)} sx={{scale:3 , color:'rgba(255,191,0)'}} />
           <Box
           sx={{
               top: 0,
@@ -109,7 +121,7 @@ const Analytics = () => {
           </Grid>            <Grid item xs={12} lg={4} sx={{ height:'50vh' , border:'5px solid #111' }}>
           <Paper sx={{  display:'flex', flexDirection:'column' , alignItems:'center',justifyContent:'space-evenly' ,width:'100%' , height:'100%' , padding:'12px 21px' }}>
           <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-          <CircularProgress size={"12.5rem"} variant="determinate" value={"90"} sx={{scale:3 , color:'rgba(0,190,190,.5)'}} />
+          <CircularProgress size={"12.5rem"} variant="determinate" value={Number(yearlySubscribers /progressValue)} sx={{scale:3 , color:'rgba(0,190,190,.5)'}} />
           <Box
           sx={{
               top: 0,
@@ -139,7 +151,7 @@ const Analytics = () => {
         <Grid item xs={12} lg={6} sx={{ minHeight:'50vh' , border:'5px solid #111' }}>
         <Paper sx={{  display:'flex', flexDirection:'column' , alignItems:'center',justifyContent:'space-evenly' ,width:'100%' , height:'100%' , padding:'12px 21px' }}>
         <Box sx={{ position: 'relative', background:'',width:'100%', height:'fit-content' , display: 'inline-flex' , justifyContent:'center' , alignItems:'center' }}>
-        <CircularProgress size={"12.5rem"} variant="determinate" value={Number(views / 100)} sx={{ color:'rgb(136, 8, 8)'}}/>
+        <CircularProgress size={"12.5rem"} variant="determinate" value={Number(views / (progressValue === 1000 ? 1000 : 10))} sx={{ color:'rgb(136, 8, 8)'}}/>
           <Box
           sx={{
               top: 0,
