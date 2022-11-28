@@ -43,7 +43,7 @@ const ShowContainer = ({
   
   const toggleVisibility = async () => {
     // setVisibility(visibility ? false : true);
-    setVisibility(!visibility);
+    
     console.log(show)
     const showData = { ...show, visible: visibility , timestamp: new Date().toLocaleString() };
     console.log(showData)
@@ -51,10 +51,11 @@ const ShowContainer = ({
     var config = {
       method: 'POST',
       // url: `${API_INSTANCE}/create-shows`,
-      url: `${API_INSTANCE}/edit-shows` ,
-      data: JSON.stringify(visibility)
+      url: `${API_INSTANCE}/edit-show` ,
+      data: JSON.stringify({visibility})
     };
     const res = await axios(config)
+    setVisibility(!visibility);
     // console.log(res)
     if (visibility) {
       setbuttonType("success");

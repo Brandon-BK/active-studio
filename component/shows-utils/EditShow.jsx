@@ -65,7 +65,7 @@ export default function EditShowModal({
   const handleCloseSpeedDail = () => setOpenSpeedDail(false);
 
   // receive input values from show name and show description
-  console.log('MODAL SHOW',show);
+
   const [name, SetName] = React.useState(show.Title ? show.Title : "");
   //   const [name, SetName] = React.useState("");
   const [description, SetDescription] = React.useState(
@@ -115,9 +115,7 @@ export default function EditShowModal({
   //const endpoint = 'http://127.0.0.1:3000/create-shows'
 
   useEffect(async () => {
-    console.log("new fie to be compressed");
-    //original file...
-    console.log("THE FILES", files[0]);
+    
 
     try {
       //IMAGE COMPRESSION
@@ -140,7 +138,7 @@ export default function EditShowModal({
     e.preventDefault();
 
     
-    console.log("click");
+    
 
     // awesome code
     if ((name, description && files.length !== 0)) {
@@ -148,12 +146,12 @@ export default function EditShowModal({
 
       //show the laoder
       setLoading(true);
-      console.log("loading:", loading);
+      
       ////file compression algorithm
 
       //posting shows object to lambda endpoint,inserting all user data in data object
       const data = JSON.stringify({
-        Title: name.replace(/ /g, "-"),
+        Title: show.Title,
         //this should be pulled from context
         description: description,
         timestamp: new Date(),
@@ -187,14 +185,14 @@ export default function EditShowModal({
           const { largeCoverArtSignedUrl } = response;
 
           //Posting image to presigned url
-          await axios.put(smallCoverArtSignedUrl, compressedImage, {
+          const smImgRes = await axios.put(smallCoverArtSignedUrl, compressedImage, {
             "Content-Type": "image/jpeg",
           });
 
-          await axios.put(largeCoverArtSignedUrl, files[0], {
+          const lgImgRes = await axios.put(largeCoverArtSignedUrl, files[0], {
             "Content-Type": "image/jpeg",
           });
-
+          console.log('S3 IMAGE RESPONSE',{smImgRes,lgImgRes})
           console.log(`successfully posted to images to s3!!`);
           console.log("POSTED FILES :", files[0], compressedImage);
 
@@ -208,7 +206,7 @@ export default function EditShowModal({
         console.log("IMAGE POST ERROR", error);
       }
 
-      console.log(showDetails);
+      
     }
   };
   const handleSetFiles = (file) => {
