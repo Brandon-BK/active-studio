@@ -320,7 +320,6 @@ export default function EpisodeModal({
                 fontSize: "10px",
                 textTransform: "uppercase",
                 textAlign: "left",
-                // marginLeft: "10px",
                 margin: "20px 0 0 10px",
               }}
             >
@@ -342,7 +341,7 @@ export default function EpisodeModal({
             <Typography
               id="transition-modal-title"
               sx={{
-                margin: "10px 0 0 10px",
+                margin: "0px 0 0 10px",
                 textTransform: "uppercase",
                 fontSize: "11px",
                 textAlign: "center",
