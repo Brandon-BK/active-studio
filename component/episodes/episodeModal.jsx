@@ -12,7 +12,7 @@ import CreateEpisodeCoverArt from "./create-episode-coverArt";
 import { AppContext } from "../context/AppContext";
 import { ModalLoader } from "../loader";
 import { API_INSTANCE } from "../../app-config/index.";
-import {useRouter} from 'next/router'
+import { useRouter } from "next/router";
 const axios = require("axios");
 
 const style = {
@@ -21,15 +21,16 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   bgcolor: "#111",
-  border: "2px solid #fff",
-  
-  //overflow: "scroll",
+  // border: "2px solid #fff",
+  overflow: "auto",
   padding: "20px 0",
-  height : '90vh',
-  width : '600px',
+  height: "90vh",
+  width: "600px",
   boxShadow: 24,
   color: "white",
   p: 2,
+  // border:'1px solid red',
+  overflowX: "hidden",
 };
 
 export default function EpisodeModal({
@@ -43,7 +44,7 @@ export default function EpisodeModal({
   setVideoFiles,
   episodes,
 }) {
-  const { singleShowData, setShowJsonData, showJson ,setShowJson } =
+  const { singleShowData, setShowJsonData, showJson, setShowJson } =
     React.useContext(AppContext);
 
   const [bool, setBool] = React.useState(false);
@@ -63,8 +64,7 @@ export default function EpisodeModal({
 
   //modal loader state
   const [loading, setLoading] = useState(false);
-  
-  
+
   //CREATE EPISODE BUTTON HANDLER
   const handleSubmit = async (e) => {
     //e.preventDefault();
@@ -74,8 +74,8 @@ export default function EpisodeModal({
     if ((name, description, author)) {
       try {
         setLoading(true);
-        
-        const prevEpisodes = episodes
+
+        const prevEpisodes = episodes;
 
         const showDetails = { name, description, file: files[0] };
 
@@ -114,7 +114,7 @@ export default function EpisodeModal({
 
         console.log({ createEpisodeResponse: response });
         const { showMetaDataSignedUrl } = response.data;
-  
+
         //posting the json data
         console.log("posting json data...");
         const jsonDataConfig = {
@@ -157,7 +157,6 @@ export default function EpisodeModal({
         setOpen(false);
         console.log("episode created !!!");
         setSync(!sync);
-      
       } catch (error) {
         setLoading(false);
         console.log("create episode error:", error);
@@ -192,11 +191,6 @@ export default function EpisodeModal({
         <Fade in={open}>
           <Box sx={style}>
             <Box sx={{ margin: "0 10px" }}>
-              <ModalLoader
-                loadingOnModal={loading}
-                action="uploading"
-                height="100%"
-              />
               <Typography
                 id="transition-modal-title"
                 variant="h6"
@@ -210,19 +204,20 @@ export default function EpisodeModal({
               <b>NOTE :</b> ONLY EPISODES WITH VIDEOS UNDERNEATH THEM ARE
               VISIBLE TO THE PUBLIC
             </Typography>
-
-            <Box sx={{ display: "flex",  }}>
+            <ModalLoader
+              loadingOnModal={loading}
+              action="uploading"
+              height="90vh"
+              width="100%"
+              style={{height:'100%'}}
+            />
+            <Box sx={{ display: "flex" }}>
               <Box style={{ height: "100%", width: "50%", padding: "10px" }}>
                 <CreateEpisodeCoverArt
                   files={files}
                   handleSetFiles={handleSetFiles}
                   img={"logo.svg"}
                 />
-                <BasicVideo
-                  videoFiles={videoFiles}
-                  handleSetVideoFiles={handleSetVideoFiles}
-                  img={"logo.svg"}
-                ></BasicVideo>
               </Box>
               <Box></Box>
               <Box
@@ -230,7 +225,7 @@ export default function EpisodeModal({
                   height: "100%",
                   width: "50%",
                   padding: "10px",
-                  marginTop: "50px",
+                  marginTop: "3px",
                 }}
               >
                 <form onSubmit={handleSubmit}>
@@ -308,12 +303,62 @@ export default function EpisodeModal({
                 </form>
               </Box>
             </Box>
+
+            <Box sx={{ margin: "0 10px" }}>
+              <Typography
+                id="transition-modal-title"
+                variant="h6"
+                component="h5"
+                // style={{ marginTop: "30px" }}
+              >
+                UPLOAD A VIDEO FOR THIS EPISODE
+              </Typography>
+              <hr style={{ width: "100px", margin: "10px 0" }} />
+            </Box>
+            <Typography
+              style={{
+                fontSize: "10px",
+                textTransform: "uppercase",
+                textAlign: "left",
+                // marginLeft: "10px",
+                margin: "20px 0 0 10px",
+              }}
+            >
+              <b>NOTE: </b> Accepted files TYPES : video/mp4{" "}
+            </Typography>
+            <Box
+              style={{
+                width: "100%",
+                height: "45%",
+                padding: "10px",
+              }}
+            >
+              <BasicVideo
+                videoFiles={videoFiles}
+                handleSetVideoFiles={handleSetVideoFiles}
+                img={"logo.svg"}
+              ></BasicVideo>
+            </Box>
+            <Typography
+              id="transition-modal-title"
+              sx={{
+                margin: "10px 0 0 10px",
+                textTransform: "uppercase",
+                fontSize: "11px",
+                textAlign: "center",
+              }}
+            >
+              Start sharing your story and connect with viewers. Videos that you
+              upload will show up here
+            </Typography>
+
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
-                marginTop: "20px",
+                marginBottom: "10px",
                 width: "100%",
+                padding: "0 10px",
               }}
             >
               <Button
