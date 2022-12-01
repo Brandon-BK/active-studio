@@ -15,7 +15,6 @@ import { API_INSTANCE } from "../../app-config/index.";
 import {useRouter} from 'next/router'
 const axios = require("axios");
 const ffmpeg = require("fluent-ffmpeg");
-// import ffmpeg from 'fluent-ffmpeg';
 
 const style = {
   position: "absolute",
