@@ -5,8 +5,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import ShareIcon from "@mui/icons-material/Share";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShowOptions from "../shows-utils/showOptions";
-import BannerOptions from "./bannerOptions";
-import CreateBanner from "./create-banner";
+import {ProfilePictureOptions} from "./bannerOptions";
+import {CreateProfilePictureModal} from "./createProfilePictureModal";
 import axios from 'axios'
 import { API_INSTANCE } from "../../app-config/index.";
 import { AppContext } from "../context/AppContext";
@@ -82,7 +82,7 @@ const ProfilePictures = () => {
                       height: "fit-content"
                     }}
                   >
-                    <BannerOptions
+                    <ProfilePictureOptions
                       show={""}
                       title={"Banner 1"}
                       img={""}
@@ -101,7 +101,7 @@ const ProfilePictures = () => {
        
       </Grid>
      </Box>
-      <CreateBanner />
+      <CreateProfilePictureModal />
 
     </Box>
   );
