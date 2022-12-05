@@ -67,7 +67,7 @@ export default function EpisodeModal({
   
   //CREATE EPISODE BUTTON HANDLER
   const handleSubmit = async (e) => {
-    //e.preventDefault();
+    e.preventDefault();
     console.log(sync);
 
     // awesome code
@@ -93,7 +93,7 @@ export default function EpisodeModal({
           timestamp: timestamp,
           author,
           seasonNum,
-          episodesType
+          episodeType
         };
         console.log({ EpisodeObject });
 
