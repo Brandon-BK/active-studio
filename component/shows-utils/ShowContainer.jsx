@@ -40,7 +40,15 @@ const ShowContainer = ({
   const timestamp = lastUpdated.replace("T", " ");
   const updatedTimestamp = timestamp.replace("Z", " ").split(".")[0];
 
-  
+  const [showJson,setShowJson] = React.useState({});
+  React.useEffect(()=>{
+    async function getData(){
+      const res = await axios.get(show.showsMetaData);
+      setShowJson(res.data)
+    }
+    getData()
+  },[])
+  const episodesLength = showJson.episodes?.length
   const toggleVisibility = async () => {
     // setVisibility(visibility ? false : true);
     
@@ -108,7 +116,7 @@ const ShowContainer = ({
                   alignItems: "center",
                 }}
               >
-                {count}
+                {episodesLength}
                 <ListIcon />
               </Box>
             </Box>

@@ -86,6 +86,7 @@ export default function EpisodeModal({
 
         const EpisodeObject = {
           Title: name.replace(/ /g, "-"),
+          episodeName : name,
           showTitle: singleShowData.Title.replace(/ /g, "-"), //this must be the show title,(not episode)
           thumbnailFilename: showDetails.file.name,
           videoFileName: videoFiles[0]?.name,
@@ -112,7 +113,9 @@ export default function EpisodeModal({
         };
 
         const response = await axios(config);
-
+        // if (episodeType === 'featured episode'){
+        //   await axios.put(API_INSTANCE + '/edit-show',JSON.stringify({featuredEpisodes : [show]}))
+        // }
         console.log({ createEpisodeResponse: response });
         const { showMetaDataSignedUrl } = response.data;
   

@@ -45,7 +45,7 @@ const Shows = () => {
     // return new Date(x.timestamp) < new Date(y.timestamp) ? 1 : -1
   });
 
-  const endpoint = `https://p6x7b95wcd.execute-api.us-east-2.amazonaws.com/Prod/get-shows`;
+
   const getData = async () => {
     try {
       setLoading(true);
@@ -54,10 +54,10 @@ const Shows = () => {
       const freeShowsResponse = await axios.get(
         `${API_INSTANCE}/get-free-shows`
       );
-      console.log("Fetched sucessfully fetched!!!!!",shows);
-      setLoading(false);
+      console.log("Fetched sucessfully fetched!!!!!");
+      setLoading(false) ;
       setShows(res.data);
-     setFreeShows(freeShowsResponse.data);
+      setFreeShows(freeShowsResponse.data);
     } catch (err) {
       console.log(err);
       setLoading(true);
@@ -71,7 +71,7 @@ const Shows = () => {
 
   useEffect(() => {
     getData();
-    console.log("boom");
+    console.log("boom")
   }, [fetchAgain]);
 
   console.log(shows.sort((a, b) => a.Title.localeCompare(b.Title)));
@@ -85,15 +85,12 @@ const Shows = () => {
         background: "#111",
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <Box sx={{ display:'flex' , justifyContent:'center' }}>
         <Button
           onClick={(e) => setSelectedShowType("Active TV Originals")}
           sx={{
-            margin: "4px 8px",
-            borderBottom:
-              selectedShowType !== "Free Shows"
-                ? "2px solid yellow"
-                : "2px solid transparent",
+            margin:'4px 8px',
+            borderBottom:selectedShowType !== "Free Shows" ? "2px solid yellow" : "2px solid transparent", 
             padding: "16px",
             color: "#eee",
           }}
@@ -103,11 +100,8 @@ const Shows = () => {
         <Button
           onClick={(e) => setSelectedShowType("Free Shows")}
           sx={{
-            margin: "4px 8px",
-            borderBottom:
-              selectedShowType === "Free Shows"
-                ? "2px solid yellow"
-                : "2px solid transparent",
+            margin:'4px 8px',
+            borderBottom:selectedShowType === "Free Shows" ? "2px solid yellow" : "2px solid transparent", 
             padding: "16px",
             color: "#eee",
           }}
@@ -206,23 +200,23 @@ const Shows = () => {
               const replacedHeight = newIframe.replace("560", "100%");
               const replacedWidth = replacedHeight.replace("315", "100%");
               return (
+                
                 <IframeContainer
-                  key={index}
-                  embedCode={replacedWidth}
-                  show={item}
-                  likes={100}
-                  title={item.Title.replace(/-/g, " ")}
-                  lastUpdated={"Yesterday"}
-                  description={
-                    "THis is an iframe embeded from another platform."
-                  }
-                  fetchAgain={fetchAgain}
-                  setFetchAgain={setFetchAgain}
-                  loading={loading}
-                  setLoading={setLoading}
-                  loadingOnModal={loadingOnModal}
-                  setLoadingOnModal={setLoadingOnModal}
-                />
+                key={index}
+                embedCode={replacedWidth}
+                show={item}
+                likes={100}
+                title={item.Title.replace(/-/g, " ")}
+                lastUpdated={"Yesterday"}
+                description={"THis is an iframe embeded from another platform."}
+                fetchAgain={fetchAgain}
+                setFetchAgain={setFetchAgain}
+                loading={loading}
+                setLoading={setLoading}
+                loadingOnModal={loadingOnModal}
+                setLoadingOnModal={setLoadingOnModal}
+              />
+    
               );
             })}
           </Grid>

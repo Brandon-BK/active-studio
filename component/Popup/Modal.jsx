@@ -219,13 +219,11 @@ export default function CreateShowModal({
       const data = JSON.stringify({
         Title: name.replace(/ /g, "-"),
         filename: showDetails.file.name,
+        showName : name,
         //this should be pulled from context
         description: description,
         timestamp: timestamp,
         visibility: extraInfo.visibility,
-
-        
-        episodes: [],
         description: description,
         timestamp: new Date().toLocaleString(),
         seasons:extraInfo.seasons,
