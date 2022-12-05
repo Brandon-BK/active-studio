@@ -5,7 +5,7 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
+import {Select , MenuItem} from "@mui/material";
 import CreateShow from "./create-show";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
@@ -20,12 +20,7 @@ const axios = require('axios')
 import imageCompression from 'browser-image-compression';
 import {AppContext} from '../../pages/_app';
 
-const actions = [
-  { icon: <FileCopyIcon />, name: "Copy" },
-  { icon: <SaveIcon />, name: "Save" },
-  { icon: <PrintIcon />, name: "Print" },
-  { icon: <ShareIcon />, name: "Share" },
-];
+
 
 const input = {
   background: "#333",
@@ -75,7 +70,7 @@ export default function CreateShowModal() {
 
   //THE CREATE SHOWS ENDPOINT
 
-  const endpoint = 'https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Stage/create-shows' 
+  const endpoint = 'https://p6x7b95wcd.execute-api.us-east-2.amazonaws.com/cognito_pool/create-shows' 
   //const endpoint = 'http://127.0.0.1:3000/create-shows'
   
   useEffect(async() =>{
@@ -220,6 +215,7 @@ export default function CreateShowModal() {
         <Fade in={open}>
           <Box sx={style}>
             <Box sx={{ margin: "0 10px" }}>
+              <Box>
               <Typography
                 id="transition-modal-title"
                 variant="h6"
@@ -227,7 +223,10 @@ export default function CreateShowModal() {
               >
                 CREATE SHOWS
               </Typography>
-              <hr style={{ width: "100px", margin: "10px 0" }} />
+              <Select value="Free Shows">
+                <MenuItem>Free Show</MenuItem>
+              </Select>
+              </Box>
             </Box>
             <Typography variant="p" sx={{ fontSize: "11px", margin: "0 10px" }}>
               <b>NOTE :</b> ONLY SHOWS WITH VIDEOS UNDERNEATH THEM ARE VISIBLE

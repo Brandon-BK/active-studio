@@ -1,191 +1,278 @@
-import Box from '@mui/material/Box';
-import withAdminNav from "./hoc/withAdminNav";
-import TransitionsModal from '../component/Popup/Modal'
-import ShowContainer from '../component/shows-utils/ShowContainer';
-import { useEffect, useState,useContext } from 'react';
-import GuideBar from '../component/shows-utils/GuideBar';
-import data from '../component/shows-utils/shows.json'
-import { IconButton, Typography } from '@mui/material';
-import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
+import Box from "@mui/material/Box";
+import withAdminNav from "./../component/hoc/withAdminNav";
+import TransitionsModal from "../component/Popup/Modal";
+import ShowContainer from "../component/shows-utils/ShowContainer";
+import { useEffect, useState } from "react";
+import GuideBar from "../component/shows-utils/GuideBar";
+import { IconButton, Button, Grid, Typography } from "@mui/material";
 
-// icons
-import SortIcon from '@mui/icons-material/Sort';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import { API_INSTANCE } from '../app-config/index.';
-import axios from 'axios';
-import CreateShowModal from '../component/Popup/Modal';
-import {Loader} from '../component/loader/index';
+import SortIcon from "@mui/icons-material/Sort";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import { API_INSTANCE } from "../app-config/index.";
+import axios from "axios";
+import CreateShowModal from "../component/Popup/Modal";
+import { Loader } from "../component/loader/index";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import Link from "next/link";
+import Iframe from "../component/shows-utils/Iframe";
+import IframeContainer from "../component/shows-utils/iframeContainer";
 
-export let allShows = []
 const Shows = () => {
+  const [filterTerm, setFilterTerm] = useState("");
+  const [shows, setShows] = useState([]);
+  const [freeShows, setFreeShows] = useState([]);
+  const [selectedShowType, setSelectedShowType] = useState(
+    "Active Tv Originals"
+  );
 
-    const [filterTerm, setFilterTerm] = useState("")
-    const [shows, setShows] = useState([])
-    const [filterTime, setFilterTime] = useState(false)
-    
-    const [fetchAgain,setFetchAgain] = useState(false)
-    const [modalOpen,setModalOpen] = useState(false);
+  const [filterTime, setFilterTime] = useState(false);
 
-    const [loading,setLoading] = useState(false);
-    const [loadingOnModal,setLoadingOnModal] = useState(false)
+  const [fetchAgain, setFetchAgain] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
-    const getData = async () => {
-        setLoading(true)
-        console.log('fetching data....')
-        const res = await axios.get(`${API_INSTANCE}/get-shows`);
-  
-        //const res = await axios.get('http://127.0.0.1:3000/get-shows/');
+  const [loading, setLoading] = useState(true);
+  const [errorLogs, setErrorLogs] = useState(null);
+  const [loadingOnModal, setLoadingOnModal] = useState(false);
 
-        res.data.map(item => console.log('ITEM:',item))
-        console.log('Fetched sucessfully fetched!!!!!')
-        setLoading(false)
-        setShows(res.data)
-        console.log(res)
-        allShows = res.data
-        setLoading(false)
+  const sortedByTitleShows = shows.sort((a, b) =>
+    a.Title.localeCompare(b.Title)
+  );
+  const sortByTime = shows.sort((x, y) => {
+    const first = new Date(x.timestamp);
+    const second = new Date(y.timestamp);
+    return first - second;
+    // return new Date(x.timestamp) < new Date(y.timestamp) ? 1 : -1
+  });
+
+
+  const getData = async () => {
+    try {
+      setLoading(true);
+      console.log("fetching data....");
+      const res = await axios.get(`${API_INSTANCE}/get-shows`);
+      const freeShowsResponse = await axios.get(
+        `${API_INSTANCE}/get-free-shows`
+      );
+      console.log("Fetched sucessfully fetched!!!!!");
+      setLoading(false);
+      setShows(res.data);
+      setFreeShows(freeShowsResponse.data);
+    } catch (err) {
+      console.log(err);
+      setLoading(true);
+      setErrorLogs(err.message);
     }
+  };
 
-    const handleTimeFilterClick = () => {
-        setFilterTime(true)
-    }
+  const handleTimeFilterClick = () => {
+    setFilterTime(true);
+  };
 
-    useEffect(() => {
-        
-        getData()
-    }, [fetchAgain]);
+  useEffect(() => {
+    getData();
+    console.log("boom")
+  }, [fetchAgain]);
 
+  console.log(shows.sort((a, b) => a.Title.localeCompare(b.Title)));
+  console.log(sortByTime);
 
-    const FilterByTime = ({ shows }) => {
-        let localShows = shows.sort((a, b) => {
-            let A = a.timestamp
-            let B = b.timestamp
-            return A - B
-        })
-
-        console.log(localShows);
-        return localShows.map((item,index) => {
-            const episodes = item.episodes ? item.episodes : [];
-
-            return (
-                <ShowContainer key={index} loadingOnModal = {loadingOnModal}
-                setLoadingOnModal = {setLoadingOnModal}likes={item.likes} title={item.Title} count={episodes.length} link={item.id} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
-            )
-        })
-    }
-
-    const RenderShowsBySelectedOptions = () => {
-        if (filterTime) {
-            return <FilterByTime shows={shows} />
-        } else {
-            return shows.filter((filterVal) => {
-                if (filterTerm == "") {
-                    return filterVal
-                } else if (filterVal.Title.toLocaleLowerCase().toLocaleUpperCase().includes(filterTerm.toLocaleLowerCase().toLocaleUpperCase())) {
-                    return filterVal
-                }
-            }).map((item,index) => {
-                const episodes = item.episodes ? item.episodes : [];
-
-                return (
-                    <ShowContainer
-                        key ={index}
-                        show={item} likes={item.likes}
-                        title={item.Title} count={episodes.length}
-                        link={item.id} img={item.CoverArtLarge}
-                        lastUpdated={item.timestamp} description={item.description}
-                        fetchAgain={fetchAgain}
-                        setFetchAgain = {setFetchAgain}
-                        loading = {loading}
-                        setLoading = {setLoading} 
-                        loadingOnModal = {loadingOnModal}
-                        setLoadingOnModal = {setLoadingOnModal}
-                    />
-                )
-            })
-        }
-    }
-
-
-return (
+  return (
     <Box
-        sx={{
-            minHeight: "100vh",
-            width: "100%",
-            background: '#111',
-        }}
+      sx={{
+        minHeight: "calc(100vh - 58px)",
+        width: "100%",
+        background: "#111",
+      }}
     >
-
-        <Typography color="#222" variant='h1' sx={{ padding: "8px" }}>
-            Watch shows
-        </Typography>
-        <Box sx={styles.inputContainer}>
-            <Box sx={{ width: '150px', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                <IconButton onClick={handleTimeFilterClick}>
-                    <FilterListIcon sx={{ color: '#999', transformBox: 'rotateY(360deg)' }} />
-                </IconButton>
-                <IconButton onClick={handleTimeFilterClick} sx={{ padding: '12px 12px' }}>
-                    <Typography color="#999" variant='h6' sx={{ fontSize: "12px", fontWeight: 600 }}>
-                        A - Z
-                    </Typography>
-                </IconButton>
-            </Box>
-            <input
-                placeholder='filter...'
-                style={{ color: "#fff", padding: '16px', margin: '10px ', width: '70%', background: 'transparent' }}
-                onChange={(e) => setFilterTerm(e.target.value)}
+      <Box sx={{ display:'flex' , justifyContent:'center' }}>
+        <Button
+          onClick={(e) => setSelectedShowType("Active TV Originals")}
+          sx={{
+            margin:'4px 8px',
+            borderBottom:selectedShowType !== "Free Shows" ? "2px solid yellow" : "2px solid transparent", 
+            padding: "16px",
+            color: "#eee",
+          }}
+        >
+          Active Tv Originals
+        </Button>
+        <Button
+          onClick={(e) => setSelectedShowType("Free Shows")}
+          sx={{
+            margin:'4px 8px',
+            borderBottom:selectedShowType === "Free Shows" ? "2px solid yellow" : "2px solid transparent", 
+            padding: "16px",
+            color: "#eee",
+          }}
+        >
+          Free Shows
+        </Button>
+      </Box>
+      <Box sx={styles.inputContainer}>
+        <Box
+          sx={{
+            width: "150px",
+            display: "flex",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+          }}
+        >
+          <IconButton onClick={handleTimeFilterClick}>
+            <FilterListIcon
+              sx={{ color: "#999", transformBox: "rotateY(360deg)" }}
             />
-
+          </IconButton>
+          <IconButton
+            onClick={handleTimeFilterClick}
+            sx={{ padding: "12px 12px" }}
+          >
+            <Typography
+              color="#999"
+              variant="h6"
+              sx={{ fontSize: "12px", fontWeight: 600 }}
+            >
+              A - Z
+            </Typography>
+          </IconButton>
         </Box>
-
-        <CreateShowModal 
-            modalOpen = {modalOpen}
-            setModalOpen={setModalOpen}
-            fetchAgain = {fetchAgain}
-            setFetchAgain = {setFetchAgain}
-            loading = {loading}
-            loadingOnModal = {loadingOnModal}
-            setLoadingOnModal = {setLoadingOnModal}
+        <input
+          placeholder="filter..."
+          style={{
+            color: "#fff",
+            padding: "16px",
+            margin: "10px ",
+            width: "70%",
+            background: "transparent",
+          }}
+          onChange={(e) => setFilterTerm(e.target.value)}
         />
+      </Box>
 
-        <GuideBar />
-        <Loader loading={loading}/>
-        {
-            shows.map((item,index) => {
-                const episodes = item.episodes ? item.episodes : [];
-                if (item.Title.toLocaleLowerCase().toLocaleUpperCase().includes(filterTerm.toLocaleLowerCase().toLocaleUpperCase())) {
-                    return (
-                        <ShowContainer
-                        key ={index}
-                            show={item} likes={item.likes} title={item.Title.replace(/-/g,' ')}
-                            count={episodes.length} link={item.id} img={item.CoverArtLarge}
-                            lastUpdated={item.timestamp} description={item.description}
-                            fetchAgain = {fetchAgain} setFetchAgain = {setFetchAgain}
-                            loading = {loading} setLoading = {setLoading}
-                            loadingOnModal = {loadingOnModal}
-                            setLoadingOnModal = {setLoadingOnModal}
-                        />
-                    )
-                }
-            })
-        }
+      <CreateShowModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        fetchAgain={fetchAgain}
+        setFetchAgain={setFetchAgain}
+        loading={loading}
+        loadingOnModal={loadingOnModal}
+        setLoadingOnModal={setLoadingOnModal}
+      />
+
+      <GuideBar />
+      {/* <Loader loading={loading} /> */}
+      <Typography variant="h5" sx={{ padding: "0 16px ", margin: "12px 0" }}>
+        {selectedShowType}
+      </Typography>
+      {loading ? (
+        <Box
+          sx={{
+            minHeight: "500px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {errorLogs ? (
+            <Box>
+              <img
+                src={"network-error.png"}
+                style={{ width: 200, height: 200 }}
+              />
+              <Typography
+                variant="h3"
+                fontSize={18}
+                color={"red"}
+                align="center"
+              >
+                {errorLogs}
+              </Typography>
+            </Box>
+          ) : (
+            <Loader />
+          )}
+        </Box>
+      ) : selectedShowType === "Free Shows" ? (
+        <div style={{ padding: "16px" }}>
+          <Grid container>
+            {freeShows.map((item, index) => {
+              const newIframe = item.EmbedCode;
+              const replacedHeight = newIframe.replace("560", "100%");
+              const replacedWidth = replacedHeight.replace("315", "100%");
+              return (
+                
+                <IframeContainer
+                key={index}
+                embedCode={replacedWidth}
+                show={item}
+                likes={100}
+                title={item.Title.replace(/-/g, " ")}
+                lastUpdated={"Yesterday"}
+                description={"THis is an iframe embeded from another platform."}
+                fetchAgain={fetchAgain}
+                setFetchAgain={setFetchAgain}
+                loading={loading}
+                setLoading={setLoading}
+                loadingOnModal={loadingOnModal}
+                setLoadingOnModal={setLoadingOnModal}
+              />
     
+              );
+            })}
+          </Grid>
+        </div>
+      ) : (
+        shows.map((item, index) => {
+          const episodes = item.episodes ? item.episodes : [];
+          if (
+            item.Title.toLocaleLowerCase()
+              .toLocaleUpperCase()
+              .includes(filterTerm.toLocaleLowerCase().toLocaleUpperCase())
+          ) {
+            return (
+              <ShowContainer
+                key={index}
+                show={item}
+                likes={item.likes}
+                title={item.Title.replace(/-/g, " ")}
+                count={episodes.length}
+                link={item.id}
+                img={item.CoverArtLarge}
+                lastUpdated={item.timestamp}
+                description={item.description}
+                fetchAgain={fetchAgain}
+                setFetchAgain={setFetchAgain}
+                loading={loading}
+                setLoading={setLoading}
+                loadingOnModal={loadingOnModal}
+                setLoadingOnModal={setLoadingOnModal}
+              />
+            );
+          }
+        })
+      )}
+
+      <CreateShowModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        fetchAgain={fetchAgain}
+        setFetchAgain={setFetchAgain}
+        loading={loading}
+        loadingOnModal={loadingOnModal}
+        setLoadingOnModal={setLoadingOnModal}
+      />
     </Box>
-);
-}
+  );
+};
 
-
-export default withAdminNav(Shows)
-
-
+export default withAdminNav(Shows);
 
 const styles = {
-    inputContainer: {
-        width: '100%',
-        height: 'auto',
-        display: 'flex',
-        borderTop: '1px solid #222',
-        padding: '0 15px'
-    }
-}
-
-
+  inputContainer: {
+    width: "100%",
+    height: "auto",
+    display: "flex",
+    borderTop: "1px solid #222",
+    padding: "0 15px",
+  },
+};

@@ -18,6 +18,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import HandymanIcon from "@mui/icons-material/Handyman";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const drawerWidth = 240;
 
@@ -57,10 +58,17 @@ const tabs = [
     route: "/greenlight",
     icon: <LocalMoviesIcon />,
   },
+  {
+    title: "USERS",
+    route: "/users",
+    icon: <AccountCircleIcon />,
+  },
+
 ];
 
 const withAdminNav = (Component) => {
   return function ComponentWidthAdminNavBar() {
+
     return (
       <Box sx={{ display: "flex", pl: 0 }}>
         <CssBaseline />
@@ -86,25 +94,14 @@ const withAdminNav = (Component) => {
                     minWidth: "unset",
                   }}
                 >
-                  {/* <img
-                    src="https://cdn.watchcorridor.com/assets/logo_short.svg"
+                  <img
+                    src="https://www.activetvonline.co.za/static/media/logo.718a6dab.png"
                     alt=""
                     style={{
                       height: "100%",
                       width: "100%",
                       padding: ".5rem 1rem",
                     }}
-                  /> */}
-                  <img
-                    src="active-tv-logo.png"
-                    alt=""
-                    style={{
-                      height: "100%",
-                      width: "80%",
-                      objectFit:'contain',
-                      margin: ".5rem 1rem",
-                    }}
-                    //style="width: 60%; height: 100%; object-fit: contain;"
                   />{" "}
                 </Box>
                 ACTIVE STUDIO{" "}
@@ -128,8 +125,8 @@ const withAdminNav = (Component) => {
             <List>
               {tabs.map((tab) => {
                 return (
-                  <Link href={tab.route}>
-                    <ListItem button key={tab.title}>
+                  <Link href={tab.route} key={tab.title}>
+                    <ListItem button >
                       <ListItemIcon> {tab.icon} </ListItemIcon>
                       <ListItemText primary={tab.title} />
                     </ListItem>
@@ -141,7 +138,7 @@ const withAdminNav = (Component) => {
             <Divider />
           </Box>{" "}
         </Drawer>{" "}
-        <Box component="main" sx={{ flexGrow: 1 }}>
+        <Box component="main" sx={{ flexGrow: 1,}}>
           <Toolbar />
 
           <Component />
