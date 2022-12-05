@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import withAdminNav from "./hoc/withAdminNav";
+import withAdminNav from "./../component/hoc/withAdminNav";
 
 const Merch = () => {
     return (

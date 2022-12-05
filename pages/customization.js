@@ -1,11 +1,12 @@
 import { Box } from "@mui/material";
-import withAdminNav from "./hoc/withAdminNav";
+import withAdminNav from "./../component/hoc/withAdminNav";
 import * as React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import UploadBanners from "../component/customization/upload-banners";
+import ProfilePictures from "../component/customization/profile-pictures";
 import { CategoriesSort } from "../component/customization/categories-sort";
 import { PaymentConfig } from "../component/customization/payment-config";
 
@@ -63,18 +64,22 @@ const Customization = () => {
             onChange={handleChange}
             aria-label="basic tabs example"
           >
-            <Tab label="Upload Banners" {...a11yProps(0)} />
-            <Tab label="Categories" {...a11yProps(1)} />
-            <Tab label="Payments" {...a11yProps(2)} />
+            <Tab label="Profile Pictures" {...a11yProps(0)} />
+            <Tab label="Upload Banners" {...a11yProps(1)} />
+            <Tab label="Categories" {...a11yProps(2)} />
+            <Tab label="Payments" {...a11yProps(3)} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <UploadBanners />
+          <ProfilePictures />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <CategoriesSort />
+          <UploadBanners />
         </TabPanel>
         <TabPanel value={value} index={2}>
+          <CategoriesSort />
+        </TabPanel>
+        <TabPanel value={value} index={3}>
           <PaymentConfig />
         </TabPanel>
       </Box>

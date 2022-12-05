@@ -14,6 +14,7 @@ import { ModalLoader } from "../loader";
 import { API_INSTANCE } from "../../app-config/index.";
 import { useRouter } from "next/router";
 const axios = require("axios");
+const ffmpeg = require("fluent-ffmpeg");
 
 const style = {
   position: "absolute",
@@ -64,6 +65,10 @@ export default function EpisodeModal({
 
   //modal loader state
   const [loading, setLoading] = useState(false);
+  
+
+
+
 
   //CREATE EPISODE BUTTON HANDLER
   const handleSubmit = async (e) => {
@@ -152,6 +157,28 @@ export default function EpisodeModal({
           "Content-Type": "video/mp4",
         });
         console.log(sync);
+        const GetChunksFromVideo = ffmpeg(episodeVideoSignedUrl)
+        .audioCodec('libopus')
+        .audioBitrate(96)
+        .outputOptions([
+          '-profile:v baseline',
+          '-level 3.0',
+          '-start_number 0',
+          '-hls_time 10',
+          '-hls_list_size 0',
+          '-f hls' 
+        ])
+        .output('/public/video-chunks.m3u8')
+        .on('progress', function(progress) {
+            console.log('Processing: ' + progress.percent + '% done')
+        })
+        .on('error', function(error) {
+          console.log('Error: ' + error + '')
+        })
+        .on('end', function(err, stdout, stderr) {
+            console.log('Finished processing!' /*, err, stdout, stderr*/)
+        })
+        .run()
 
         setLoading(false);
         setOpen(false);

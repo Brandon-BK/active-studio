@@ -59,10 +59,10 @@ export const ModalLoader = ({
     height: height,
     alignItems: "center",
     justifyContent: "center",
-    // top,
-    // left,
-    // right,
-    // bottom,
+    top,
+    left,
+    right,
+    bottom,
   };
 
   return (
