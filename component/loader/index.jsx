@@ -32,7 +32,15 @@ export const Loader = ({ loading, loadingOnModal }) => {
   );
 };
 
-export const ModalLoader = ({ loadingOnModal, action,height,top,left,right,bottom }) => {
+export const ModalLoader = ({
+  loadingOnModal,
+  action,
+  height,
+  top,
+  left,
+  right,
+  bottom,
+}) => {
   let [color, setColor] = useState("#ffffff");
 
   const override = {
@@ -45,7 +53,7 @@ export const ModalLoader = ({ loadingOnModal, action,height,top,left,right,botto
     background: "#00000088",
     display: loadingOnModal ? "flex" : "none",
     position: "absolute",
-    zIndex: 100,
+    zIndex: 150,
     flexDirection: "column",
     width: "100%",
     height: height,
@@ -54,8 +62,7 @@ export const ModalLoader = ({ loadingOnModal, action,height,top,left,right,botto
     top,
     left,
     right,
-    bottom
-    
+    bottom,
   };
 
   return (

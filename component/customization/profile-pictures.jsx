@@ -6,11 +6,11 @@ import ShareIcon from "@mui/icons-material/Share";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShowOptions from "../shows-utils/showOptions";
 import BannerOptions from "./bannerOptions";
-import CreateBanner from "./create-banner";
+import CreateProfilePicture from "./upload-profile-pics";
 import axios from 'axios'
 import { API_INSTANCE } from "../../app-config/index.";
 import { AppContext } from "../context/AppContext";
-const UploadBanners = () => {
+const ProfilePictures = () => {
 
   const {bannerSync,setBannerSync} = React.useContext(AppContext)
   const [loadingOnModal,setLoadingOnModal] = React.useState(false)
@@ -20,10 +20,12 @@ const UploadBanners = () => {
   React.useEffect(()=>{
     async function getImages(){
       
-      const response = await axios.get(API_INSTANCE + '/get-config')
-      setImagesArr(response.data.BannerImageUrls)
+      const response = await axios.get(API_INSTANCE + '/get-profile-pictures')
+      setImagesArr(response.data.profilePictureUrls)
+      console.log('recieved profile pictures',response.data)
     }
     getImages()
+
   },[bannerSync])
 
   return (
@@ -54,21 +56,22 @@ const UploadBanners = () => {
           }}
         >
           <Typography sx={{ fontSize: "32px", margin: "12px 0" }}>
-            Current Banners
+            Profile Pictures
           </Typography>
           <Grid container spacing={3}>
             {ImagesArr.map((img, index) => {
               return (
-                <Grid item md={3} key={index}>
+                <Grid item md={3}>
                 <Box
                   sx={{
                     width: "100%",
-                    height: "200px",
+                    height: "250px",
                     backgroundImage: `url("${img}")`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     display: "flex",
                     margin: "0 8px",
+                    // borderRadius:"50%",
                     justifyContent: "flex-end"
                   }}
                 >
@@ -82,14 +85,14 @@ const UploadBanners = () => {
                   >
                     <BannerOptions
                       
-                      title={`Banner ${index+1}`}
-                      setLoadingOnModal={setLoadingOnModal}
+                      title={`Avator ${index + 1}`}
+                      img={img}
                       imgUrl = {img}
+                      apiPath = {'/delete-profile-picture'}                      
+                      loadingOnModal={loadingOnModal}
+                      setLoadingOnModal={setLoadingOnModal}
                       bannerSync = {bannerSync}
                       setBannerSync = {setBannerSync}
-                      loadingOnModal = {loadingOnModal}
-                      apiPath = {'/delete-banner-image'}                      
-                      
                     />
                   </Box>
                 </Box>
@@ -101,10 +104,10 @@ const UploadBanners = () => {
        
       </Grid>
      </Box>
-      <CreateBanner />
+     <CreateProfilePicture/>
 
     </Box>
   );
 };
 
-export default UploadBanners;
+export default ProfilePictures;

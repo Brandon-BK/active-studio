@@ -273,7 +273,7 @@ const EpisodesPage = ({show}) => {
                       return(
                       <EpisodeContainer
                         key = {index}
-                        index={index}
+                        index={index} 
                         title={episode.episodeName}
                         showTitle = {singleShowData?.Title.replace(/-/g,' ')}
                         sync = {sync}

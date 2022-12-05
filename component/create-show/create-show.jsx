@@ -9,6 +9,7 @@ const thumbsContainer = {
   width: "100%",
   height: "100%",
   background: "#222",
+  
 };
 
 const thumb = {
@@ -105,7 +106,7 @@ function CreateShow(props) {
         >
           Accepted files TYPES : {props.accepted_type}
         </p>
-        <div style={{ height: "250px", width: "100%", padding: "0 0 10px 0" }}>
+        <div style={{ height: "250px", width: "100%", padding: "0 0 10px 0",borderRadius:'50px' }}>
           <aside style={thumbsContainer}>{thumbs}</aside>
         </div>
       </div>

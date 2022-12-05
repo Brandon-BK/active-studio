@@ -41,7 +41,8 @@ export default function BannerOptions({
   loadingOnModal,
   setLoadingOnModal,
   setBannerSync,
-  bannerSync
+  bannerSync,
+  apiPath
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -75,7 +76,7 @@ export default function BannerOptions({
   //DELETE FUNCTION
   const handleDeleteClick = async () => {
     setLoadingOnModal(true);
-    const endpoint = 'http://127.0.0.1:3000/delete-banner-image'
+    const endpoint = API_INSTANCE + apiPath
     try{
       const response = await axios(endpoint,{method : 'DELETE',data : JSON.stringify({key : imgUrl})})
       console.log('banner delete response',response)
