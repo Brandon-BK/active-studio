@@ -30,7 +30,7 @@ const ShowContainer = ({
   loading,setLoading,
   loadingOnModal,setLoadingOnModal
 }) => {
-  const [visibility, setVisibility] = useState(show.visible === undefined ? false : show.visible ); //boolean type to toggle through public and private
+  const [visibility, setVisibility] = useState(show.visibility === "Public" ? true : false ); //boolean type to toggle through public and private
   const [buttonType, setbuttonType] = useState("success"); //boolean type to toggle through public and private
   const { showsDetails,singleShowData, setSingleShowData, DisplayShowDetails,metadata,
   setShowJsonData,
@@ -48,19 +48,27 @@ const ShowContainer = ({
     const showData = { ...show, visible: visibility , timestamp: new Date().toLocaleString() };
     console.log(showData)
 
-    var config = {
-      method: 'POST',
+    var config1 = {
+      method: 'PUT',
       // url: `${API_INSTANCE}/create-shows`,
       url: `${API_INSTANCE}/edit-show` ,
-      data: JSON.stringify({visibility})
+      data: JSON.stringify({Title : show.Title,visibility : 'Public'})
     };
-    const res = await axios(config)
+    var config2 = {
+      method: 'PUT',
+      // url: `${API_INSTANCE}/create-shows`,
+      url: `${API_INSTANCE}/edit-show` ,
+      data: JSON.stringify({Title : show.Title,visibility : 'Private'})
+    }
+
     setVisibility(!visibility);
     // console.log(res)
     if (visibility) {
       setbuttonType("success");
+       await axios(config1);
     } else {
       setbuttonType("error");
+      await axios(config2)
     }
   };
 

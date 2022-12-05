@@ -227,10 +227,11 @@ export default function CreateShowModal({
         
         episodes: [],
         description: description,
-        timestamp: new Date(),
+        timestamp: new Date().toLocaleString(),
         seasons:extraInfo.seasons,
         visibility:extraInfo.visibility,
-        tags:extraInfo.tags
+        tags:tags,
+        author : extraInfo.author
       });
 
       //shows meta data that will be posted to s3 and retrived on a 'getsingleshow call
@@ -343,7 +344,7 @@ export default function CreateShowModal({
             <Box sx={{ margin: "0 10px", position: "relative" }}>
               {/* LOADER COMPONENT */}
 
-              <ModalLoader loadingOnModal={loadingOnModal} action="uploading" />
+              <ModalLoader height = '80vh'  loadingOnModal={loadingOnModal} action="uploading" />
 
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Stack>
@@ -513,12 +514,14 @@ export default function CreateShowModal({
                             }}
                             placeholder="SHOW NAME"
                             onChange={(e) => SetName(e.target.value)}
+                            required
                           />
                           {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p>  */}
 
                           <textarea
                             placeholder="SHOW DESCRIPTION here"
                             onChange={(e) => SetDescription(e.target.value)}
+                            required
                             style={{
                               border: "none",
                               width: "100%",
@@ -564,7 +567,7 @@ export default function CreateShowModal({
                               placeholder="Author"
                               name="Author"
                               type="text"
-                              
+                              required
                               style={{
                                 height: "45px",
                                 width: "100%",

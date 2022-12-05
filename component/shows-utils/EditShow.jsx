@@ -141,7 +141,7 @@ export default function EditShowModal({
     
 
     // awesome code
-    if ((name, description && files.length !== 0)) {
+    if ((name || description || files.length !== 0)) {
       const showDetails = { name, description, file: files[0] };
 
       //show the laoder
@@ -189,12 +189,16 @@ export default function EditShowModal({
             "Content-Type": "image/jpeg",
           });
 
-          const lgImgRes = await axios.put(largeCoverArtSignedUrl, files[0], {
+          if (files.length !== 0){
+            const lgImgRes = await axios.put(largeCoverArtSignedUrl, files[0], {
             "Content-Type": "image/jpeg",
           });
-          console.log('S3 IMAGE RESPONSE',{smImgRes,lgImgRes})
-          console.log(`successfully posted to images to s3!!`);
+            console.log('S3 IMAGE RESPONSE',{smImgRes,lgImgRes})
+            console.log(`successfully posted to images to s3!!`);
           console.log("POSTED FILES :", files[0], compressedImage);
+          }
+          
+          
 
           //setAddedNew(true)
           setLoading(false);

@@ -1,6 +1,6 @@
 import * as React from "react";
 import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
+import {Box,Select,MenuItem} from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
@@ -93,6 +93,7 @@ export default function EpisodeModal({
           timestamp: timestamp,
           author,
           seasonNum,
+          episodesType
         };
         console.log({ EpisodeObject });
 
@@ -175,6 +176,13 @@ export default function EpisodeModal({
     setVideoFiles(file);
   };
 
+  const [episodeType,setEpisodeType] = useState('none')
+  
+  const handleEventType = (e)=>{
+    setEpisodeType(e.target.value)
+    
+  }
+  
   return (
     <form style={{ height: "auto" }}>
       <Modal
@@ -305,6 +313,19 @@ export default function EpisodeModal({
                       margin: "20px 0px",
                     }}
                   />
+                  <Box sx={{display:'flex',alignItems:'center',flexDirection:'column'}}>
+                    {/*<Typography>Episode Type : </Typography>*/}
+                    <Select 
+                    label = 'Episode Type' 
+                    placeholder = 'Episode Type' 
+                    value = {episodeType}
+                    ariaLabel="Episode Type"
+                    onChange = {handleEventType}
+                  >
+                    <MenuItem value = 'none'>None</MenuItem>
+                    <MenuItem value = 'featured episode'>Featured Episode</MenuItem>
+                  </Select>
+                  </Box>
                 </form>
               </Box>
             </Box>
