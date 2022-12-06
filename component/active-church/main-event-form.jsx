@@ -22,7 +22,8 @@ function MainEventForm({ eventTypes, setOpen,index,sync,setSync }) {
     startTime: "",
     endTime: "",
     isUpcoming: true,
-    thumbnail : imgSrc
+    thumbnail : imgSrc,
+    youtubeLink : ''
   });
   const handleFile = () => {
     const files = fileInputRef.current.files;
@@ -42,6 +43,7 @@ function MainEventForm({ eventTypes, setOpen,index,sync,setSync }) {
     let link = e.target.value.split(/[=&]/)
     if (link.length == 0 ) return
     let img = `https://img.youtube.com/vi/${link[1]}/maxresdefault.jpg`
+    eventData.current = { ...eventData.current, youtubeLink: e.target.value };
     setImgSrc(img)
     console.log(img)
     eventData.current = { ...eventData.current, thumbnail : img };

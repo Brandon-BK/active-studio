@@ -35,7 +35,7 @@ const EpisodeContainer = ({
             <Box
               sx={{
                 ...styles.cover,
-                background: `url(${img.replace(/ /g,'-')})`,
+                background: `url(${img?.replace(/ /g,'-')})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
@@ -51,7 +51,7 @@ const EpisodeContainer = ({
           <Grid item md={7.5} sm={null} xs={null} sx={styles.item}>
             <Box sx={styles.title}>
               <Typography variant="h1" fontSize={16} color={"#f7f7f7"}>
-                {title.toUpperCase()}
+                {title?.toUpperCase()}
               </Typography>
               <Typography
                 variant="h1"

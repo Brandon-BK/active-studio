@@ -23,30 +23,30 @@ import { useRouter } from "next/router";
 import { MEDIA_URL_INSTANCE } from "../../app-config/index.";
 import { Loader } from "../../component/loader"; 
 
-export async function getStaticPaths() {
-  // Call an external API endpoint to get posts
-  const res = await fetch(API_INSTANCE + '/get-shows')
-  const shows = await res.json()
+// export async function getStaticPaths() {
+//   // Call an external API endpoint to get posts
+//   const res = await fetch(API_INSTANCE + '/get-shows')
+//   const shows = await res.json()
   
-  // Get the paths we want to pre-render based on posts
-  const paths = shows.map((show) => ({
-    params: { id: show.Title },
-  }))
+//   // Get the paths we want to pre-render based on posts
+//   const paths = shows.map((show) => ({
+//     params: { id: show.Title },
+//   }))
 
-  // We'll pre-render only these paths at build time.
-  // { fallback: false } means other routes should 404.
-  return { paths, fallback: false }
-}
+//   // We'll pre-render only these paths at build time.
+//   // { fallback: false } means other routes should 404.
+//   return { paths, fallback: false }
+// }
 
-export async function getStaticProps({ params }) {
-  // params contains the post `id`.
-  // If the route is like /posts/1, then params.id is 1
-  const res = await fetch(`${API_INSTANCE}/get-show/${params.id}`)
-  const show = await res.json()
+// export async function getStaticProps({ params }) {
+//   // params contains the post `id`.
+//   // If the route is like /posts/1, then params.id is 1
+//   const res = await fetch(`${API_INSTANCE}/get-show/${params.id}`)
+//   const show = await res.json()
 
-  // Pass post data to the page via props
-  return { props: { show } }
-}
+//   // Pass post data to the page via props
+//   return { props: { show } }
+// }
 
 const EpisodesPage = ({show}) => {
   const { setShowJson,setSingleShowData,singleShowData } = useContext(AppContext);
@@ -64,7 +64,7 @@ const EpisodesPage = ({show}) => {
   const [loading,setLoading] = useState(false);
 
   const fetchShow = async()=>{
-    
+    alert(router.query.id)
     setLoading(true)
     const res = await axios.get(`${API_INSTANCE}/get-show/${showTitleQuery}`)
     const show = res.data

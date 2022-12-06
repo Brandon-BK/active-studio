@@ -92,7 +92,7 @@ export default function EpisodeModal({
         const EpisodeObject = {
           Title: name.replace(/ /g, "-"),
           episodeName : name,
-          showTitle: singleShowData.Title.replace(/ /g, "-"), //this must be the show title,(not episode)
+          showTitle: singleShowData.Title?.replace(/ /g, "-"), //this must be the show title,(not episode)
           thumbnailFilename: showDetails.file.name,
           videoFileName: videoFiles[0]?.name,
           description: description,
@@ -103,14 +103,7 @@ export default function EpisodeModal({
         };
         console.log({ EpisodeObject });
 
-        // setShowJson({
-        //   ...showJson,
-        //   episodes: [...prevEpisodes, EpisodeObject],
-        // });
-
         const episodesEndpoint = API_INSTANCE + "/create-episode";
-        //const episodesEndpoint = 'http://127.0.0.1:3000/create-episode'
-
         const config = {
           method: "post",
           url: episodesEndpoint,
@@ -118,9 +111,7 @@ export default function EpisodeModal({
         };
 
         const response = await axios(config);
-        // if (episodeType === 'featured episode'){
-        //   await axios.put(API_INSTANCE + '/edit-show',JSON.stringify({featuredEpisodes : [show]}))
-        // }
+
         console.log({ createEpisodeResponse: response });
         const { showMetaDataSignedUrl } = response.data;
 
@@ -161,28 +152,7 @@ export default function EpisodeModal({
           "Content-Type": "video/mp4",
         });
         console.log(sync);
-        const GetChunksFromVideo = ffmpeg(episodeVideoSignedUrl)
-        .audioCodec('libopus')
-        .audioBitrate(96)
-        .outputOptions([
-          '-profile:v baseline',
-          '-level 3.0',
-          '-start_number 0',
-          '-hls_time 10',
-          '-hls_list_size 0',
-          '-f hls' 
-        ])
-        .output('/public/video-chunks.m3u8')
-        .on('progress', function(progress) {
-            console.log('Processing: ' + progress.percent + '% done')
-        })
-        .on('error', function(error) {
-          console.log('Error: ' + error + '')
-        })
-        .on('end', function(err, stdout, stderr) {
-            console.log('Finished processing!' /*, err, stdout, stderr*/)
-        })
-        .run()
+        
 
         setLoading(false);
         setOpen(false);
