@@ -17,7 +17,7 @@ import ShareIcon from "@mui/icons-material/Share";
 // import {CreateShowHandler} from "../../pages/api/create-show"
 import { useState, useEffect, useContext } from "react";
 const axios = require("axios");
-// import imageCompression from 'browser-image-compression';
+import imageCompression from 'browser-image-compression';
 import { AppContext } from "../context/AppContext";
 import { SeamlessIframe } from "seamless-iframe";
 import sanitize from "sanitize-html";

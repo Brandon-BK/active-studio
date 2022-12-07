@@ -29,11 +29,11 @@ const tabs = [
     route: "/",
     icon: <DashboardIcon />,
   },
-  {
-    title: "CONTENT",
-    route: "/content",
-    icon: <PlayArrowIcon />,
-  },
+  // {
+  //   title: "CONTENT",
+  //   route: "/content",
+  //   icon: <PlayArrowIcon />,
+  // },
   {
     title: "SHOWS",
     route: "/shows",
@@ -51,7 +51,7 @@ const tabs = [
   },
   {
     title: "MERCH",
-    route: "/merch",
+    route: "https://activetvstore.com/",
     icon: <LocalGroceryStoreIcon />,
   },
   {
