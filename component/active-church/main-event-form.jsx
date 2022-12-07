@@ -5,7 +5,7 @@ import Image from "next/image";
 import { API_INSTANCE } from "../../app-config/index.";
 import axios from "axios";
 
-function MainEventForm({ eventTypes, setOpen,index,sync,setSync }) {
+function MainEventForm({ eventTypes, setOpen,index,sync,setSync,EVENT }) {
   const [eventType, setEventType] = React.useState(eventTypes[index]?.eventType);
   const fileInputRef = React.useRef();
   const imageRef = React.useRef();
@@ -38,9 +38,16 @@ function MainEventForm({ eventTypes, setOpen,index,sync,setSync }) {
       reader.readAsDataURL(files[0]);
     }
   };
-
+  console.log('EVENT()=>',EVENT)
   const handleLink = (e)=>{
-    let link = e.target.value.split(/[=&]/)
+
+    let link = e.target.value
+    if (link.includes('list')){
+      link = e.target.value.split(/[=&]/)
+    }else{
+      link = e.target.value.split('=')
+    }
+    console.log('link',link)
     if (link.length == 0 ) return
     let img = `https://img.youtube.com/vi/${link[1]}/maxresdefault.jpg`
     eventData.current = { ...eventData.current, youtubeLink: e.target.value };
@@ -108,7 +115,7 @@ function MainEventForm({ eventTypes, setOpen,index,sync,setSync }) {
               required
               placeholder="PASTE URL : "
             />
-            <Typography>Paste the YouTube link of your video to upload its thumbnail</Typography>
+            <Typography>Paste the YouTube link of your video of a playlist to upload its thumbnail</Typography>
           </Box>
          
       </Box>
@@ -177,7 +184,7 @@ function MainEventForm({ eventTypes, setOpen,index,sync,setSync }) {
           />
         </Box>
         
-          <label style={style.insert}>
+          <label style={{...style.insert,display : EVENT ? 'none' : 'block' }}>
             <input
               type="radio"
               name="eventTime"
@@ -195,6 +202,7 @@ function MainEventForm({ eventTypes, setOpen,index,sync,setSync }) {
               name="eventTime"
               onChange={(e) => eventData.current = { ...eventData.current, isUpcoming : true}}
               style={{marginRight:'4px'}}
+              checked = {EVENT ? true : false}
             />
             <Typography sx={style.insText}>Upcoming Event</Typography>
           </label>

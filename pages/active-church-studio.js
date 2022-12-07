@@ -4,6 +4,8 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import SpeedDial from "@mui/material/SpeedDial";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import Typography from "@mui/material/Typography";
 import Event from "../component/active-church/event";
 import { API_INSTANCE } from "../app-config/index.";
@@ -55,6 +57,9 @@ const EventsAndSermons = () => {
       type: "",
     },
   ]);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(!open);
+   
   React.useEffect(() => {
     async function getData() {
       let endpoint = API_INSTANCE + "/get-events";
@@ -69,19 +74,22 @@ const EventsAndSermons = () => {
     setValue(newValue);
   };
 
-  // const eventTypes = [
-  //   { eventType: "Sunday Service" },
-  //   { eventType: "Active Youth" },
-  //   { eventType: "Children's Church" },
-  // ];
-  const types = EVENTS.map(({ type }) => type);
-  const uids = [...new Set(types)];
-  const eventTypes = uids.map((item)=>({eventType : item}))
+  const eventTypes = [
+    { eventType: "Sunday Service" },
+    { eventType: "Active Youth" },
+    { eventType: "Children's Church" },
+  ];
+  // const types = EVENTS.map(({ type }) => type);
+  // const uids = [...new Set(types)];
+  // const eventTypes = uids.map((item)=>({eventType : item}))
+  
+  
   return (
     <Box
       sx={{
         height: "100vh",
         width: "100%",
+        overflowY : 'scroll'
       }}
     >
       <Box sx={{ width: "100%" }}>
@@ -100,16 +108,25 @@ const EventsAndSermons = () => {
         {eventTypes.map((event, i) => (
           <TabPanel key={i} value={value} index={i}>
             <Event
-              EVENTS={EVENTS.filter((item) => item.type == event.eventType && !item.isUpoming)}
+              EVENTS={EVENTS.filter((item) => item.type == event.eventType && !item.isUpcoming)}
               UC_EVENTS = {EVENTS.filter((item)=> item.isUpcoming)}
               sync={sync}
               setSync={setSync}
               title={event.eventType}
               eventTypes={eventTypes}
               index={i}
+              open = {open}
+              setOpen = {setOpen}
+              handleOpen = {handleOpen}
             />
           </TabPanel>
         ))}
+        <SpeedDial
+        ariaLabel="SpeedDial controlled open example"
+        sx={{ position: "absolute", bottom: "32px", right: "32px" }}
+        icon={<SpeedDialIcon />}
+        onClick={handleOpen}
+      />
       </Box>
     </Box>
   );

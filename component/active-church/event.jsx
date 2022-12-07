@@ -1,24 +1,17 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import SpeedDial from "@mui/material/SpeedDial";
-import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+
 import EventModal from "./event-modal";
 import Image from "next/image";
 function Event(props) {
+  const  {open,handleOpen,setOpen} = props
   const EVENT  = props.EVENTS[0];
   const {UC_EVENTS} = props
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(!open);
 
   console.log('uc event',UC_EVENTS)
   return (
     <Box>
-      <SpeedDial
-        ariaLabel="SpeedDial controlled open example"
-        sx={{ position: "absolute", bottom: "32px", right: "32px" }}
-        icon={<SpeedDialIcon />}
-        onClick={handleOpen}
-      />
+
       <EventModal
         index={props.index}
         open={open}
@@ -26,6 +19,7 @@ function Event(props) {
         eventTypes={props.eventTypes}
         sync = {props.sync}
         setSync = {props.setSync}
+        EVENT = {EVENT}
       />
       <Typography sx={style.title}>{props.title}</Typography>
       <Box sx={style.mainEvent}>
@@ -82,6 +76,7 @@ const style = {
     display: "flex",
     width: "80%",
     justifyContent: "space-around",
+    overflowX : 'scroll'
   },
   ucEvent: {
     width: "300px",

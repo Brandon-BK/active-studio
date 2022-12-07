@@ -11,14 +11,18 @@ import {
 import MainEventsForm from "./main-event-form";
 import UcEventsForm from "./uc-events-form";
 
-function EventModal({ open, setOpen,eventTypes,index,sync,setSync }) {
+function EventModal({
+  open,
+  setOpen,
+  eventTypes,
+  index,
+  sync,
+  setSync,
+  EVENT,
+}) {
   const [eventType, setEventType] = React.useState("Main Event");
   return (
-    <Modal
-      
-      open={open}
-      onClose={() => setOpen(false)}
-    >
+    <Modal open={open} onClose={() => setOpen(false)}>
       <Box sx={style.container}>
         {/* <Button onClick={() => setOpen(false)}>Close</Button> */}
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -33,12 +37,21 @@ function EventModal({ open, setOpen,eventTypes,index,sync,setSync }) {
                 : "Upcload upcoming events that will be occuring for the Active Church."}{" "}
             </Typography>
           </Stack>
-          
         </Box>
         <hr style={{ width: "100px", margin: "10px 0" }} />
-        {eventType == "Main Event" ? <MainEventsForm sync={sync} setSync={setSync} index={index} setOpen = {setOpen} eventTypes = {eventTypes} /> : <UcEventsForm />}
+        {eventType == "Main Event" ? (
+          <MainEventsForm
+            sync={sync}
+            setSync={setSync}
+            index={index}
+            setOpen={setOpen}
+            eventTypes={eventTypes}
+            EVENT = {EVENT}
+          />
+        ) : (
+          <UcEventsForm />
+        )}
       </Box>
-      
     </Modal>
   );
 }
