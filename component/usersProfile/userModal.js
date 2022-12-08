@@ -52,11 +52,7 @@ const UserModal = ({user}) => {
             component="h2"
             className="active-tv-font"
           >
-<<<<<<< HEAD
-            {user.email}
-=======
             {user.name || user.email}
->>>>>>> produce-that-page
           </Typography>
           <Typography
             id="modal-modal-description"
