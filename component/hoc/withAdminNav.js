@@ -55,8 +55,8 @@ const tabs = [
     icon: <LocalGroceryStoreIcon />,
   },
   {
-    title: "GREENLIGHT",
-    route: "/greenlight",
+    title: "PRODUCE THAT !",
+    route: "/produce-that",
     icon: <LocalMoviesIcon />,
   },
   {

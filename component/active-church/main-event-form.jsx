@@ -4,6 +4,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Image from "next/image";
 import { API_INSTANCE } from "../../app-config/index.";
 import axios from "axios";
+import getYouTubeID from 'get-youtube-id';
 
 function MainEventForm({ eventTypes, setOpen,index,sync,setSync,EVENT }) {
   const [eventType, setEventType] = React.useState(eventTypes[index]?.eventType);
@@ -41,15 +42,16 @@ function MainEventForm({ eventTypes, setOpen,index,sync,setSync,EVENT }) {
   console.log('EVENT()=>',EVENT)
   const handleLink = (e)=>{
 
-    let link = e.target.value
-    if (link.includes('list')){
-      link = e.target.value.split(/[=&]/)
-    }else{
-      link = e.target.value.split('=')
-    }
-    console.log('link',link)
-    if (link.length == 0 ) return
-    let img = `https://img.youtube.com/vi/${link[1]}/maxresdefault.jpg`
+    // let link = e.target.value
+    // if (link.includes('list')){
+    //   link = e.target.value.split(/[=&]/)
+    // }else{
+    //   link = e.target.value.split('=')
+    // }
+    let id = getYouTubeID(e.target.value)
+    console.log('link',id)
+    // if (link.length == 0 ) return
+    let img = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`
     eventData.current = { ...eventData.current, youtubeLink: e.target.value };
     setImgSrc(img)
     console.log(img)

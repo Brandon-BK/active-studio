@@ -89,7 +89,8 @@ const EventsAndSermons = () => {
       sx={{
         height: "100vh",
         width: "100%",
-        overflowY : 'scroll'
+        color : '#ccc'
+        // overflowY : 'scroll'
       }}
     >
       <Box sx={{ width: "100%" }}>

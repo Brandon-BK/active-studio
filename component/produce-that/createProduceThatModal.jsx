@@ -157,8 +157,8 @@ export const CreateProduceThatModal = (props) => {
 
   const handleCreate = async ()=>{
 
-  const endpoint = `${API_INSTANCE}/create-pt-show`;
-
+  // const endpoint = `${API_INSTANCE}/create-pt-show`;
+    const endpoint = 'http://127.0.0.1:3000/create-pt-show'
     if (showName,showDescription,files[0]){
       setLoading(true);
       const date = new Date();
