@@ -185,7 +185,7 @@ const Analytics = () => {
             shows.map((item , index)=>{
                 if(index < 3){
                     return(
-                        <Grid item xs={12} lg={6} sx={{ opacity:'.7',backgroundImage:`url(${item.CoverArtLarge})`, backgroundRepeat:'no-repeat', backgroundPosition:'center',backgroundSize:'contain',margin:'12px 0',height:{ xs:'250px', md:'200px'},padding:'12px' }} >
+                        <Grid key={index} item xs={12} lg={6} sx={{ opacity:'.7',backgroundImage:`url(${item.CoverArtLarge})`, backgroundRepeat:'no-repeat', backgroundPosition:'center',backgroundSize:'contain',margin:'12px 0',height:{ xs:'250px', md:'200px'},padding:'12px' }} >
 
                         </Grid>
                         )

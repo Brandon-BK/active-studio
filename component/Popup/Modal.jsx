@@ -624,6 +624,7 @@ export default function CreateShowModal({
                               {tags.length > 0
                                 ? tags.map((item, index) => (
                                     <Box
+                                    key ={index}
                                       sx={{
                                         display: "flex",
                                         width: "fit-content",

@@ -108,7 +108,7 @@ const SmallScreenNavBar = (props) => {
                         </Box>
                         <List sx={{ width: "100%" }} id="small-screen-nav-routes">
                             {props.tabs.map((tab) => (
-                                <>
+                                <div key ={index}>
                                     <Link href={tab.route}>
                                         <a
                                             key={tab.title}
@@ -126,7 +126,7 @@ const SmallScreenNavBar = (props) => {
                                             </ListItem>
                                         </a>
                                     </Link>
-                                </>
+                                </div>
                             ))}
                         </List>
                     </Box>

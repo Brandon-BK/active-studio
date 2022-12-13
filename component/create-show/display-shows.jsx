@@ -37,7 +37,7 @@ const DisplayShows = ({showsData}) => {
       showsData.map((item , index)=>{
         console.log(item)
         return(
-          <Paper elevation={1}>
+          <Paper key = {index} elevation={1}>
           <Grid container >
             <Grid sx={{ padding:'12px 0', ...styles.tableColumn }} item xs={0.5}><Checkbox /> </Grid>
             <Grid sx={{ padding:'12px 0' , ...styles.tableColumn  }} item xs={3}> 

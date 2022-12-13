@@ -31,7 +31,7 @@ function Event(props) {
     <Box sx={{...style.mainEvent,
     '&::before':{
       content:"''",position : 'absolute',
-      top : '0px',left:'0px',background:`url(${EVENT.thumbnail})`,
+      top : '0px',left:'0px',background:`url(${EVENT?.thumbnail ? EVENT.thumbnail : ''})`,
       width : '100%',height:'100%',filter : 'blur(10px)'
     }
   }}
@@ -49,9 +49,9 @@ function Event(props) {
   <Typography sx={style.ucText}>Upcoming Events</Typography>
   <Box sx={style.upcomingEventsBox}>
   {
-    props.UC_EVENTS.map((item)=>(
+    props.UC_EVENTS.map((item,i)=>(
 
-      <Box sx={style.ucEvent}>
+      <Box key = {i} sx={style.ucEvent}>
       <Image 
       src = {item.thumbnail}
       loader = {()=>item.thumbnail}

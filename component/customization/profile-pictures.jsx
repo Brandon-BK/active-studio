@@ -61,7 +61,7 @@ const ProfilePictures = () => {
           <Grid container spacing={3}>
             {ImagesArr.map((img, index) => {
               return (
-                <Grid item md={3}>
+                <Grid item md={3} key ={index}>
                 <Box
                   sx={{
                     width: "100%",
