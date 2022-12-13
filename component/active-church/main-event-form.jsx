@@ -129,7 +129,7 @@ function MainEventForm({ eventTypes, setOpen,index,sync,setSync,EVENT }) {
             sx={{ padding: "8px", margin: 0, height: "40px" }}
             // variant
             value={eventType}
-            ariaLabel="Event-Type"
+            aria-label="Event-Type"
             label="Event-Type"
             placeholder="Event-Type"
             onChange={handleSelect}

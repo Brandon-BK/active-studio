@@ -5,7 +5,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import ShareIcon from "@mui/icons-material/Share";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShowOptions from "../shows-utils/showOptions";
-import {BannerOptions} from "./bannerOptions";
+import BannerOptions from "./bannerOptions";
 import CreateBanner from "./create-banner";
 import axios from 'axios'
 import { API_INSTANCE } from "../../app-config/index.";
