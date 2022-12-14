@@ -7,8 +7,10 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import UploadBanners from "../component/customization/upload-banners";
 import ProfilePictures from "../component/customization/profile-pictures";
+import {LoginBackground} from "../component/customization/login-background";
 import { CategoriesSort } from "../component/customization/categories-sort";
 import { PaymentConfig } from "../component/customization/payment-config";
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -68,6 +70,7 @@ const Customization = () => {
             <Tab label="Upload Banners" {...a11yProps(1)} />
             <Tab label="Categories" {...a11yProps(2)} />
             <Tab label="Payments" {...a11yProps(3)} />
+            <Tab label="Login" {...a11yProps(4)} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -81,6 +84,10 @@ const Customization = () => {
         </TabPanel>
         <TabPanel value={value} index={3}>
           <PaymentConfig />
+        </TabPanel>
+                <TabPanel value={value} index={4}>
+        <LoginBackground />
+          
         </TabPanel>
       </Box>
     </Box>
