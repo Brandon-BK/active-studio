@@ -40,7 +40,7 @@ const usersPage = () => {
           }}
         >
           {users.map((user) => (
-            <UserModal key={user.id} user={user} />
+            <UserModal key={user.displayName} user={user} />
           ))}
         </Box>
       )}
