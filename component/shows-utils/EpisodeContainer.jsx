@@ -88,6 +88,7 @@ const EpisodeContainer = ({
                   setFiles = {setFiles}
                   videoFiles = {videoFiles}
                   setVideoFiles = {setVideoFiles}
+                  imageUrl = {img}
                 />
 
           </Grid>

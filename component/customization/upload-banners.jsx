@@ -8,7 +8,7 @@ import ShowOptions from "../shows-utils/showOptions";
 import BannerOptions from "./bannerOptions";
 import CreateBanner from "./create-banner";
 import axios from 'axios'
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import { AppContext } from "../context/AppContext";
 const UploadBanners = () => {
 

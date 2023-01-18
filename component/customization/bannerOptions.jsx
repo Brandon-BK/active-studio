@@ -15,7 +15,7 @@ import { ModalLoader } from "../loader";
 import { Edit } from "@mui/icons-material";
 import ShareComponent from "../shows-utils/ShareComponent";
 import EditShowModal from "../shows-utils/EditShow";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 // import { ModalLoader } from "../loader";
 const modalStyle = {
   position: "absolute",

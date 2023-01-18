@@ -1,6 +1,6 @@
 import * as React from "react";
 import Backdrop from "@mui/material/Backdrop";
-import {Box,Select,MenuItem} from "@mui/material";
+import { Box, Select, MenuItem } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
@@ -11,7 +11,7 @@ import { useState } from "react";
 import CreateEpisodeCoverArt from "./create-episode-coverArt";
 import { AppContext } from "../context/AppContext";
 import { ModalLoader } from "../loader";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE, MEDIA_URL_INSTANCE } from "../../app-config";
 import { useRouter } from "next/router";
 const axios = require("axios");
 // const ffmpeg = require("fluent-ffmpeg");
@@ -45,9 +45,14 @@ export default function EpisodeModal({
   setVideoFiles,
   episodes,
 }) {
-  const { singleShowData, setShowJsonData, showJson, setShowJson } =
-    React.useContext(AppContext);
-
+  const {
+    singleShowData,
+    setShowJsonData,
+    showJson,
+    setShowJson,
+    jsonEpisodes,
+  } = React.useContext(AppContext);
+  console.log("json episodes", jsonEpisodes);
   const [bool, setBool] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -65,10 +70,6 @@ export default function EpisodeModal({
 
   //modal loader state
   const [loading, setLoading] = useState(false);
-  
-
-
-
 
   //CREATE EPISODE BUTTON HANDLER
   const handleSubmit = async (e) => {
@@ -87,11 +88,11 @@ export default function EpisodeModal({
         console.log("sending request....");
         //posting episode object to lambda endpoint,inserting all user data in data object
         const date = new Date();
-        const timestamp = date.toLocaleString();
+        const timestamp = date.getTime();
 
         const EpisodeObject = {
           Title: name.replace(/ /g, "-"),
-          episodeName : name,
+          episodeName: name,
           showTitle: singleShowData.Title?.replace(/ /g, "-"), //this must be the show title,(not episode)
           thumbnailFilename: showDetails.file.name,
           videoFileName: videoFiles[0]?.name,
@@ -99,7 +100,8 @@ export default function EpisodeModal({
           timestamp: timestamp,
           author,
           seasonNum,
-          episodeType
+          episodeType,
+          
         };
         console.log({ EpisodeObject });
 
@@ -114,7 +116,11 @@ export default function EpisodeModal({
 
         console.log({ createEpisodeResponse: response });
         const { showMetaDataSignedUrl } = response.data;
-
+        const { allEpisodesSignedUrl } = response.data;
+        const {mediaUrls} = response.data
+        
+        EpisodeObject['CoverArtLarge'] = mediaUrls.largeCoverArt
+        
         //posting the json data
         console.log("posting json data...");
         const jsonDataConfig = {
@@ -133,8 +139,16 @@ export default function EpisodeModal({
             2
           ),
         };
-        await axios(jsonDataConfig);
 
+        //for the episodes json on s3
+        const episodesConfig = {
+          method: "put",
+          url: allEpisodesSignedUrl,
+          headers: { "Content-Type": "application/json" },
+          data: [...jsonEpisodes.Episodes, EpisodeObject],
+        };
+        await axios(jsonDataConfig);
+        await axios(episodesConfig);
         //posting the thumbnail
         const { largeCoverArt } = response.data;
 
@@ -152,7 +166,6 @@ export default function EpisodeModal({
           "Content-Type": "video/mp4",
         });
         console.log(sync);
-        
 
         setLoading(false);
         setOpen(false);
@@ -175,13 +188,12 @@ export default function EpisodeModal({
     setVideoFiles(file);
   };
 
-  const [episodeType,setEpisodeType] = useState('none')
-  
-  const handleEventType = (e)=>{
-    setEpisodeType(e.target.value)
-    
-  }
-  
+  const [episodeType, setEpisodeType] = useState("none");
+
+  const handleEventType = (e) => {
+    setEpisodeType(e.target.value);
+  };
+
   return (
     <form style={{ height: "auto" }}>
       <Modal
@@ -217,7 +229,7 @@ export default function EpisodeModal({
               action="uploading"
               height="90vh"
               width="100%"
-              style={{height:'100%'}}
+              style={{ height: "100%" }}
             />
             <Box sx={{ display: "flex" }}>
               <Box style={{ height: "100%", width: "50%", padding: "10px" }}>
@@ -308,18 +320,26 @@ export default function EpisodeModal({
                       margin: "20px 0px",
                     }}
                   />
-                  <Box sx={{display:'flex',alignItems:'center',flexDirection:'column'}}>
-                    {/*<Typography>Episode Type : </Typography>*/}
-                    <Select 
-                    label = 'Episode Type' 
-                    placeholder = 'Episode Type' 
-                    value = {episodeType}
-                    ariaLabel="Episode Type"
-                    onChange = {handleEventType}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      flexDirection: "column",
+                    }}
                   >
-                    <MenuItem value = 'none'>None</MenuItem>
-                    <MenuItem value = 'featured episode'>Featured Episode</MenuItem>
-                  </Select>
+                    {/*<Typography>Episode Type : </Typography>*/}
+                    <Select
+                      label="Episode Type"
+                      placeholder="Episode Type"
+                      value={episodeType}
+                      ariaLabel="Episode Type"
+                      onChange={handleEventType}
+                    >
+                      <MenuItem value="none">None</MenuItem>
+                      <MenuItem value="featured episode">
+                        Featured Episode
+                      </MenuItem>
+                    </Select>
                   </Box>
                 </form>
               </Box>

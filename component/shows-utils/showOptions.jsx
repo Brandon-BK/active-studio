@@ -8,7 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "@mui/material/Modal";
 import { Backdrop, Box, Typography, Button, Fade } from "@mui/material";
 import { ModalLoader } from "../loader";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import ShareIcon from "@mui/icons-material/Share";
 import { Edit } from "@mui/icons-material";
 import ShareComponent from "./ShareComponent";

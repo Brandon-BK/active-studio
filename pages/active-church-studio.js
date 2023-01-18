@@ -8,7 +8,7 @@ import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import Typography from "@mui/material/Typography";
 import Event from "../component/active-church/event";
-import { API_INSTANCE } from "../app-config/index.";
+import { API_INSTANCE } from "../app-config";
 import axios from "axios";
 
 function TabPanel(props) {

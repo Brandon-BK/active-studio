@@ -1,13 +1,14 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-
 import EventModal from "./event-modal";
 import Image from "next/image";
+import InfoModal from "./infoModal";
 function Event(props) {
   const { open, handleOpen, setOpen } = props;
   const EVENT = props.EVENTS[0];
   const { UC_EVENTS } = props;
-
+  const [openInfoModal,setOpenInfoModal] = React.useState(false)
+  const [currentEvent,setCurrentEvent] = React.useState({})
   console.log("uc event", UC_EVENTS);
   return (
     <Box>
@@ -20,6 +21,7 @@ function Event(props) {
         setSync={props.setSync}
         EVENT={EVENT}
       />
+      
       <Typography variant="h2" sx={{ textAlign: "center", color: "#ccc" }}>
         Main Event
       </Typography>
@@ -56,8 +58,12 @@ function Event(props) {
 
       <Typography sx={style.ucText}>Upcoming Events</Typography>
       <Box sx={style.upcomingEventsBox}>
+        <InfoModal open={openInfoModal}EVENT={currentEvent} setOpen={setOpenInfoModal}/>
         {props.UC_EVENTS.map((item, i) => (
-          <Box key={i} sx={style.ucEvent}>
+          <Box key={i} sx={style.ucEvent} onClick={()=>{
+            setOpenInfoModal(true)
+            setCurrentEvent(item)
+          }}>
             <Image
               src={item?.thumbnail}
               loader={() => item?.thumbnail}
@@ -105,6 +111,7 @@ const style = {
   },
   ucEvent: {
     margin: "0px 12px",
+    cursor : 'pointer'
   },
 };
 export default Event;

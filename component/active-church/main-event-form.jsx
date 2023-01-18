@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Typography, Select, MenuItem, Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Image from "next/image";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config/index";
 import axios from "axios";
 import getYouTubeID from 'get-youtube-id';
 

@@ -11,7 +11,7 @@ import { useState } from "react";
 import CreateEpisodeCoverArt from "./create-episode-coverArt";
 import { AppContext } from "../context/AppContext";
 import { ModalLoader } from "../loader";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import {useRouter} from 'next/router'
 const axios = require("axios");
 
@@ -42,9 +42,10 @@ export default function editEpisodeModal({
   setVideoFiles,
   episodes,
   episode,
-  index
+  index,
+  imageUrl
 }) {
-  const { singleShowData, setShowJsonData, showJson ,setShowJson } =
+  const { singleShowData, setShowJsonData, showJson ,setShowJson,jsonEpisodes } =
     React.useContext(AppContext);
 
   const [bool, setBool] = React.useState(false);
@@ -56,7 +57,7 @@ export default function editEpisodeModal({
   const [name, SetName] = useState(episode.Title);
   const [description, SetDescription] = useState(episode.description);
   const [imagecover, SetImageCover] = useState("");
-
+  const [thumbnailFileName,setThumbnailFileName] = useState(episode?.thumbnailFileName)
   //episode info stored in state
 
   const [author, setAuthor] = useState(episode.author);
@@ -78,25 +79,14 @@ export default function editEpisodeModal({
         
         const prevEpisodes = episodes
 
-        const showDetails = { name, description, file: files[0] };
+        
 
         console.log("sending request....");
         //posting episode object to lambda endpoint,inserting all user data in data object
         const date = new Date();
         const timestamp = date.toLocaleString();
 
-        const EpisodeObject = {
-          Title: episode.Title,
-          showTitle: singleShowData.Title.replace(/ /g, "-"), //this must be the show title,(not episode)
-          
-          thumbnailFilename: files[0]?.name,
-          //videoFileName: videoFiles[0].name,
-          description: description,
-          timestamp: timestamp,
-          author,
-          seasonNum,
-        };
-        console.log({ EpisodeObject });
+        
 
         // setShowJson({
         //   ...showJson,
@@ -104,19 +94,46 @@ export default function editEpisodeModal({
         // });
 
         const episodesEndpoint = API_INSTANCE + "/create-episode";
-        //const episodesEndpoint = 'http://127.0.0.1:3000/create-episode'
+        // const episodesEndpoint = 'http://127.0.0.1:3000/create-episode'
 
         const config = {
           method: "post",
           url: episodesEndpoint,
           data: JSON.stringify(EpisodeObject),
         };
-
+       
         const response = await axios(config);
-
-        console.log({ createEpisodeResponse: response });
+        
+        console.log({ createEpisodeResponse: response.data });
+        
+        // setLoading(false)
+        // return
         const { showMetaDataSignedUrl } = response.data;
-  
+        const {allEpisodesSignedUrl} = response.data;
+        const {mediaUrls} = response.data
+        const EpisodeObject = {
+          Title: episode.Title,
+          showTitle: singleShowData.Title.replace(/ /g, "-"), //this must be the show title,(not episode)
+          
+          thumbnailFilename: files[0]?.name ? files[0]?.name : thumbnailFileName ,
+          //videoFileName: videoFiles[0].name,
+          description: description,
+          timestamp: timestamp,
+          author,
+          seasonNum,
+          CoverArtLarge : mediaUrls.largeCoverArt
+          
+        };
+        console.log({ EpisodeObject });
+
+        const episodesConfig = {
+          method : 'put',
+          url : allEpisodesSignedUrl,
+          headers : {'Content-Type' : 'application/json'},
+          data : [...jsonEpisodes.Episodes,EpisodeObject]
+        }
+        await axios (episodesConfig)
+
         //posting the json data
         console.log("posting json data...");
         const updatedEpisode = {...episode,...EpisodeObject}

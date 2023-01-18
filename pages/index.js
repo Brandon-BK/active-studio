@@ -62,7 +62,7 @@ const Home = () => {
 
   React.useEffect(async () => {
     const response = await axios.get(
-      "https://p6x7b95wcd.execute-api.us-east-2.amazonaws.com/Prod/get-accounts"
+      "https://p6x7b95wcd.execute-api.us-east-2.amazonaws.com/Prod/get-users"
     );
     const results = response.data;
     console.log(results);

@@ -12,7 +12,7 @@ import Link from "next/link";
 import axios from "axios";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import ShowOptions from "./showOptions";
 
 const ShowContainer = ({

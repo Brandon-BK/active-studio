@@ -2,13 +2,13 @@ import Box from "@mui/material/Box";
 import withAdminNav from "./../component/hoc/withAdminNav";
 import TransitionsModal from "../component/Popup/Modal";
 import ShowContainer from "../component/shows-utils/ShowContainer";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 import GuideBar from "../component/shows-utils/GuideBar";
 import { IconButton, Button, Grid, Typography } from "@mui/material";
 
 import SortIcon from "@mui/icons-material/Sort";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { API_INSTANCE } from "../app-config/index.";
+import { API_INSTANCE } from "../app-config";
 import axios from "axios";
 import CreateShowModal from "../component/Popup/Modal";
 import { Loader } from "../component/loader/index";
@@ -17,15 +17,17 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Link from "next/link";
 import Iframe from "../component/shows-utils/Iframe";
 import IframeContainer from "../component/shows-utils/iframeContainer";
+import { AppContext } from "../component/context/AppContext";
 
 const Shows = () => {
   const [filterTerm, setFilterTerm] = useState("");
-  const [shows, setShows] = useState([]);
+  
   const [freeShows, setFreeShows] = useState([]);
   const [selectedShowType, setSelectedShowType] = useState(
     "Active Tv Originals"
   );
 
+  const {shows} = useContext(AppContext)
   const [filterTime, setFilterTime] = useState(false);
 
   const [fetchAgain, setFetchAgain] = useState(false);
@@ -49,13 +51,13 @@ const Shows = () => {
     try {
       setLoading(true);
       console.log("fetching data....");
-      const res = await axios.get(`${API_INSTANCE}/get-shows`);
+      
       const freeShowsResponse = await axios.get(
         `${API_INSTANCE}/get-free-shows`
       );
       console.log("Fetched sucessfully fetched!!!!!");
       setLoading(false);
-      setShows(res.data);
+      
       setFreeShows(freeShowsResponse.data);
     } catch (err) {
       console.log(err);
