@@ -17,7 +17,7 @@ import PrintIcon from "@mui/icons-material/Print";
 import ShareIcon from "@mui/icons-material/Share";
 import CreateShow from "../create-show/create-show";
 import axios from "axios";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import { ModalLoader } from "../loader";
 import { AppContext } from "../context/AppContext";
 

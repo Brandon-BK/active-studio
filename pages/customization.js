@@ -7,8 +7,10 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import UploadBanners from "../component/customization/upload-banners";
 import ProfilePictures from "../component/customization/profile-pictures";
+import { LoginBackground } from "../component/customization/login-background";
 import { CategoriesSort } from "../component/customization/categories-sort";
 import { PaymentConfig } from "../component/customization/payment-config";
+import FeaturedShow from "../component/customization/featured-show";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -33,13 +35,13 @@ function TabPanel(props) {
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired
+  value: PropTypes.number.isRequired,
 };
 
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -54,7 +56,7 @@ const Customization = () => {
     <Box
       sx={{
         height: "100vh",
-        width: "100%"
+        width: "100%",
       }}
     >
       <Box sx={{ width: "100%" }}>
@@ -68,6 +70,8 @@ const Customization = () => {
             <Tab label="Upload Banners" {...a11yProps(1)} />
             <Tab label="Categories" {...a11yProps(2)} />
             <Tab label="Payments" {...a11yProps(3)} />
+            <Tab label="Login" {...a11yProps(4)} />
+            <Tab label="Main Show" {...a11yProps(5)} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -81,6 +85,12 @@ const Customization = () => {
         </TabPanel>
         <TabPanel value={value} index={3}>
           <PaymentConfig />
+        </TabPanel>
+        <TabPanel value={value} index={4}>
+          <LoginBackground />
+        </TabPanel>
+        <TabPanel value={value} index={5}>
+          <FeaturedShow />
         </TabPanel>
       </Box>
     </Box>

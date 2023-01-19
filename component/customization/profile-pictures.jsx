@@ -8,7 +8,7 @@ import ShowOptions from "../shows-utils/showOptions";
 import BannerOptions from "./bannerOptions";
 import CreateProfilePicture from "./upload-profile-pics";
 import axios from 'axios'
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import { AppContext } from "../context/AppContext";
 const ProfilePictures = () => {
 

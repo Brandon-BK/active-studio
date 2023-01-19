@@ -23,7 +23,7 @@ import { useDropzone } from "react-dropzone";
 import imageCompression from 'browser-image-compression';
 import { useState } from "react";
 import { ModalLoader } from "../loader";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import BasicVideo from "../Popup/Basic-video";
 
 const thumbsContainer = {

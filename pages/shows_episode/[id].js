@@ -7,7 +7,7 @@ import EpisodeContainer from "../../component/shows-utils/EpisodeContainer";
 import { useContext,useEffect } from "react";
 import { AppContext } from "../../component/context/AppContext";
 import axios from "axios";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import FilterListIcon from "@mui/icons-material/FilterList";
 //import episodes from "../../component/shows-utils/episodes.json";
 import { useState } from "react";
@@ -20,7 +20,7 @@ import EpisodeModal from "../../component/episodes/episodeModal";
 import { useRouter } from "next/router";
 
 
-import { MEDIA_URL_INSTANCE } from "../../app-config/index.";
+import { MEDIA_URL_INSTANCE } from "../../app-config";
 import { Loader } from "../../component/loader"; 
 
 // export async function getStaticPaths() {
@@ -120,6 +120,7 @@ const EpisodesPage = ({show}) => {
          setVideoFiles = {setVideoFiles}
          sync = {sync}
          setSync = {setSync}
+      
         
         />
       <Grid container sx={{ background: "red" }}>
@@ -279,7 +280,7 @@ const EpisodesPage = ({show}) => {
                         sync = {sync}
                         setSync = {setSync}
                         description={episode.description}
-                        img={MEDIA_URL_INSTANCE+`${showTitleQuery}/episodes/${episode.Title}/large-${episode.thumbnailFilename}`}
+                        img={episode.CoverArtLarge}
                         video = {MEDIA_URL_INSTANCE+`${showTitleQuery}/episodes/${episode.Title}/${episode.videoFileName}`}
                         episodes = {episodes}
                         episode = {episode}

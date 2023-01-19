@@ -1,7 +1,7 @@
 import { Box, Select, MenuItem, Typography, Grid, Button } from "@mui/material";
 import axios from "axios";
 import { useState, useContext , useEffect } from "react";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import { AppConfigContext } from "../context/AppConfigContext";
 import { ModalLoader } from "../loader";
 
@@ -78,10 +78,15 @@ export const CategoriesSort = () => {
     }
 
     if(pop , lat , free , originals , Favourites === 1){
-      const postRes = await axios.post(`${API_INSTANCE}/post-config/12`);
+      try{
+        const postRes = await axios.post(`${API_INSTANCE}/post-config/12`);
       const putConfig = await axios.put(postRes.data.configJson , JSON.stringify(configuration))
       console.log(postRes)
       console.log(putConfig)
+      }catch(err){
+        setLoading(false)
+        console.log('config error',err)
+      }
     }
     setLoading(false)
   };

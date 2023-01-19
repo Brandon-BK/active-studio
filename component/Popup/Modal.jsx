@@ -21,7 +21,7 @@ import imageCompression from 'browser-image-compression';
 import { AppContext } from "../context/AppContext";
 import { SeamlessIframe } from "seamless-iframe";
 import sanitize from "sanitize-html";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import { CloseRounded } from "@mui/icons-material";
 import { ModalLoader } from "../loader";
 

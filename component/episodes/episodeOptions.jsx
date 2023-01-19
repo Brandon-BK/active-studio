@@ -9,7 +9,7 @@ import Modal from "@mui/material/Modal";
 import { Backdrop, Box, Typography, Button, Fade } from "@mui/material";
 import { ModalLoader } from "../loader";
 import { AppContext } from "../context/AppContext";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import { useRouter } from "next/router";
 import EditIcon from "@mui/icons-material/Edit";
 import EditEpisodeModal from "./edit-episode-modal";
@@ -40,7 +40,8 @@ export default function EpisodeOptions({
   files,
   setFiles, 
   videoFiles, 
-  setVideoFiles 
+  setVideoFiles ,
+  imageUrl
 }) {
   const { singleShowData, showJson, setShowJson } =
     React.useContext(AppContext);
@@ -184,6 +185,7 @@ export default function EpisodeOptions({
           sync = {sync}
           setSync = {setSync}
           index = {index}
+          imageUrl = {imageUrl}
       />
       <Modal
         aria-labelledby="transition-modal-title"

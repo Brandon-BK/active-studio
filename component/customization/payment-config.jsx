@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useState, useContext, useEffect, useRef } from "react";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import { AppConfigContext } from "../context/AppConfigContext";
 import { Edit } from "@mui/icons-material";
 import { ModalLoader } from "../loader";

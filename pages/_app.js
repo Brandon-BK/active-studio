@@ -4,7 +4,7 @@ import RouterIdicator from "../state/context/RouterIdicator";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AppContext } from "../component/context/AppContext";
 import { useEffect, useState } from "react";
-import { API_INSTANCE } from "../app-config/index.";
+import { API_INSTANCE } from "../app-config";
 import axios from "axios";
 import {
   AppConfigContext,
@@ -51,8 +51,10 @@ function MyApp({ Component, pageProps }) {
   const [singleShowData, setSingleShowData] = useState(JSON.stringify({}));
   const [showJsonData, setShowJsonData] = useState({});
   const [showJson, setShowJson] = useState({});
-  const [bannerSync,setBannerSync] = useState(false)
-
+  const [bannerSync, setBannerSync] = useState(false);
+  const [shows, setShows] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [jsonEpisodes,setJsonEpisodes] = useState([])
   const getConfig = async () => {
     const request = await axios.get(`${API_INSTANCE}/get-config`);
     const configRequest = await axios.get(request.data.configJsonData);
@@ -63,15 +65,42 @@ function MyApp({ Component, pageProps }) {
       banners: request.status === 200 ? request.data.BannerImageUrls : [],
       sortCatergories: configData.sortCatergories,
       setCatergorySizeAndType: configData.setCatergorySizeAndType,
+      authenticationImages: {
+        sameImage: false,
+      },
+      ...configData,
     });
+    setLoading(false)
   };
 
+  const getShows = async () => {
+    const res = await axios.get(API_INSTANCE + '/get-shows');
+    setShows(res.data);
+  };
+  const getJsonEpisodes = async ()=>{
+    const res = await axios.get(API_INSTANCE + '/get-episodes');
+    setJsonEpisodes(res.data)
+  }
   useEffect(() => {
-    getConfig();
+    getShows();
+    getJsonEpisodes()
   }, []);
 
+  const [configSync, setConfigSync] = useState(false);
+  useEffect(() => {
+    getConfig();
+  }, [configSync]);
   return (
-    <AppConfigContext.Provider value={{ configuration, setConfiguration }}>
+    <AppConfigContext.Provider
+      value={{
+        configuration,
+        setConfiguration,
+        configSync,
+        setConfigSync,
+        loading,
+        setLoading,
+      }}
+    >
       <AppContext.Provider
         value={{
           showsDetails,
@@ -82,8 +111,11 @@ function MyApp({ Component, pageProps }) {
           showJsonData,
           setShowJsonData,
           showJson,
-           setShowJson,
-           bannerSync,setBannerSync
+          setShowJson,
+          bannerSync,
+          setBannerSync,
+          shows,
+          jsonEpisodes
         }}
       >
         <RouterIdicator />

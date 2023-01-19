@@ -9,7 +9,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import withAdminNav from "./../component/hoc/withAdminNav";
+import withAdminNav from "../component/hoc/withAdminNav";
 import EditIcon from "@mui/icons-material/Edit";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -20,10 +20,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import UploadIcon from "@mui/icons-material/Upload";
 import CloseIcon from "@mui/icons-material/Close";
-import { ProduceThatItem } from "./../component/produce-that/produceThatItem";
-import { CreateProduceThatModal } from "./../component/produce-that/createProduceThatModal";
-import { EditProduceThatModal } from "./../component/produce-that/editProduceThatModal";
-import { API_INSTANCE } from "../app-config/index.";
+import { ProduceThatItem } from "../component/produce-that/produceThatItem";
+import { CreateProduceThatModal } from "../component/produce-that/createProduceThatModal";
+import { EditProduceThatModal } from "../component/produce-that/editProduceThatModal";
+import { API_INSTANCE } from "../app-config";
 
 const Greenlight = () => {
   const [shows, setShows] = React.useState([]);

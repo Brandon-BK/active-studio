@@ -11,8 +11,8 @@ import { useState } from "react";
 import CreateEpisodeCoverArt from "./create-episode-coverArt";
 import { AppContext } from "../context/AppContext";
 import { ModalLoader } from "../loader";
-import { API_INSTANCE } from "../../app-config/index.";
-import {useRouter} from 'next/router'
+import { API_INSTANCE } from "../../app-config";
+import { useRouter } from "next/router";
 const axios = require("axios");
 
 const style = {
@@ -22,7 +22,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   bgcolor: "#111",
   border: "2px solid #fff",
-  height : '90vh',
+  height: "90vh",
   overflow: "scroll",
   padding: "20px 0",
 
@@ -42,10 +42,16 @@ export default function editEpisodeModal({
   setVideoFiles,
   episodes,
   episode,
-  index
+  index,
+  imageUrl,
 }) {
-  const { singleShowData, setShowJsonData, showJson ,setShowJson } =
-    React.useContext(AppContext);
+  const {
+    singleShowData,
+    setShowJsonData,
+    showJson,
+    setShowJson,
+    jsonEpisodes,
+  } = React.useContext(AppContext);
 
   const [bool, setBool] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -56,7 +62,9 @@ export default function editEpisodeModal({
   const [name, SetName] = useState(episode.Title);
   const [description, SetDescription] = useState(episode.description);
   const [imagecover, SetImageCover] = useState("");
-
+  const [thumbnailFileName, setThumbnailFileName] = useState(
+    episode?.thumbnailFileName
+  );
   //episode info stored in state
 
   const [author, setAuthor] = useState(episode.author);
@@ -64,39 +72,24 @@ export default function editEpisodeModal({
 
   //modal loader state
   const [loading, setLoading] = useState(false);
-  
-  const router = useRouter()
+
+  const router = useRouter();
   //CREATE EPISODE BUTTON HANDLER
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(sync);
 
     // awesome code
-    if ((description, author,episodes)) {
+    if ((description, author, episodes)) {
       try {
         setLoading(true);
-        
-        const prevEpisodes = episodes
 
-        const showDetails = { name, description, file: files[0] };
+        const prevEpisodes = episodes;
 
         console.log("sending request....");
         //posting episode object to lambda endpoint,inserting all user data in data object
         const date = new Date();
         const timestamp = date.toLocaleString();
-
-        const EpisodeObject = {
-          Title: episode.Title,
-          showTitle: singleShowData.Title.replace(/ /g, "-"), //this must be the show title,(not episode)
-          
-          thumbnailFilename: files[0]?.name,
-          //videoFileName: videoFiles[0].name,
-          description: description,
-          timestamp: timestamp,
-          author,
-          seasonNum,
-        };
-        console.log({ EpisodeObject });
 
         // setShowJson({
         //   ...showJson,
@@ -104,25 +97,58 @@ export default function editEpisodeModal({
         // });
 
         const episodesEndpoint = API_INSTANCE + "/create-episode";
-        //const episodesEndpoint = 'http://127.0.0.1:3000/create-episode'
+        // const episodesEndpoint = 'http://127.0.0.1:3000/create-episode'
 
+        
+        
+        // setLoading(false)
+        // return
+        const EpisodeObject = {
+          Title: episode.Title,
+          showTitle: singleShowData.Title.replace(/ /g, "-"), //this must be the show title,(not episode)
+          
+          thumbnailFilename: files[0]?.name
+          ? files[0]?.name
+          : thumbnailFileName,
+          //videoFileName: videoFiles[0].name,
+          description: description,
+          timestamp: timestamp,
+          author,
+          seasonNum,
+        };
         const config = {
           method: "post",
           url: episodesEndpoint,
           data: JSON.stringify(EpisodeObject),
         };
-
         const response = await axios(config);
-
-        console.log({ createEpisodeResponse: response });
+        console.log({ createEpisodeResponse: response.data });
+        
         const { showMetaDataSignedUrl } = response.data;
-  
+        const { allEpisodesSignedUrl } = response.data;
+        const { mediaUrls } = response.data;
+        console.log({ EpisodeObject });
+        
+        EpisodeObject['CoverArtLarge'] = mediaUrls.largeCoverArt
+        const episodesConfig = {
+          method: "put",
+          url: allEpisodesSignedUrl,
+          headers: { "Content-Type": "application/json" },
+          data: [...jsonEpisodes.Episodes, EpisodeObject],
+        };
+        await axios(episodesConfig);
+
         //posting the json data
         console.log("posting json data...");
-        const updatedEpisode = {...episode,...EpisodeObject}
-        episodes[index] = updatedEpisode
-        console.log({index})
-        console.log('THE EPISODES:',episodes,'UPDATED EPISODE',updatedEpisode)
+        const updatedEpisode = { ...episode, ...EpisodeObject };
+        episodes[index] = updatedEpisode;
+        console.log({ index });
+        console.log(
+          "THE EPISODES:",
+          episodes,
+          "UPDATED EPISODE",
+          updatedEpisode
+        );
         const jsonDataConfig = {
           method: "put",
           url: showMetaDataSignedUrl,
@@ -139,44 +165,40 @@ export default function editEpisodeModal({
             2
           ),
         };
-        console.log({THE_DATA:JSON.parse(jsonDataConfig.data)})
+        console.log({ THE_DATA: JSON.parse(jsonDataConfig.data) });
         await axios(jsonDataConfig);
 
-        
-          //posting the thumbnail
+        //posting the thumbnail
         const { largeCoverArt } = response.data;
 
-        if (files.length){
+        if (files.length) {
           console.log("posting thumbnail....");
-        
+
           await axios.put(largeCoverArt, files[0], {
             "Content-Type": "image/jpeg",
           });
         }
-        
-        
 
         //posting the video file
-//        const { episodeVideoSignedUrl } = response.data;
+        //        const { episodeVideoSignedUrl } = response.data;
 
         //posting video....
         // console.log("posing video...");
         // await axios.put(episodeVideoSignedUrl, videoFiles[0], {
         //   "Content-Type": "video/mp4",
         // });
-         console.log(sync);
+        console.log(sync);
 
         setLoading(false);
         setOpen(false);
         console.log("episode created !!!");
         setSync(!sync);
-      
       } catch (error) {
         setLoading(false);
         console.log("create episode error:", error);
       }
     } else {
-      alert('no changes detected');
+      alert("no changes detected");
     }
   };
 
@@ -204,7 +226,14 @@ export default function editEpisodeModal({
       >
         <Fade in={open}>
           <Box sx={style}>
-            <Box sx={{ margin: "0 10px",display:'flex',flexDirection:'column',alignItems:'center' }}>
+            <Box
+              sx={{
+                margin: "0 10px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
               <ModalLoader
                 loadingOnModal={loading}
                 action="uploading"
@@ -214,24 +243,33 @@ export default function editEpisodeModal({
                 id="transition-modal-title"
                 variant="h6"
                 component="h4"
-                sx={{textAlign:'center'}}
+                sx={{ textAlign: "center" }}
               >
                 EDIT EPISODE
               </Typography>
-              <hr style={{ width: "100px", margin: "10px 0",textAlign:'center' }} />
-            <Typography variant="p" sx={{ fontSize: "11px", margin: "0 10px",textAlign:'center' }}>
-              <b>NOTE :</b> ONLY EPISODES WITH VIDEOS UNDERNEATH THEM ARE
-              VISIBLE TO THE PUBLIC
-            </Typography>
+              <hr
+                style={{
+                  width: "100px",
+                  margin: "10px 0",
+                  textAlign: "center",
+                }}
+              />
+              <Typography
+                variant="p"
+                sx={{ fontSize: "11px", margin: "0 10px", textAlign: "center" }}
+              >
+                <b>NOTE :</b> ONLY EPISODES WITH VIDEOS UNDERNEATH THEM ARE
+                VISIBLE TO THE PUBLIC
+              </Typography>
             </Box>
 
             <Box sx={{ overFlow: "scroll" }}>
-              <Box style={{padding: "10px", }}>
+              <Box style={{ padding: "10px" }}>
                 <CreateEpisodeCoverArt
                   files={files}
                   handleSetFiles={handleSetFiles}
                   img={"logo.svg"}
-                />    
+                />
                 {/* <Box sx={{border:'1px solid red',width:'100%',height:'400px',margin:'20px 0px'}}>
                 <BasicVideo
                   videoFiles={videoFiles}
@@ -241,15 +279,13 @@ export default function editEpisodeModal({
 
 
                 </Box> */}
-                
               </Box>
-            
+
               <Box
                 style={{
                   height: "100%",
                   width: "100%",
                   padding: "10px",
-                
                 }}
               >
                 <form onSubmit={handleSubmit}>
@@ -261,18 +297,18 @@ export default function editEpisodeModal({
                       display: "flex",
                       alignItems: "center",
                       padding: "10px ",
-                      
+
                       border: "none",
                     }}
                     placeholder={`TITLE : ${episode.Title}`}
                     disabled
                     onChange={(e) => SetName(e.target.value)}
-                  /> 
-                  {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p> */} 
+                  />
+                  {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p> */}
 
                   <textarea
                     placeholder={`EPISODE DESCRIPTION : ${episode.description}`}
-                    type= "text"
+                    type="text"
                     onChange={(e) => SetDescription(e.target.value)}
                     style={{
                       border: "none",
@@ -296,7 +332,6 @@ export default function editEpisodeModal({
                     placeHolder={`SEASON NUMBER (${episode.seasonNum})`}
                     onChange={(e) => setSeasonNum(e.target.value)}
                     style={{
-                  
                       width: "100%",
                       height: "34px",
                       padding: "10px 0",
@@ -322,7 +357,7 @@ export default function editEpisodeModal({
                       alignItems: "center",
                       padding: "10px ",
                       color: "white",
-                      
+
                       margin: "20px 0px",
                     }}
                   />

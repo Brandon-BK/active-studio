@@ -22,7 +22,7 @@ import { AppContext } from "../context/AppContext";
 import { ModalLoader } from "../loader/";
 import { SeamlessIframe } from "seamless-iframe";
 import sanitize from "sanitize-html";
-import { API_INSTANCE } from "../../app-config/index.";
+import { API_INSTANCE } from "../../app-config";
 import { Edit } from "@mui/icons-material";
 import CreateEpisodeCoverArt from "../episodes/create-episode-coverArt";
 import { CloseRounded } from "@mui/icons-material";

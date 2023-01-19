@@ -40,6 +40,8 @@ export const ModalLoader = ({
   left,
   right,
   bottom,
+  width,
+  position
 }) => {
   let [color, setColor] = useState("#ffffff");
 
@@ -52,10 +54,10 @@ export const ModalLoader = ({
   const container = {
     background: "#00000088",
     display: loadingOnModal ? "flex" : "none",
-    position: "absolute",
+    position: position ? 'relative' : "absolute",
     zIndex: 150,
     flexDirection: "column",
-    width: "100%",
+    width: width ? width : "100%",
     height: height,
     alignItems: "center",
     justifyContent: "center",
