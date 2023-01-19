@@ -6,14 +6,14 @@ import {
   Paper,
   Card,
   CardMedia,
-  CardContent,
+  CardContent,  
 } from "@mui/material";
 
 function InfoModal({ EVENT, open, setOpen }) {
   return (
     <Modal open={open} onClose={() => setOpen(false)} sx={style.container}>
       <Card sx={style.card}>
-        <CardMedia sx={{ height: 220 }} image={EVENT.thumbnail} title="title" />
+        <CardMedia sx={{ height: 220 }} image={EVENT?.thumbnail ? EVENT.thumbnail : ""} title="title" />
         <CardContent>
           <Typography
             
@@ -22,7 +22,7 @@ function InfoModal({ EVENT, open, setOpen }) {
             align="center"
             sx={style.headerText}
           >
-            {EVENT.Title.replace(/-/g,' ')}
+            {EVENT && EVENT.Title.replace(/-/g,' ')}
           </Typography>
           <Box sx={{width : '100%',height:'2px',background: 'white',marginBottom:'14px'}} />
           <Box sx={{ padding: "0px 12px" }}>
@@ -39,7 +39,7 @@ function InfoModal({ EVENT, open, setOpen }) {
               </Typography>
               <Typography sx={{ fontSize: "24px" }}>
                 {" "}
-                {" " + EVENT.startTime}
+                {EVENT &&  " " + EVENT.startTime}
               </Typography>
             </Box>
             <Box sx={{ display: "flex", justifyContent:'center' }}>
@@ -55,7 +55,7 @@ function InfoModal({ EVENT, open, setOpen }) {
               </Typography>
               <Typography sx={{ fontSize: "24px" }}>
                 {" "}
-                {" " + EVENT.endTime}
+                {EVENT && " " + EVENT.endTime}
               </Typography>
             </Box>
           </Box>

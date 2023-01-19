@@ -8,7 +8,7 @@ function Event(props) {
   const EVENT = props.EVENTS[0];
   const { UC_EVENTS } = props;
   const [openInfoModal,setOpenInfoModal] = React.useState(false)
-  const [currentEvent,setCurrentEvent] = React.useState({})
+  const [currentEvent,setCurrentEvent] = React.useState(EVENT)
   console.log("uc event", UC_EVENTS);
   return (
     <Box>
