@@ -35,7 +35,7 @@ const Greenlight = () => {
   React.useEffect(() => {
     async function getData() {
       const response = await axios.get(API_INSTANCE + "/get-pt-shows");
-      const results = response.data.produceThatShows;
+      const results = response.data.produceThatShows ? response.data.produceThatShows : response.data.shows;
       setShows(results);
     }
     getData();
@@ -45,7 +45,7 @@ const Greenlight = () => {
 
   let searchResults = [];
 
-  shows.map((item) => {
+  shows?.map((item) => {
     if (item.Title.toLowerCase().includes(searchTerm.toLowerCase())) {
       searchResults.push(item);
     }
