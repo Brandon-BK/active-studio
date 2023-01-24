@@ -8,23 +8,29 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import withAdminNav from "./../component/hoc/withAdminNav";
+
 import React from "react";
 import axios from "axios";
 import LaunchIcon from "@mui/icons-material/Launch";
 import CreateShowModal from "../component/Popup/Modal";
+import EpisodeModal from "../component/episodes/episodeModal";
+import {withSnackbar} from 'notistack'
 
-const Home = () => {
+const Home = (props) => {
+  
   const [shows, setShows] = React.useState([]);
   const [users, setUsers] = React.useState([]);
   const [fetchAgain, setFetchAgain] = React.useState(false);
-
+  //modal states
   const [modalOpen, setModalOpen] = React.useState(false);
-
+  const [files,setFiles] = React.useState([])
+  const [videoFiles,setVideoFiles] = React.useState([])
+  const [episodes,setEpisodes] = React.useState([])
   const [loading, setLoading] = React.useState(true);
 
   const [loadingOnModal, setLoadingOnModal] = React.useState(false);
 
+  
   let monthlySubscribers = 0;
 
   users.map((user) => {
@@ -52,13 +58,7 @@ const Home = () => {
   });
 
   console.log("views", views);
-  React.useEffect(async () => {
-    const response = await axios.get(
-      "https://p6x7b95wcd.execute-api.us-east-2.amazonaws.com/Prod/get-shows"
-    );
-    const results = response.data;
-    setShows(results);
-  }, []);
+  
 
   React.useEffect(async () => {
     const response = await axios.get(
@@ -121,7 +121,21 @@ const Home = () => {
                 <Typography sx={{ margin: "12px 0" }}>
                   Upload and publish a video to get started.
                 </Typography>
+                <EpisodeModal 
+                dashboard
+                  open ={modalOpen}
+                  setOpen={setModalOpen}
+                  files={files}
+                  setFiles = {setFiles}
+                  videoFiles = {videoFiles}
+                  setVideoFiles = {setVideoFiles}
+                  episodes = {episodes}
+                  sync = {false}
+                  setSync = {()=>true}
+                  enqueueSnackbar = {props.enqueueSnackbar}  
+                />
                 <Button
+                onClick={()=>setModalOpen(true)}
                   sx={{
                     margin: "12px 0",
                     background: "#3ea6ff",
@@ -299,17 +313,8 @@ const Home = () => {
         </Grid>
       </Grid>
 
-      <CreateShowModal
-        modalOpen={modalOpen}
-        setModalOpen={setModalOpen}
-        fetchAgain={fetchAgain}
-        setFetchAgain={setFetchAgain}
-        loading={loading}
-        loadingOnModal={loadingOnModal}
-        setLoadingOnModal={setLoadingOnModal}
-      />
-    </Box>
+          </Box>
   );
 };
 
-export default withAdminNav(Home);
+export default withSnackbar(Home)

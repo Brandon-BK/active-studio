@@ -9,7 +9,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import withAdminNav from "../component/hoc/withAdminNav";
+import {withSnackbar} from 'notistack'
 import EditIcon from "@mui/icons-material/Edit";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -153,4 +153,4 @@ const Greenlight = () => {
   );
 };
 
-export default withAdminNav(Greenlight);
+export default withSnackbar(Greenlight);

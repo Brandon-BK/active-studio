@@ -13,6 +13,7 @@ import { AppContext } from "../context/AppContext";
 import { ModalLoader } from "../loader";
 import { API_INSTANCE } from "../../app-config";
 import { useRouter } from "next/router";
+import { Select, MenuItem } from "@mui/material";
 const axios = require("axios");
 
 const style = {
@@ -69,7 +70,11 @@ export default function editEpisodeModal({
 
   const [author, setAuthor] = useState(episode.author);
   const [seasonNum, setSeasonNum] = useState(episode.seasonNum);
+  const [episodeType, setEpisodeType] = useState("none");
 
+  const handleEventType = (e) => {
+    setEpisodeType(e.target.value);
+  };
   //modal loader state
   const [loading, setLoading] = useState(false);
 
@@ -99,22 +104,22 @@ export default function editEpisodeModal({
         const episodesEndpoint = API_INSTANCE + "/create-episode";
         // const episodesEndpoint = 'http://127.0.0.1:3000/create-episode'
 
-        
-        
         // setLoading(false)
         // return
         const EpisodeObject = {
+          ...episode,
           Title: episode.Title,
           showTitle: singleShowData.Title.replace(/ /g, "-"), //this must be the show title,(not episode)
-          
+
           thumbnailFilename: files[0]?.name
-          ? files[0]?.name
-          : thumbnailFileName,
+            ? files[0]?.name
+            : thumbnailFileName,
           //videoFileName: videoFiles[0].name,
           description: description,
           timestamp: timestamp,
           author,
           seasonNum,
+          showCoverArt : episode.showCoverArt ? episode.showCoverArt : singleShowData.CoverArtLarge
         };
         const config = {
           method: "post",
@@ -123,13 +128,13 @@ export default function editEpisodeModal({
         };
         const response = await axios(config);
         console.log({ createEpisodeResponse: response.data });
-        
+
         const { showMetaDataSignedUrl } = response.data;
         const { allEpisodesSignedUrl } = response.data;
         const { mediaUrls } = response.data;
         console.log({ EpisodeObject });
-        
-        EpisodeObject['CoverArtLarge'] = mediaUrls.largeCoverArt
+
+        EpisodeObject["CoverArtLarge"] = mediaUrls.largeCoverArt;
         const episodesConfig = {
           method: "put",
           url: allEpisodesSignedUrl,
@@ -357,10 +362,21 @@ export default function editEpisodeModal({
                       alignItems: "center",
                       padding: "10px ",
                       color: "white",
-
                       margin: "20px 0px",
                     }}
                   />
+                    <Select
+                      label="Episode Type"
+                      placeholder="Episode Type"
+                      value={episodeType}
+                      ariaLabel="Episode Type"
+                      onChange={handleEventType}
+                    >
+                      <MenuItem value="none">None</MenuItem>
+                      <MenuItem value="featured episode">
+                        Featured Episode
+                      </MenuItem>
+                    </Select>
                 </form>
               </Box>
             </Box>

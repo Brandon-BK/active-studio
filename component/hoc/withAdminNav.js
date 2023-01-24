@@ -20,7 +20,7 @@ import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
 import ChurchIcon from '@mui/icons-material/Church';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
+import {withSnackbar} from 'notistack'
 const drawerWidth = 240;
 
 const tabs = [
@@ -71,8 +71,8 @@ const tabs = [
 
 ];
 
-const withAdminNav = (Component) => {
-  return function ComponentWidthAdminNavBar() {
+const withAdminNav = ({children}) => {
+  
 
     return (
       <Box sx={{ display: "flex", pl: 0 }}>
@@ -146,11 +146,11 @@ const withAdminNav = (Component) => {
         <Box component="main" sx={{ flexGrow: 1,}}>
           <Toolbar />
 
-          <Component />
+          {children}
         </Box>
       </Box>
     );
   };
-};
 
-export default withAdminNav;
+
+export default withAdminNav

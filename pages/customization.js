@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import withAdminNav from "./../component/hoc/withAdminNav";
+import {withSnackbar} from 'notistack'
 import * as React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
@@ -11,6 +11,7 @@ import { LoginBackground } from "../component/customization/login-background";
 import { CategoriesSort } from "../component/customization/categories-sort";
 import { PaymentConfig } from "../component/customization/payment-config";
 import FeaturedShow from "../component/customization/featured-show";
+import EpisodeBanner from '../component/customization/episode-banner'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -72,6 +73,7 @@ const Customization = () => {
             <Tab label="Payments" {...a11yProps(3)} />
             <Tab label="Login" {...a11yProps(4)} />
             <Tab label="Main Show" {...a11yProps(5)} />
+            <Tab label='Episode Banner' {...a11yProps(6)} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -92,9 +94,12 @@ const Customization = () => {
         <TabPanel value={value} index={5}>
           <FeaturedShow />
         </TabPanel>
+        <TabPanel value={value} index={6}>
+          <EpisodeBanner />
+        </TabPanel>
       </Box>
     </Box>
   );
 };
 
-export default withAdminNav(Customization);
+export default withSnackbar(Customization);

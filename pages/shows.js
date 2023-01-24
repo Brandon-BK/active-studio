@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import withAdminNav from "./../component/hoc/withAdminNav";
+import {withSnackbar} from 'notistack'
 import TransitionsModal from "../component/Popup/Modal";
 import ShowContainer from "../component/shows-utils/ShowContainer";
 import { useEffect, useState,useContext } from "react";
@@ -159,8 +159,6 @@ const Shows = () => {
       <CreateShowModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
-        fetchAgain={fetchAgain}
-        setFetchAgain={setFetchAgain}
         loading={loading}
         loadingOnModal={loadingOnModal}
         setLoadingOnModal={setLoadingOnModal}
@@ -271,7 +269,7 @@ const Shows = () => {
   );
 };
 
-export default withAdminNav(Shows);
+export default withSnackbar(Shows);
 
 const styles = {
   inputContainer: {

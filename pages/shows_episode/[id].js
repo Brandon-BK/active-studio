@@ -288,6 +288,7 @@ const EpisodesPage = ({show}) => {
                         setFiles = {setFiles}
                         videoFiles = {videoFiles}
                         setVideoFiles = {setVideoFiles}
+                        showCoverArt = {singleShowData?.CoverArtLarge}
                       />
                     )})}
                   {provided.placeholder}

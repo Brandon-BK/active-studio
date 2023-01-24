@@ -1,6 +1,13 @@
 import * as React from "react";
 import Backdrop from "@mui/material/Backdrop";
-import { Box, Select, MenuItem } from "@mui/material";
+import {
+  Box,
+  Container,
+  MenuItem,
+  Stepper,
+  Step,
+  StepLabel,
+} from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
@@ -34,35 +41,37 @@ const style = {
   overflowX: "hidden",
 };
 
-export default function EpisodeModal({
-  open,
-  setOpen,
-  sync,
-  setSync,
-  files,
-  setFiles,
-  videoFiles,
-  setVideoFiles,
-  episodes,
-}) {
+export default function EpisodeModal(props) {
+  const {
+    open,
+    setOpen,
+    sync,
+    setSync,
+    files,
+    setFiles,
+    videoFiles,
+    setVideoFiles,
+    episodes,
+    dashboard,
+  } = props;
   const {
     singleShowData,
     setShowJsonData,
     showJson,
     setShowJson,
     jsonEpisodes,
+    shows,
+    setEpisodes,
+    setSingleShowData,
   } = React.useContext(AppContext);
   console.log("json episodes", jsonEpisodes);
-  const [bool, setBool] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+
   const handleClose = () => setOpen(false);
-  const handleCreate = () => setBool(true);
 
   // receive input values from show name and show description
   const [name, SetName] = useState("");
   const [description, SetDescription] = useState("");
-  const [imagecover, SetImageCover] = useState("");
-
+  const [selectedShow, setSelectedShow] = useState("");
   //episode info stored in state
 
   const [author, setAuthor] = useState("");
@@ -71,7 +80,66 @@ export default function EpisodeModal({
   //modal loader state
   const [loading, setLoading] = useState(false);
 
+  //stepper state and data
+  const [activeStep, setActiveStep] = useState(0);
+  const steps = [
+    "Upload Thumbnail",
+    "Enter Episode Information",
+    "Upload Episode Video",
+  ];
+
+  const ratioRef = React.useRef(undefined);
+  const [correctRatio, setCorrectRatio] = useState(false);
+  function determineRatio(ratio) {
+    console.log("ratio ref", ratio);
+    if (ratio) {
+      if (ratio == "16:9") {
+        setCorrectRatio(true);
+      } else {
+        setCorrectRatio(false);
+        console.log("FALSE", ratio);
+
+        props.enqueueSnackbar(
+          `Please insert thumbnail with correct aspect ratio (16:9) <${ratioRef.current}>`,
+          {
+            preventDuplicate: true,
+            variant: "warning",
+          }
+        );
+        return false;
+      }
+    } else {
+      setCorrectRatio(false);
+
+      // props.enqueueSnackbar('bad')
+    }
+  }
+  React.useEffect(() => {}, [ratioRef.current]);
+  const handleNext = () => {
+    setActiveStep((prev) => prev + 1);
+  };
+  const handleBack = () => {
+    setActiveStep((prev) => prev - 1);
+  };
   //CREATE EPISODE BUTTON HANDLER
+  const handleSetFiles = (file) => {
+    setFiles(file);
+    setFiles(file);
+  };
+  const handleSetVideoFiles = (file) => {
+    console.log({ video: file });
+    setVideoFiles(file);
+  };
+
+  const [episodeType, setEpisodeType] = useState("none");
+
+  const handleEventType = (e) => {
+    setEpisodeType(e.target.value);
+  };
+
+  const handleShowChange = (e) => {
+    setSelectedShow(e.target.value);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(sync);
@@ -81,7 +149,23 @@ export default function EpisodeModal({
       try {
         setLoading(true);
 
-        const prevEpisodes = episodes;
+        if ((dashboard, selectedShow)) {
+          const fetchShow = async () => {
+          
+            setLoading(true);
+            const res = await axios.get(
+              `${API_INSTANCE}/get-show/${selectedShow}`
+            );
+            const show = res.data;
+            console.log({ SHOW: show });
+
+            setSingleShowData(show.showItem.Item);
+            setShowJson(show.showJson);
+            setEpisodes(show.showJson.episodes);
+            setLoading(false);
+          };
+          fetchShow();
+        }
 
         const showDetails = { name, description, file: files[0] };
 
@@ -101,7 +185,7 @@ export default function EpisodeModal({
           author,
           seasonNum,
           episodeType,
-          
+          showCoverArt: singleShowData?.CoverArtLarge,
         };
         console.log({ EpisodeObject });
 
@@ -117,10 +201,10 @@ export default function EpisodeModal({
         console.log({ createEpisodeResponse: response });
         const { showMetaDataSignedUrl } = response.data;
         const { allEpisodesSignedUrl } = response.data;
-        const {mediaUrls} = response.data
-        
-        EpisodeObject['CoverArtLarge'] = mediaUrls.largeCoverArt
-        
+        const { mediaUrls } = response.data;
+
+        EpisodeObject["CoverArtLarge"] = mediaUrls.largeCoverArt;
+
         //posting the json data
         console.log("posting json data...");
         const jsonDataConfig = {
@@ -180,22 +264,8 @@ export default function EpisodeModal({
     }
   };
 
-  const handleSetFiles = (file) => {
-    setFiles(file);
-  };
-  const handleSetVideoFiles = (file) => {
-    console.log({ video: file });
-    setVideoFiles(file);
-  };
-
-  const [episodeType, setEpisodeType] = useState("none");
-
-  const handleEventType = (e) => {
-    setEpisodeType(e.target.value);
-  };
-
   return (
-    <form style={{ height: "auto" }}>
+    <form style={{}}>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -209,7 +279,7 @@ export default function EpisodeModal({
         sx={{}}
       >
         <Fade in={open}>
-          <Box sx={style}>
+          <Box sx={{ ...style, height: "90vh" }}>
             <Box sx={{ margin: "0 10px" }}>
               <Typography
                 id="transition-modal-title"
@@ -220,211 +290,300 @@ export default function EpisodeModal({
               </Typography>
               <hr style={{ width: "100px", margin: "10px 0" }} />
             </Box>
-            <Typography variant="p" sx={{ fontSize: "11px", margin: "0 10px" }}>
-              <b>NOTE :</b> ONLY EPISODES WITH VIDEOS UNDERNEATH THEM ARE
-              VISIBLE TO THE PUBLIC
-            </Typography>
-            <ModalLoader
-              loadingOnModal={loading}
-              action="uploading"
-              height="90vh"
-              width="100%"
-              style={{ height: "100%" }}
-            />
-            <Box sx={{ display: "flex" }}>
-              <Box style={{ height: "100%", width: "50%", padding: "10px" }}>
-                <CreateEpisodeCoverArt
-                  files={files}
-                  handleSetFiles={handleSetFiles}
-                  img={"logo.svg"}
-                />
-              </Box>
-              <Box></Box>
-              <Box
-                style={{
-                  height: "100%",
-                  width: "50%",
-                  padding: "10px",
-                  marginTop: "3px",
-                }}
-              >
-                <form onSubmit={handleSubmit}>
-                  <input
-                    style={{
-                      height: "50px",
-                      width: "100%",
-                      background: "#222",
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "10px ",
-                      color: "white",
-                      border: "none",
-                    }}
-                    placeholder="EPISODE NAME"
-                    onChange={(e) => SetName(e.target.value)}
-                  />
-                  {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p>  */}
-
-                  <textarea
-                    placeholder="EPISODE DESCRIPTION"
-                    onChange={(e) => SetDescription(e.target.value)}
-                    style={{
-                      border: "none",
-                      width: "100%",
-                      height: "100px",
-                      padding: "10px 0",
-                      background: "#222",
-                      display: "flex",
-                      alignItems: "flex-start",
-                      padding: "10px 0",
-                      marginTop: "20px",
-                      padding: "10px",
-                      color: "white",
-                    }}
-                  >
-                    {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW DESCRIPTION'}</p>  */}
-                  </textarea>
-                  <input
-                    type="number"
-                    min={1}
-                    placeHolder="SEASON NUMBER"
-                    onChange={(e) => setSeasonNum(e.target.value)}
-                    style={{
-                      border: "none",
-                      width: "100%",
-                      height: "34px",
-                      padding: "10px 0",
-                      background: "#222",
-                      display: "flex",
-                      alignItems: "flex-start",
-                      padding: "10px 0",
-                      marginTop: "20px",
-                      padding: "10px",
-                      color: "white",
-                    }}
-                  />
-                  <input
-                    type="text"
-                    placeHolder="Author"
-                    required
-                    onChange={(e) => setAuthor(e.target.value)}
-                    style={{
-                      height: "50px",
-                      width: "100%",
-                      background: "#222",
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "10px ",
-                      color: "white",
-                      border: "none",
-                      margin: "20px 0px",
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      flexDirection: "column",
-                    }}
-                  >
-                    {/*<Typography>Episode Type : </Typography>*/}
-                    <Select
-                      label="Episode Type"
-                      placeholder="Episode Type"
-                      value={episodeType}
-                      ariaLabel="Episode Type"
-                      onChange={handleEventType}
-                    >
-                      <MenuItem value="none">None</MenuItem>
-                      <MenuItem value="featured episode">
-                        Featured Episode
-                      </MenuItem>
-                    </Select>
-                  </Box>
-                </form>
-              </Box>
-            </Box>
-
-            <Box sx={{ margin: "0 10px" }}>
-              <Typography
-                id="transition-modal-title"
-                variant="h6"
-                component="h5"
-                // style={{ marginTop: "30px" }}
-              >
-                UPLOAD A VIDEO FOR THIS EPISODE
-              </Typography>
-              <hr style={{ width: "100px", margin: "10px 0" }} />
-            </Box>
-            <Typography
-              style={{
-                fontSize: "10px",
-                textTransform: "uppercase",
-                textAlign: "left",
-                margin: "20px 0 0 10px",
-              }}
-            >
-              <b>NOTE: </b> Accepted files TYPES : video/mp4{" "}
-            </Typography>
-            <Box
-              style={{
-                width: "100%",
-                height: "45%",
-                padding: "10px",
-              }}
-            >
-              <BasicVideo
-                videoFiles={videoFiles}
-                handleSetVideoFiles={handleSetVideoFiles}
-                img={"logo.svg"}
-              ></BasicVideo>
-            </Box>
-            <Typography
-              id="transition-modal-title"
-              sx={{
-                margin: "0px 0 0 10px",
-                textTransform: "uppercase",
-                fontSize: "11px",
-                textAlign: "center",
-              }}
-            >
-              Start sharing your story and connect with viewers. Videos that you
-              upload will show up here
-            </Typography>
-
-            <Box
+            <Container
               sx={{
                 display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "10px",
-                width: "100%",
-                padding: "0 10px",
+                flexDirection: "column",
+                alignItems: "center",
+                height: "90%",
               }}
             >
-              <Button
-                variant="outlined"
-                color="error"
+              <Stepper activeStep={activeStep} sx={{ margin: "20px 0px" }}>
+                {steps.map((step, i) => (
+                  <Step key={i}>
+                    <StepLabel>{step}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+              {activeStep === steps.length ? (
+                <>
+                  <Typography sx={{ mt: 2, mb: 1 }}>
+                    All steps completed - you&apos;re finished
+                  </Typography>
+                  <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                    <Box sx={{ flex: "1 1 auto" }} />
+                    {/* <Button onClick={handleReset}>Reset</Button> */}
+                  </Box>
+                </>
+              ) : (
+                <>
+                  {activeStep === 0 && (
+                    <>
+                      <Typography
+                        variant="p"
+                        sx={{ fontSize: "11px", margin: "12px 10px" }}
+                      >
+                        <b>NOTE :</b> ONLY EPISODES WITH VIDEOS UNDERNEATH THEM
+                        ARE VISIBLE TO THE PUBLIC
+                      </Typography>
+                      <Box
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          width: "100%",
+                          padding: "10px",
+                        }}
+                      >
+                        <CreateEpisodeCoverArt
+                          ratioRef={ratioRef}
+                          files={files}
+                          setFiles={setFiles}
+                          handleSetFiles={handleSetFiles}
+                          img={"logo.svg"}
+                          determineRatio={determineRatio}
+                        />
+                      </Box>
+                    </>
+                  )}
+                  {activeStep === 1 && (
+                    <>
+                      <Box
+                        style={{
+                          height: "90vh",
+                          width: "70%",
+                          padding: "10px",
+                          marginTop: "3px",
+                        }}
+                      >
+                        <form onSubmit={handleSubmit}>
+                          <input
+                            style={{
+                              height: "50px",
+                              width: "100%",
+                              background: "#222",
+                              display: "flex",
+                              alignItems: "center",
+                              padding: "10px ",
+                              color: "white",
+                              border: "none",
+                            }}
+                            placeholder="EPISODE NAME"
+                            onChange={(e) => SetName(e.target.value)}
+                          />
+                          {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p>  */}
+
+                          <textarea
+                            placeholder="EPISODE DESCRIPTION"
+                            onChange={(e) => SetDescription(e.target.value)}
+                            style={{
+                              border: "none",
+                              width: "100%",
+                              height: "100px",
+                              padding: "10px 0",
+                              background: "#222",
+                              display: "flex",
+                              alignItems: "flex-start",
+                              padding: "10px 0",
+                              marginTop: "20px",
+                              padding: "10px",
+                              color: "white",
+                            }}
+                          >
+                            {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW DESCRIPTION'}</p>  */}
+                          </textarea>
+                          <input
+                            type="number"
+                            min={1}
+                            placeHolder="SEASON NUMBER"
+                            onChange={(e) => setSeasonNum(e.target.value)}
+                            style={{
+                              border: "none",
+                              width: "100%",
+                              height: "34px",
+                              padding: "10px 0",
+                              background: "#222",
+                              display: "flex",
+                              alignItems: "flex-start",
+                              padding: "10px 0",
+                              marginTop: "20px",
+                              padding: "10px",
+                              color: "white",
+                            }}
+                          />
+                          <input
+                            type="text"
+                            placeHolder="Author"
+                            required
+                            onChange={(e) => setAuthor(e.target.value)}
+                            style={{
+                              height: "50px",
+                              width: "100%",
+                              background: "#222",
+                              display: "flex",
+                              alignItems: "center",
+                              padding: "10px ",
+                              color: "white",
+                              border: "none",
+                              margin: "20px 0px",
+                            }}
+                          />
+                          <Box
+                            sx={{
+                              display: "flex",
+                              margin: "20px 0px",
+                            }}
+                          >
+                            <TextField
+                              select
+                              label="Episode Type"
+                              placeholder="Episode Type"
+                              value={episodeType}
+                              ariaLabel="Episode Type"
+                              onChange={handleEventType}
+                              fullWidth
+                            >
+                              <MenuItem value="none">None</MenuItem>
+                              <MenuItem value="featured episode">
+                                Featured Episode
+                              </MenuItem>
+                            </TextField>
+                          </Box>
+
+                          {dashboard && (
+                            <Box sx={{ display: "flex", margin: "20px 0px" }}>
+                              <TextField
+                                select
+                                label="Show"
+                                value={selectedShow}
+                                onChange={handleShowChange}
+                                fullWidth
+                              >
+                                {shows.map((show, i) => (
+                                  <MenuItem key={i} value={show.Title}>
+                                    {show.Title}
+                                  </MenuItem>
+                                ))}
+                              </TextField>
+                            </Box>
+                          )}
+                        </form>
+                      </Box>
+                    </>
+                  )}
+                  {activeStep == 2 && (
+                    <>
+                      <Box sx={{ margin: "0 10px" }}>
+                        <Typography
+                          id="transition-modal-title"
+                          variant="h6"
+                          component="h5"
+                          // style={{ marginTop: "30px" }}
+                        >
+                          UPLOAD A VIDEO FOR THIS EPISODE
+                        </Typography>
+                        <hr style={{ width: "100px", margin: "10px 0" }} />
+                      </Box>
+                      <Typography
+                        style={{
+                          fontSize: "10px",
+                          textTransform: "uppercase",
+                          textAlign: "left",
+                          margin: "20px 0 0 10px",
+                        }}
+                      >
+                        <b>NOTE: </b> Accepted files TYPES : video/mp4{" "}
+                      </Typography>
+                      <Box
+                        style={{
+                          width: "100%",
+                          height: "45%",
+                          padding: "10px",
+                        }}
+                      >
+                        <BasicVideo
+                          videoFiles={videoFiles}
+                          handleSetVideoFiles={handleSetVideoFiles}
+                          img={"logo.svg"}
+                        ></BasicVideo>
+                      </Box>
+                      <Typography
+                        id="transition-modal-title"
+                        sx={{
+                          margin: "0px 0 0 10px",
+                          textTransform: "uppercase",
+                          fontSize: "11px",
+                          textAlign: "center",
+                        }}
+                      >
+                        Start sharing your story and connect with viewers.
+                        Videos that you upload will show up here
+                      </Typography>
+                    </>
+                  )}
+                </>
+              )}
+
+              <ModalLoader
+                loadingOnModal={loading}
+                action="uploading"
+                height="90vh"
+                width="100%"
+                style={{ height: "100%" }}
+              />
+
+              <Box
                 sx={{
-                  "&:hover": { background: "red", color: "white" },
-                  marginTop: "50px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "10px",
+                  width: "100%",
+                  padding: "0 10px",
+                  justifySelf: "flex-end",
+                  alignSelf: "flex-end",
                 }}
-                onClick={handleClose}
               >
-                close
-              </Button>
-              <Button
-                type="submit"
-                color="success"
-                variant="outlined"
-                sx={{
-                  "&:hover": { backgroundColor: "darkgreen", color: "white" },
-                  marginTop: "50px",
-                }}
-                onClick={handleSubmit}
-              >
-                create
-              </Button>
-            </Box>
+                <Button
+                  variant="outlined"
+                  color={activeStep === 0 ? "error" : 'info'}
+                  sx={{
+                    "&:hover": { background: activeStep === 0 ? "red" : '#777', color: "white" },
+                    marginTop: "50px",
+                  }}
+                  onClick={activeStep === 0 ? handleClose : handleBack}
+                >
+                  {activeStep === 0 ? "close" : "back"}
+                </Button>
+                <Button
+                  type="submit"
+                  color={
+                    activeStep !== steps.length - 1 ? "primary" : "success"
+                  }
+                  variant="outlined"
+                  disabled={
+                    activeStep === 0
+                      ? !correctRatio
+                      : activeStep === 1
+                      ? !(name, description, author, dashboard ? selectedShow : episodeType)
+                      : activeStep === 2
+                      ? false
+                      : false
+                  }
+                  sx={{
+                    "&:hover": activeStep === steps.length - 1 && {
+                      backgroundColor: "darkgreen",
+                      color: "white",
+                    },
+                    marginTop: "50px",
+                  }}
+                  onClick={
+                    activeStep !== steps.length - 1 ? handleNext : handleSubmit
+                  }
+                >
+                
+                  {activeStep !== steps.length - 1 ? "next" : "create"}
+                </Button>
+              </Box>
+            </Container>
           </Box>
         </Fade>
       </Modal>

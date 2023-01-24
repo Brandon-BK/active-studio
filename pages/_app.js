@@ -10,7 +10,9 @@ import {
   AppConfigContext,
   initialConfigState,
 } from "../component/context/AppConfigContext";
-
+import Slide from "@mui/material/Slide";
+import {SnackbarProvider} from 'notistack'
+import AdminNavLayout  from '../component/hoc/withAdminNav'
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -47,9 +49,9 @@ function MyApp({ Component, pageProps }) {
       lastUpdated: lastUpdated,
     });
   };
-
   const [singleShowData, setSingleShowData] = useState(JSON.stringify({}));
   const [showJsonData, setShowJsonData] = useState({});
+
   const [showJson, setShowJson] = useState({});
   const [bannerSync, setBannerSync] = useState(false);
   const [shows, setShows] = useState([]);
@@ -82,15 +84,31 @@ function MyApp({ Component, pageProps }) {
     setJsonEpisodes(res.data)
   }
   useEffect(() => {
-    getShows();
     getJsonEpisodes()
   }, []);
+  
+  const [showsSync, setShowsSync] = useState(false);
 
+  useEffect(()=>{
+    getShows();
+
+  },[showsSync])
   const [configSync, setConfigSync] = useState(false);
   useEffect(() => {
     getConfig();
   }, [configSync]);
   return (
+    <SnackbarProvider
+      maxSnack = {3}
+      PreventDuplicate
+      utoHideDuration={5000}
+      TransitionComponent={Slide}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "center",
+      }}
+    
+    >
     <AppConfigContext.Provider
       value={{
         configuration,
@@ -115,15 +133,19 @@ function MyApp({ Component, pageProps }) {
           bannerSync,
           setBannerSync,
           shows,
-          jsonEpisodes
+          jsonEpisodes,
+          configSync, setConfigSync
         }}
       >
-        <RouterIdicator />
         <ThemeProvider theme={darkTheme}>
+        <RouterIdicator />
+        <AdminNavLayout>
           <Component {...pageProps} />
+        </AdminNavLayout>
         </ThemeProvider>
       </AppContext.Provider>
     </AppConfigContext.Provider>
+    </SnackbarProvider>
   );
 }
 

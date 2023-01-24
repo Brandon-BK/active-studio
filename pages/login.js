@@ -1,6 +1,6 @@
 import React from 'react'
 import Login from '../component/Login&&Signin/Login';
-import withAdminNav from "./../component/hoc/withAdminNav";
+import {withSnackbar} from 'notistack'
 
 
 const login = () => {
@@ -14,7 +14,7 @@ const login = () => {
    </>
   )
 }
-export default withAdminNav(login)
+export default withSnackbar(login)
 
 
 

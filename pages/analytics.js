@@ -1,5 +1,5 @@
 import { Box , Grid,Button , TextField , MenuItem ,Paper , Typography , CircularProgress } from "@mui/material";
-import withAdminNav from "./../component/hoc/withAdminNav";
+import {withSnackbar} from 'notistack'
 import React from "react";
 import axios from"axios";
 import LaunchIcon from '@mui/icons-material/Launch';
@@ -201,4 +201,4 @@ const Analytics = () => {
           );
 }
 
-export default withAdminNav(Analytics)
+export default withSnackbar(Analytics)

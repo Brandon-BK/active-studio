@@ -1,5 +1,5 @@
 import React from 'react'
-import withAdminNav from "./../component/hoc/withAdminNav";
+import {withSnackbar} from 'notistack'
 
 
 const signin = () => {
@@ -8,4 +8,4 @@ const signin = () => {
   )
 }
 
-export default withAdminNav(signin)
+export default withSnackbar(signin)

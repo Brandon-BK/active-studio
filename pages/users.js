@@ -1,6 +1,6 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import withAdminNav from "./../component/hoc/withAdminNav";
+import {withSnackbar} from 'notistack'
 import UserModal from "../component/usersProfile/userModal";
 import { Loader } from "../component/loader/index";
 import { useState,useContext } from "react";
@@ -51,4 +51,4 @@ const usersPage = () => {
   );
 };
 
-export default withAdminNav(usersPage);
+export default withSnackbar(usersPage);

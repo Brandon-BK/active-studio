@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import withAdminNav from "./../component/hoc/withAdminNav";
+import {withSnackbar} from 'notistack'
 
 const Merch = () => {
     return (
@@ -14,4 +14,4 @@ const Merch = () => {
     );
 }
 
-export default withAdminNav(Merch)
+export default withSnackbar(Merch)

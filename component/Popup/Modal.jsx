@@ -57,13 +57,11 @@ const style = {
 export default function CreateShowModal({
   modalOpen,
   setModalOpen,
-  fetchAgain,
-  setFetchAgain,
   loading,
   loadingOnModal,
   setLoadingOnModal,
 }) {
-  const { setAddedNew, showEpisodes } = useContext(AppContext);
+  const { setAddedNew, showEpisodes,showsSync,setShowsSync } = useContext(AppContext);
 
   const [files, setFiles] = React.useState([]);
   const [bool, setBool] = React.useState(false);
@@ -295,7 +293,7 @@ export default function CreateShowModal({
 
           //setAddedNew(true)
           setLoadingOnModal(false);
-          setFetchAgain(!fetchAgain);
+          setShowsSync(!showsSync);
           setModalOpen(false);
         }
       } catch (error) {

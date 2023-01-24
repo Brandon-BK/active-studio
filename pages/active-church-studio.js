@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import withAdminNav from "../component/hoc/withAdminNav";
+import {withSnackbar} from 'notistack'
 import * as React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
@@ -133,4 +133,4 @@ const EventsAndSermons = () => {
   );
 };
 
-export default withAdminNav(EventsAndSermons);
+export default withSnackbar(EventsAndSermons);
