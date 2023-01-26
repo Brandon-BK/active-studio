@@ -134,7 +134,8 @@ function MyApp({ Component, pageProps }) {
           setBannerSync,
           shows,
           jsonEpisodes,
-          configSync, setConfigSync
+          configSync, setConfigSync,
+          showsSync, setShowsSync
         }}
       >
         <ThemeProvider theme={darkTheme}>

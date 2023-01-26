@@ -3,7 +3,7 @@ import { AppContext } from "../context/AppContext";
 import { Typography, Box, Grid, Select } from "@mui/material";
 import Image from "next/image";
 import { API_INSTANCE } from "../../app-config";
-import { ModalLoader as Loader } from "../loader";
+import { Loader } from "../loader";
 import axios from "axios";
 import { AppConfigContext } from "../context/AppConfigContext";
 

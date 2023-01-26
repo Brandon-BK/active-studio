@@ -6,6 +6,7 @@ import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Select, Grid, MenuItem, TextField, Stack } from "@mui/material";
+import { Container, Stepper, Step, StepLabel } from "@mui/material";
 import CreateShow from "../create-show/create-show";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
@@ -14,45 +15,15 @@ import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import PrintIcon from "@mui/icons-material/Print";
 import ShareIcon from "@mui/icons-material/Share";
-// import {CreateShowHandler} from "../../pages/api/create-show"
+
 import { useState, useEffect, useContext } from "react";
 const axios = require("axios");
-import imageCompression from 'browser-image-compression';
+import imageCompression from "browser-image-compression";
 import { AppContext } from "../context/AppContext";
-import { SeamlessIframe } from "seamless-iframe";
-import sanitize from "sanitize-html";
+
 import { API_INSTANCE } from "../../app-config";
 import { CloseRounded } from "@mui/icons-material";
 import { ModalLoader } from "../loader";
-
-const actions = [
-  { icon: <FileCopyIcon />, name: "Copy" },
-  { icon: <SaveIcon />, name: "Save" },
-  { icon: <PrintIcon />, name: "Print" },
-  { icon: <ShareIcon />, name: "Share" },
-];
-
-const input = {
-  background: "#333",
-  color: "white",
-};
-
-const style = {
-  position: "absolute",
-
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "#111",
-  border: "2px solid #fff",
-  height: "auto",
-  padding: "20px 0",
-  width: "600px",
-  boxShadow: 24,
-  color: "white",
-  p: 2,
-};
 
 export default function CreateShowModal({
   modalOpen,
@@ -60,8 +31,10 @@ export default function CreateShowModal({
   loading,
   loadingOnModal,
   setLoadingOnModal,
+  enqueueSnackbar,
 }) {
-  const { setAddedNew, showEpisodes,showsSync,setShowsSync } = useContext(AppContext);
+  const { setAddedNew, showEpisodes, showsSync, setShowsSync } =
+    useContext(AppContext);
 
   const [files, setFiles] = React.useState([]);
   const [bool, setBool] = React.useState(false);
@@ -77,7 +50,7 @@ export default function CreateShowModal({
 
   // receive input values from show name and show description
   const [extraInfo, setExtraInfo] = useState({
-    author : '',
+    author: "",
     tags: [],
     visibility: "public",
   });
@@ -107,23 +80,6 @@ export default function CreateShowModal({
       />
     );
   }
-  const style = {
-    position: "absolute",
-
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    // minHeight: showType === "Free Show" ? '350px' : '450px',
-    height: "80%",
-    bgcolor: "#111",
-    border: "2px solid #111",
-    padding: "20px 0",
-    overflowY: "auto",
-    width: "75%",
-    boxShadow: 24,
-    color: "white",
-    p: 2,
-  };
 
   const [iframeUploader, setIframeUploader] = useState({
     ID: "",
@@ -132,8 +88,6 @@ export default function CreateShowModal({
     url: "",
   });
 
-  
-
   const handleFieldChange = (e) => {
     setIframeUploader({
       ...iframeUploader,
@@ -141,8 +95,6 @@ export default function CreateShowModal({
     });
     console.log(iframeUploader);
   };
-
-  
 
   useEffect(() => {
     setIframeUploader({
@@ -176,7 +128,7 @@ export default function CreateShowModal({
     console.log("new fie to be compressed");
     //original file...
     console.log("THE FILES", files[0]);
-    setLoadingOnModal(false)
+    setLoadingOnModal(false);
     try {
       //IMAGE COMPRESSION
       const options = {
@@ -194,6 +146,44 @@ export default function CreateShowModal({
     }
   }, [files]);
 
+  //stepper state and functionality
+  const [activeStep, setActiveStep] = useState(0);
+  const steps = ["Upload Thumbnail", "Upload Logo", "Enter Show Information"];
+  const handleNext = () => {
+    setActiveStep((prev) => prev + 1);
+  };
+  const handleBack = () => {
+    setActiveStep((prev) => prev - 1);
+  };
+  const ratioRef = React.useRef(undefined);
+  const [correctRatio, setCorrectRatio] = useState(false);
+  function determineRatio(ratio) {
+    console.log("ratio ref", ratio);
+    if (ratio) {
+      if (ratio == "16:9") {
+        setCorrectRatio(true);
+      } else {
+        setCorrectRatio(false);
+        console.log("FALSE", ratio);
+
+        enqueueSnackbar(
+          `Please insert thumbnail with correct aspect ratio (16:9) <${ratioRef.current}>`,
+          {
+            preventDuplicate: true,
+            variant: "warning",
+          }
+        );
+        return false;
+      }
+    } else {
+      setCorrectRatio(false);
+
+      // props.enqueueSnackbar('bad')
+    }
+  }
+
+  //######################################//
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -205,8 +195,7 @@ export default function CreateShowModal({
 
       //show the laoder
       setLoadingOnModal(true);
-    
-      
+
       console.log("loading:", loading);
       ////file compression algorithm
 
@@ -217,17 +206,17 @@ export default function CreateShowModal({
       const data = JSON.stringify({
         Title: name.replace(/ /g, "-"),
         filename: showDetails.file.name,
-        showName : name,
+        showName: name,
         //this should be pulled from context
         description: description,
         timestamp: timestamp,
         visibility: extraInfo.visibility,
         description: description,
         timestamp: new Date().toLocaleString(),
-        seasons:extraInfo.seasons,
-        visibility:extraInfo.visibility,
-        tags:tags,
-        author : extraInfo.author
+        seasons: extraInfo.seasons,
+        visibility: extraInfo.visibility,
+        tags: tags,
+        author: extraInfo.author,
       });
 
       //shows meta data that will be posted to s3 and retrived on a 'getsingleshow call
@@ -305,10 +294,6 @@ export default function CreateShowModal({
     }
   };
 
-  const RenderIframe = () => {
-    return iframeUploader.EmbedCode;
-  };
-
   const handleSetFiles = (file) => {
     setFiles(file);
   };
@@ -340,7 +325,11 @@ export default function CreateShowModal({
             <Box sx={{ margin: "0 10px", position: "relative" }}>
               {/* LOADER COMPONENT */}
 
-              <ModalLoader height = '80vh'  loadingOnModal={loadingOnModal} action="uploading" />
+              <ModalLoader
+                height="80vh"
+                loadingOnModal={loadingOnModal}
+                action="uploading"
+              />
 
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Stack>
@@ -387,35 +376,54 @@ export default function CreateShowModal({
 
               <hr style={{ width: "100px", margin: "10px 0" }} />
             </Box>
-            {showType === "Free Show" ? (
-              <Box
-                sx={{
-                  minHeight: "35vh",
-                  // background: "red",
-                  padding: "21px 8px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-evenly",
-                  alignItems: "flex-end",
-                }}
-              >
-                <TextField
-                  name="Title"
-                  onChange={handleFieldChange}
-                  value={iframeUploader.Title}
-                  fullWidth
-                  label="Show Title"
-                />
-                <TextField
-                  value={iframeUploader.EmbedCode}
-                  onChange={handleFieldChange}
-                  name="EmbedCode"
-                  type="textarea"
-                  sx={{ margin: "12px 0" }}
-                  fullWidth
-                  label="Embed Link"
-                />
-                {/* <TextField
+            <Stepper activeStep={activeStep} sx={{ margin: "20px 0px" }}>
+              {steps.map((step, i) => (
+                <Step key={step}>
+                  <StepLabel>{step}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            {activeStep === steps.length ? (
+              <>
+                <Typography sx={{ mt: 2, mb: 1 }}>
+                  All steps completed - you&apos;re finished
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  {/* <Button onClick={handleReset}>Reset</Button> */}
+                </Box>
+              </>
+            ) : (
+              <>
+                {showType === "Free Show" ? (
+                  <Box
+                    sx={{
+                      minHeight: "35vh",
+                      // background: "red",
+                      padding: "21px 8px",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-evenly",
+                      alignItems: "flex-end",
+                    }}
+                  >
+                    <TextField
+                      name="Title"
+                      onChange={handleFieldChange}
+                      value={iframeUploader.Title}
+                      fullWidth
+                      label="Show Title"
+                    />
+                    <TextField
+                      value={iframeUploader.EmbedCode}
+                      onChange={handleFieldChange}
+                      name="EmbedCode"
+                      type="textarea"
+                      sx={{ margin: "12px 0" }}
+                      fullWidth
+                      label="Embed Link"
+                    />
+                    {/* <TextField
                   value={iframeUploader.url}
                   onChange={handleFieldChange}
                   name="url"
@@ -424,338 +432,366 @@ export default function CreateShowModal({
                   fullWidth
                   label="Url"
                 /> */}
-                <Button
-                  type="submit"
-                  color="success"
-                  variant="outlined"
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "darkgreen",
-                      color: "white",
-                    },
-                  }}
-                  onClick={handleIframe}
-                >
-                  create
-                </Button>
-                <Iframe iframe={iframeUploader.EmbedCode} />
-                {/* {iframeUploader.EmbedCode} */}
-              </Box>
-            ) : (
-              <Box
-                sx={{
-                  minHeight: "35vh",
-                  background: "",
-                  padding: "8px 0",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  // alignItems: "flex-end",
-                }}
-              >
-                <Grid container>
-                  <Grid item xs={12}>
-                    <Typography
-                      variant="p"
-                      sx={{ fontSize: "11px", margin: "0 10px", width: "95%" }}
+                    <Button
+                      type="submit"
+                      color="success"
+                      variant="outlined"
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: "darkgreen",
+                          color: "white",
+                        },
+                      }}
+                      onClick={handleIframe}
                     >
-                      <b>NOTE :</b> ONLY SHOWS WITH VIDEOS UNDERNEATH THEM ARE
-                      VISIBLE TO THE PUBLIC
-                    </Typography>
-                    <Box sx={{ height: "300px", display: "flex" }}>
-                      <Box
-                        style={{
-                          height: "100%",
-                          width: "50%",
-                          padding: "10px 0",
-                        }}
-                      >
-                        <CreateShow
-                          media_type={"cover image"}
-                          accepted_type={"JPEG/JPG"}
-                          files={files}
-                          handleSetFiles={handleSetFiles}
-                          img={"logo.svg"}
-                        />
-                        <Box sx={{ margin: "14px 0" }}>
+                      create
+                    </Button>
+                    <Iframe iframe={iframeUploader.EmbedCode} />
+                    {/* {iframeUploader.EmbedCode} */}
+                  </Box>
+                ) : (
+                  <Box
+                    sx={{
+                      minHeight: "35vh",
+                      background: "",
+                      padding: "8px 0",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      // alignItems: "flex-end",
+                    }}
+                  >
+                    {activeStep === 0 && (
+                      <Box>
+                        <Typography
+                          variant="p"
+                          sx={{
+                            fontSize: "14px",
+                            margin: "0 10px",
+                            width: "95%",
+                          }}
+                        >
+                          <b>NOTE :</b> ONLY SHOWS WITH VIDEOS UNDERNEATH THEM
+                          ARE VISIBLE TO THE PUBLIC
+                        </Typography>
+                        <Box
+                          style={{
+                            height: "100%",
+                            width: "100%",
+                            padding: "10px 0",
+                          }}
+                        >
                           <CreateShow
-                            media_type={"gif"}
-                            accepted_type={"gif"}
+                            ratioRef={ratioRef}
+                            determineRatio={determineRatio}
+                            setFiles={setFiles}
+                            media_type={"cover image"}
+                            accepted_type={"JPEG/JPG"}
                             files={files}
                             handleSetFiles={handleSetFiles}
                             img={"logo.svg"}
                           />
                         </Box>
                       </Box>
-                      <Box
-                        style={{
-                          height: "100%",
-                          width: "50%",
-                          padding: "10px",
-                          marginTop: "48px",
-                        }}
-                      >
-                        <form onSubmit={handleSubmit}>
-                          <input
-                            style={{
-                              height: "50px",
-                              width: "100%",
-                              background: "#222",
-                              display: "flex",
-                              alignItems: "center",
-                              padding: "10px ",
-                              color: "white",
-                              border: "none",
-                            }}
-                            placeholder="SHOW NAME"
-                            onChange={(e) => SetName(e.target.value)}
-                            required
-                          />
-                          {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p>  */}
-
-                          <textarea
-                            placeholder="SHOW DESCRIPTION here"
-                            onChange={(e) => SetDescription(e.target.value)}
-                            required
-                            style={{
-                              border: "none",
-                              width: "100%",
-                              height: "170px",
-                              padding: "10px 0",
-                              background: "#222",
-                              display: "flex",
-                              alignItems: "flex-start",
-                              padding: "10px 0",
-                              marginTop: "20px",
-                              padding: "10px",
-                              marginBottom: "21px",
-                              color: "white",
-                            }}
-                          ></textarea>
-                          <Box sx={{ marginTop: "0px" }}>
-                            <p
-                              style={{
-                                color: "transparent",
-                                fontSize: "12px",
-                                textTransform: "uppercase",
-                              }}
-                            >
-                              Drag 'n' drop the show
-                            </p>
-                            <p
-                              style={{
-                                color: "transparent",
-                                fontSize: "10px",
-                                textTransform: "uppercase",
-                                margin: "10px 0 5px 0",
-                              }}
-                            >
-                              Accepted files TYPES :
-                            </p>
-                            <input
-                              onChange={(e) => {
-                                setExtraInfo({
-                                  ...extraInfo,
-                                  author: e.target.value,
-                                });
-                              }}
-                              placeholder="Author"
-                              name="Author"
-                              type="text"
-                              required
-                              style={{
-                                height: "45px",
-                                width: "100%",
-                                background: "#222",
-                                display: "flex",
-                                alignItems: "center",
-                                margin: "8px 0",
-                                padding: "10px ",
-                                color: "white",
-                                border: "none",
-                              }}
-                            />
-
-                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                              <input
-                                placeholder="tags"
-                                name="tags"
-                                value={tagValue}
-                                onChange={handleTagValue}
-                                type="text"
-                                style={{
-                                  height: "45px",
-                                  width: "90%",
-                                  background: "#222",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  margin: " 0 0 8px 0",
-                                  padding: "10px ",
-                                  color: "white",
-                                  border: "none",
-                                }}
-                              />
-                              <Button
-                                onClick={addToTags}
-                                sx={{
-                                  background: "#aaa",
-                                  padding: "11px 12px",
-                                  margin: " 0 0 8px 0",
-                                  color: "#111",
-                                  fontWeight: 600,
-                                }}
-                              >
-                                +
-                              </Button>
-                            </Box>
+                    )}
+                    {activeStep === 1 && (
+                      <Box>
+                        <h2>LOGO UPLOAD</h2>
+                      </Box>
+                    )}
+                    {activeStep === 2 && (
+                      
+                        
+                          <Box sx={{  display: "flex",justfyContent:'center',width:'100%' }}>
                             <Box
-                              sx={{
-                                height: "fit-content",
-                                background: "#222",
-                                display: "flex",
-                                alignItems: "center",
-                                padding: "0px 8px",
-                                overflowX: "scroll",
+                              style={{
+                                height: "100%",
+                                width: "130%",
+                                display : 'flex',
+                                justifyContent:'center',
+                                padding: "10px",
+                                marginTop: "48px",
                               }}
                             >
-                              {tags.length > 0
-                                ? tags.map((item, index) => (
-                                    <Box
-                                    key ={index}
-                                      sx={{
-                                        display: "flex",
-                                        width: "fit-content",
-                                        alignItems: "center",
-                                        background: "#111",
-                                        padding: "8px",
-                                        margin: "0 8px 0 0",
-                                        color: "#Eee",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between",
-                                      }}
-                                    >
-                                      <Box
-                                        sx={{ padding: "8px", flex: 5 }}
-                                        key={index}
-                                      >
-                                        <Typography
-                                          sx={{
-                                            //  flex:2 ,
-                                            textAlign: "center",
-                                          }}
-                                        >
-                                          {item}
-                                        </Typography>
-                                      </Box>
-                                      <Box
-                                        onClick={() => {
-                                          // setTags();
-                                          const filterdTags = tags.filter(
-                                            (tag) => {
-                                              console.log(tag === item);
-                                              return tag !== item;
-                                            }
-                                          );
-                                          setTags(filterdTags);
-                                          // delete[index] tags
-                                          // console.log()
-                                        }}
-                                        sx={{
-                                          padding: "8px",
-                                          flex: 1,
-                                          cursor: "pointer",
-                                        }}
-                                        key={index}
-                                      >
-                                        <CloseRounded
-                                          sx={{
-                                            margin: "0 2px",
-                                            color: "red",
-                                            fontSize: "16px",
-                                            fontWeight: "600",
-                                          }}
-                                        />
-                                      </Box>
-                                    </Box>
-                                  ))
-                                : ""}
-                            </Box>
+                              <form onSubmit={handleSubmit}>
+                                <input
+                                  style={{
+                                    height: "50px",
+                                    width: "100%",
+                                    background: "#222",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    padding: "10px ",
+                                    color: "white",
+                                    border: "none",
+                                  }}
+                                  placeholder="SHOW NAME"
+                                  onChange={(e) => SetName(e.target.value)}
+                                  required
+                                />
+                                {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p>  */}
 
-                            <Select
-                              // onChange={handleShowType}
-                              sx={{
-                                margin: "16px 0",
-                                padding: "0px 0",
-                                width: "100%",
-                                margin: 0,
-                              }}
-                              name="visibility"
-                              value={extraInfo.visibility}
-                              ariaLabel="Visiblity"
-                              label="Visiblity"
-                              placeholder="Public"
-                            >
-                              {["Public", "Private"].map((item, index) => {
-                                return (
-                                  <MenuItem
-                                    onClick={() =>
+                                <textarea
+                                  placeholder="SHOW DESCRIPTION here"
+                                  onChange={(e) =>
+                                    SetDescription(e.target.value)
+                                  }
+                                  required
+                                  style={{
+                                    border: "none",
+                                    width: "100%",
+                                    height: "170px",
+                                    padding: "10px 0",
+                                    background: "#222",
+                                    display: "flex",
+                                    alignItems: "flex-start",
+                                    padding: "10px 0",
+                                    marginTop: "20px",
+                                    padding: "10px",
+                                    marginBottom: "21px",
+                                    color: "white",
+                                  }}
+                                ></textarea>
+                                <Box sx={{ marginTop: "0px" }}>
+                                  
+                                  <input
+                                    onChange={(e) => {
                                       setExtraInfo({
                                         ...extraInfo,
-                                        visibility: item,
-                                      })
-                                    }
-                                    key={index}
-                                    value={item}
+                                        author: e.target.value,
+                                      });
+                                    }}
+                                    placeholder="Author"
+                                    name="Author"
+                                    type="text"
+                                    required
+                                    style={{
+                                      height: "45px",
+                                      width: "100%",
+                                      background: "#222",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      margin: "8px 0",
+                                      padding: "10px ",
+                                      color: "white",
+                                      border: "none",
+                                    }}
+                                  />
+
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                    }}
                                   >
-                                    {item}
-                                  </MenuItem>
-                                );
-                              })}
-                            </Select>
+                                    <input
+                                      placeholder="tags"
+                                      name="tags"
+                                      value={tagValue}
+                                      onChange={handleTagValue}
+                                      type="text"
+                                      style={{
+                                        height: "45px",
+                                        width: "90%",
+                                        background: "#222",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        margin: " 0 0 8px 0",
+                                        padding: "10px ",
+                                        color: "white",
+                                        border: "none",
+                                      }}
+                                    />
+                                    <Button
+                                      onClick={addToTags}
+                                      sx={{
+                                        background: "#aaa",
+                                        padding: "11px 12px",
+                                        margin: " 0 0 8px 0",
+                                        color: "#111",
+                                        fontWeight: 600,
+                                      }}
+                                    >
+                                      +
+                                    </Button>
+                                  </Box>
+                                  <Box
+                                    sx={{
+                                      height: "fit-content",
+                                      background: "#222",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      padding: "0px 8px",
+                                      overflowX: "scroll",
+                                    }}
+                                  >
+                                    {tags.length > 0
+                                      ? tags.map((item, index) => (
+                                          <Box
+                                            key={index}
+                                            sx={{
+                                              display: "flex",
+                                              width: "fit-content",
+                                              alignItems: "center",
+                                              background: "#111",
+                                              padding: "8px",
+                                              margin: "0 8px 0 0",
+                                              color: "#Eee",
+                                              display: "flex",
+                                              alignItems: "center",
+                                              justifyContent: "space-between",
+                                            }}
+                                          >
+                                            <Box
+                                              sx={{ padding: "8px", flex: 5 }}
+                                              key={index}
+                                            >
+                                              <Typography
+                                                sx={{
+                                                  //  flex:2 ,
+                                                  textAlign: "center",
+                                                }}
+                                              >
+                                                {item}
+                                              </Typography>
+                                            </Box>
+                                            <Box
+                                              onClick={() => {
+                                                // setTags();
+                                                const filterdTags = tags.filter(
+                                                  (tag) => {
+                                                    console.log(tag === item);
+                                                    return tag !== item;
+                                                  }
+                                                );
+                                                setTags(filterdTags);
+                                                // delete[index] tags
+                                                // console.log()
+                                              }}
+                                              sx={{
+                                                padding: "8px",
+                                                flex: 1,
+                                                cursor: "pointer",
+                                              }}
+                                              key={index}
+                                            >
+                                              <CloseRounded
+                                                sx={{
+                                                  margin: "0 2px",
+                                                  color: "red",
+                                                  fontSize: "16px",
+                                                  fontWeight: "600",
+                                                }}
+                                              />
+                                            </Box>
+                                          </Box>
+                                        ))
+                                      : ""}
+                                  </Box>
+
+                                  <Select
+                                    // onChange={handleShowType}
+                                    sx={{
+                                      margin: "16px 0",
+                                      padding: "0px 0",
+                                      width: "100%",
+                                      margin: 0,
+                                    }}
+                                    name="visibility"
+                                    value={extraInfo.visibility}
+                                    ariaLabel="Visiblity"
+                                    label="Visiblity"
+                                    placeholder="Public"
+                                  >
+                                    {["Public", "Private"].map(
+                                      (item, index) => {
+                                        return (
+                                          <MenuItem
+                                            onClick={() =>
+                                              setExtraInfo({
+                                                ...extraInfo,
+                                                visibility: item,
+                                              })
+                                            }
+                                            key={index}
+                                            value={item}
+                                          >
+                                            {item}
+                                          </MenuItem>
+                                        );
+                                      }
+                                    )}
+                                  </Select>
+                                </Box>
+                              </form>
+                            </Box>
                           </Box>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              margin: "20px 0",
-                            }}
-                          >
-                            <Button
-                              variant="outlined"
-                              color="error"
-                              sx={{
-                                "&:hover": {
-                                  background: "red",
-                                  color: "white",
-                                },
-                              }}
-                              onClick={handleClose}
-                            >
-                              close
-                            </Button>
-                            <Button
-                              type="submit"
-                              color="success"
-                              variant="outlined"
-                              sx={{
-                                "&:hover": {
-                                  backgroundColor: "darkgreen",
-                                  color: "white",
-                                },
-                              }}
-                              onClick={handleCreate}
-                            >
-                              Upload
-                            </Button>
-                          </Box>
-                        </form>
-                      </Box>
+                        
+                      
+                    )}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        width: "70%",
+                        justifyContent: "space-between",
+                        margin: "20px 0",
+                      }}
+                    >
+                      <Button
+                        variant="outlined"
+                        color={activeStep === 0 ? "error" : "info"}
+                        sx={{
+                          "&:hover": {
+                            background: activeStep === 0 ? "red" : "#777",
+                            color: "white",
+                          },
+                      
+                        }}
+                        onClick={activeStep === 0 ? handleClose : handleBack}
+                      >
+                        {activeStep === 0 ? "close" : "back"}
+                      </Button>
+                      <Button
+                        type={
+                          activeStep !== steps.length - 1 ? "button" : "submit"
+                        }
+                        color={
+                          activeStep !== steps.length - 1
+                            ? "primary"
+                            : "success"
+                        }
+                        disabled={
+                          activeStep === 0
+                            ? !correctRatio
+                            : activeStep === 1
+                            ? false
+                            : activeStep === 2
+                            ? !(name && description,extraInfo.author)
+                            : false
+                        }
+                        variant="outlined"
+                        sx={{
+                          "&:hover": {
+                            backgroundColor:
+                              activeStep !== steps.length - 1
+                                ? "blue"
+                                : "darkgreen",
+                            color: "white",
+                          },
+                        }}
+                        onClick={
+                          activeStep !== steps.length - 1
+                            ? handleNext
+                            : handleSubmit
+                        }
+                      >
+                        {activeStep !== steps.length - 1 ? "Next" : "Upload"}
+                      </Button>
                     </Box>
-                  </Grid>
-                </Grid>
-              </Box>
+                  </Box>
+                )}
+              </>
             )}
           </Box>
         </Fade>
@@ -763,3 +799,20 @@ export default function CreateShowModal({
     </div>
   );
 }
+const style = {
+  position: "absolute",
+
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  // minHeight: showType === "Free Show" ? '350px' : '450px',
+  height: "80%",
+  bgcolor: "#111",
+  border: "2px solid #111",
+  padding: "20px 0",
+  overflowY: "auto",
+  width: "55%",
+  boxShadow: 24,
+  color: "white",
+  p: 2,
+};

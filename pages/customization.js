@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import {withSnackbar} from 'notistack'
+import { withSnackbar } from "notistack";
 import * as React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
@@ -11,8 +11,9 @@ import { LoginBackground } from "../component/customization/login-background";
 import { CategoriesSort } from "../component/customization/categories-sort";
 import { PaymentConfig } from "../component/customization/payment-config";
 import FeaturedShow from "../component/customization/featured-show";
-import EpisodeBanner from '../component/customization/episode-banner'
-
+import EpisodeBanner from "../component/customization/episode-banner";
+import { AppContext } from "../component/context/AppContext";
+import { AppConfigContext } from "../component/context/AppConfigContext";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -48,7 +49,9 @@ function a11yProps(index) {
 
 const Customization = () => {
   const [value, setValue] = React.useState(0);
-
+  const { jsonEpisodes } = React.useContext(AppContext);
+  const { configuration, configSync, setConfigSync, loading, setLoading } =
+    React.useContext(AppConfigContext);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -73,7 +76,7 @@ const Customization = () => {
             <Tab label="Payments" {...a11yProps(3)} />
             <Tab label="Login" {...a11yProps(4)} />
             <Tab label="Main Show" {...a11yProps(5)} />
-            <Tab label='Episode Banner' {...a11yProps(6)} />
+            <Tab label="Featured Episodes" {...a11yProps(6)} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -95,7 +98,14 @@ const Customization = () => {
           <FeaturedShow />
         </TabPanel>
         <TabPanel value={value} index={6}>
-          <EpisodeBanner />
+          <EpisodeBanner
+            episodes={jsonEpisodes.Episodes}
+            configuration={configuration}
+            configSync={configSync}
+            setConfigSync={setConfigSync}
+            loading={loading}
+            setLoading={setLoading}
+          />
         </TabPanel>
       </Box>
     </Box>

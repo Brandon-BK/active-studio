@@ -19,7 +19,7 @@ import Iframe from "../component/shows-utils/Iframe";
 import IframeContainer from "../component/shows-utils/iframeContainer";
 import { AppContext } from "../component/context/AppContext";
 
-const Shows = () => {
+const Shows = (props) => {
   const [filterTerm, setFilterTerm] = useState("");
   
   const [freeShows, setFreeShows] = useState([]);
@@ -235,7 +235,7 @@ const Shows = () => {
           ) {
             return (
               <ShowContainer
-                key={index}
+                key={item.Title}
                 show={item}
                 likes={item.likes}
                 title={item.Title.replace(/-/g, " ")}
@@ -257,6 +257,7 @@ const Shows = () => {
       )}
 
       <CreateShowModal
+        enqueueSnackbar = {props.enqueueSnackbar}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         fetchAgain={fetchAgain}
