@@ -10,12 +10,7 @@ import { Container, Stepper, Step, StepLabel } from "@mui/material";
 import CreateShow from "../create-show/create-show";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
-import SpeedDialAction from "@mui/material/SpeedDialAction";
-import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
-import SaveIcon from "@mui/icons-material/Save";
-import PrintIcon from "@mui/icons-material/Print";
-import ShareIcon from "@mui/icons-material/Share";
-
+import LogoUploader from "../create-show/logo-uploader";
 import { useState, useEffect, useContext } from "react";
 const axios = require("axios");
 import imageCompression from "browser-image-compression";
@@ -40,6 +35,8 @@ export default function CreateShowModal({
   const [bool, setBool] = React.useState(false);
   const [showType, setShowType] = React.useState("Free Show");
 
+  //logo states
+  const [logoFiles, setLogoFiles] = React.useState([]);
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => setModalOpen(false);
   const handleCreate = () => setBool(true);
@@ -496,239 +493,245 @@ export default function CreateShowModal({
                       </Box>
                     )}
                     {activeStep === 1 && (
-                      <Box>
-                        <h2>LOGO UPLOAD</h2>
+                      <Box
+                        sx={{
+                          height: "100%",
+                          width: "80%",
+                          padding: "10px 0",
+                        }}
+                      >
+                        <LogoUploader
+                          logoFiles={logoFiles}
+                          setLogoFiles={setLogoFiles}
+                        />
                       </Box>
                     )}
                     {activeStep === 2 && (
-                      
-                        
-                          <Box sx={{  display: "flex",justfyContent:'center',width:'100%' }}>
-                            <Box
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justfyContent: "center",
+                          width: "100%",
+                        }}
+                      >
+                        <Box
+                          style={{
+                            height: "100%",
+                            width: "130%",
+                            display: "flex",
+                            justifyContent: "center",
+                            padding: "10px",
+                            marginTop: "48px",
+                          }}
+                        >
+                          <form onSubmit={handleSubmit}>
+                            <input
                               style={{
-                                height: "100%",
-                                width: "130%",
-                                display : 'flex',
-                                justifyContent:'center',
-                                padding: "10px",
-                                marginTop: "48px",
+                                height: "50px",
+                                width: "100%",
+                                background: "#222",
+                                display: "flex",
+                                alignItems: "center",
+                                padding: "10px ",
+                                color: "white",
+                                border: "none",
                               }}
-                            >
-                              <form onSubmit={handleSubmit}>
+                              placeholder="SHOW NAME"
+                              onChange={(e) => SetName(e.target.value)}
+                              required
+                            />
+                            {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p>  */}
+
+                            <textarea
+                              placeholder="SHOW DESCRIPTION here"
+                              onChange={(e) => SetDescription(e.target.value)}
+                              required
+                              style={{
+                                border: "none",
+                                width: "100%",
+                                height: "170px",
+                                padding: "10px 0",
+                                background: "#222",
+                                display: "flex",
+                                alignItems: "flex-start",
+                                padding: "10px 0",
+                                marginTop: "20px",
+                                padding: "10px",
+                                marginBottom: "21px",
+                                color: "white",
+                              }}
+                            ></textarea>
+                            <Box sx={{ marginTop: "0px" }}>
+                              <input
+                                onChange={(e) => {
+                                  setExtraInfo({
+                                    ...extraInfo,
+                                    author: e.target.value,
+                                  });
+                                }}
+                                placeholder="Author"
+                                name="Author"
+                                type="text"
+                                required
+                                style={{
+                                  height: "45px",
+                                  width: "100%",
+                                  background: "#222",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  margin: "8px 0",
+                                  padding: "10px ",
+                                  color: "white",
+                                  border: "none",
+                                }}
+                              />
+
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
                                 <input
+                                  placeholder="tags"
+                                  name="tags"
+                                  value={tagValue}
+                                  onChange={handleTagValue}
+                                  type="text"
                                   style={{
-                                    height: "50px",
-                                    width: "100%",
+                                    height: "45px",
+                                    width: "90%",
                                     background: "#222",
                                     display: "flex",
                                     alignItems: "center",
+                                    margin: " 0 0 8px 0",
                                     padding: "10px ",
                                     color: "white",
                                     border: "none",
                                   }}
-                                  placeholder="SHOW NAME"
-                                  onChange={(e) => SetName(e.target.value)}
-                                  required
                                 />
-                                {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p>  */}
-
-                                <textarea
-                                  placeholder="SHOW DESCRIPTION here"
-                                  onChange={(e) =>
-                                    SetDescription(e.target.value)
-                                  }
-                                  required
-                                  style={{
-                                    border: "none",
-                                    width: "100%",
-                                    height: "170px",
-                                    padding: "10px 0",
-                                    background: "#222",
-                                    display: "flex",
-                                    alignItems: "flex-start",
-                                    padding: "10px 0",
-                                    marginTop: "20px",
-                                    padding: "10px",
-                                    marginBottom: "21px",
-                                    color: "white",
+                                <Button
+                                  onClick={addToTags}
+                                  sx={{
+                                    background: "#aaa",
+                                    padding: "11px 12px",
+                                    margin: " 0 0 8px 0",
+                                    color: "#111",
+                                    fontWeight: 600,
                                   }}
-                                ></textarea>
-                                <Box sx={{ marginTop: "0px" }}>
-                                  
-                                  <input
-                                    onChange={(e) => {
-                                      setExtraInfo({
-                                        ...extraInfo,
-                                        author: e.target.value,
-                                      });
-                                    }}
-                                    placeholder="Author"
-                                    name="Author"
-                                    type="text"
-                                    required
-                                    style={{
-                                      height: "45px",
-                                      width: "100%",
-                                      background: "#222",
-                                      display: "flex",
-                                      alignItems: "center",
-                                      margin: "8px 0",
-                                      padding: "10px ",
-                                      color: "white",
-                                      border: "none",
-                                    }}
-                                  />
-
-                                  <Box
-                                    sx={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                    }}
-                                  >
-                                    <input
-                                      placeholder="tags"
-                                      name="tags"
-                                      value={tagValue}
-                                      onChange={handleTagValue}
-                                      type="text"
-                                      style={{
-                                        height: "45px",
-                                        width: "90%",
-                                        background: "#222",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        margin: " 0 0 8px 0",
-                                        padding: "10px ",
-                                        color: "white",
-                                        border: "none",
-                                      }}
-                                    />
-                                    <Button
-                                      onClick={addToTags}
-                                      sx={{
-                                        background: "#aaa",
-                                        padding: "11px 12px",
-                                        margin: " 0 0 8px 0",
-                                        color: "#111",
-                                        fontWeight: 600,
-                                      }}
-                                    >
-                                      +
-                                    </Button>
-                                  </Box>
-                                  <Box
-                                    sx={{
-                                      height: "fit-content",
-                                      background: "#222",
-                                      display: "flex",
-                                      alignItems: "center",
-                                      padding: "0px 8px",
-                                      overflowX: "scroll",
-                                    }}
-                                  >
-                                    {tags.length > 0
-                                      ? tags.map((item, index) => (
-                                          <Box
-                                            key={index}
+                                >
+                                  +
+                                </Button>
+                              </Box>
+                              <Box
+                                sx={{
+                                  height: "fit-content",
+                                  background: "#222",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  padding: "0px 8px",
+                                  overflowX: "scroll",
+                                }}
+                              >
+                                {tags.length > 0
+                                  ? tags.map((item, index) => (
+                                      <Box
+                                        key={index}
+                                        sx={{
+                                          display: "flex",
+                                          width: "fit-content",
+                                          alignItems: "center",
+                                          background: "#111",
+                                          padding: "8px",
+                                          margin: "0 8px 0 0",
+                                          color: "#Eee",
+                                          display: "flex",
+                                          alignItems: "center",
+                                          justifyContent: "space-between",
+                                        }}
+                                      >
+                                        <Box
+                                          sx={{ padding: "8px", flex: 5 }}
+                                          key={index}
+                                        >
+                                          <Typography
                                             sx={{
-                                              display: "flex",
-                                              width: "fit-content",
-                                              alignItems: "center",
-                                              background: "#111",
-                                              padding: "8px",
-                                              margin: "0 8px 0 0",
-                                              color: "#Eee",
-                                              display: "flex",
-                                              alignItems: "center",
-                                              justifyContent: "space-between",
+                                              //  flex:2 ,
+                                              textAlign: "center",
                                             }}
                                           >
-                                            <Box
-                                              sx={{ padding: "8px", flex: 5 }}
-                                              key={index}
-                                            >
-                                              <Typography
-                                                sx={{
-                                                  //  flex:2 ,
-                                                  textAlign: "center",
-                                                }}
-                                              >
-                                                {item}
-                                              </Typography>
-                                            </Box>
-                                            <Box
-                                              onClick={() => {
-                                                // setTags();
-                                                const filterdTags = tags.filter(
-                                                  (tag) => {
-                                                    console.log(tag === item);
-                                                    return tag !== item;
-                                                  }
-                                                );
-                                                setTags(filterdTags);
-                                                // delete[index] tags
-                                                // console.log()
-                                              }}
-                                              sx={{
-                                                padding: "8px",
-                                                flex: 1,
-                                                cursor: "pointer",
-                                              }}
-                                              key={index}
-                                            >
-                                              <CloseRounded
-                                                sx={{
-                                                  margin: "0 2px",
-                                                  color: "red",
-                                                  fontSize: "16px",
-                                                  fontWeight: "600",
-                                                }}
-                                              />
-                                            </Box>
-                                          </Box>
-                                        ))
-                                      : ""}
-                                  </Box>
-
-                                  <Select
-                                    // onChange={handleShowType}
-                                    sx={{
-                                      margin: "16px 0",
-                                      padding: "0px 0",
-                                      width: "100%",
-                                      margin: 0,
-                                    }}
-                                    name="visibility"
-                                    value={extraInfo.visibility}
-                                    ariaLabel="Visiblity"
-                                    label="Visiblity"
-                                    placeholder="Public"
-                                  >
-                                    {["Public", "Private"].map(
-                                      (item, index) => {
-                                        return (
-                                          <MenuItem
-                                            onClick={() =>
-                                              setExtraInfo({
-                                                ...extraInfo,
-                                                visibility: item,
-                                              })
-                                            }
-                                            key={index}
-                                            value={item}
-                                          >
                                             {item}
-                                          </MenuItem>
-                                        );
+                                          </Typography>
+                                        </Box>
+                                        <Box
+                                          onClick={() => {
+                                            // setTags();
+                                            const filterdTags = tags.filter(
+                                              (tag) => {
+                                                console.log(tag === item);
+                                                return tag !== item;
+                                              }
+                                            );
+                                            setTags(filterdTags);
+                                            // delete[index] tags
+                                            // console.log()
+                                          }}
+                                          sx={{
+                                            padding: "8px",
+                                            flex: 1,
+                                            cursor: "pointer",
+                                          }}
+                                          key={index}
+                                        >
+                                          <CloseRounded
+                                            sx={{
+                                              margin: "0 2px",
+                                              color: "red",
+                                              fontSize: "16px",
+                                              fontWeight: "600",
+                                            }}
+                                          />
+                                        </Box>
+                                      </Box>
+                                    ))
+                                  : ""}
+                              </Box>
+
+                              <Select
+                                // onChange={handleShowType}
+                                sx={{
+                                  margin: "16px 0",
+                                  padding: "0px 0",
+                                  width: "100%",
+                                  margin: 0,
+                                }}
+                                name="visibility"
+                                value={extraInfo.visibility}
+                                ariaLabel="Visiblity"
+                                label="Visiblity"
+                                placeholder="Public"
+                              >
+                                {["Public", "Private"].map((item, index) => {
+                                  return (
+                                    <MenuItem
+                                      onClick={() =>
+                                        setExtraInfo({
+                                          ...extraInfo,
+                                          visibility: item,
+                                        })
                                       }
-                                    )}
-                                  </Select>
-                                </Box>
-                              </form>
+                                      key={index}
+                                      value={item}
+                                    >
+                                      {item}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
                             </Box>
-                          </Box>
-                        
-                      
+                          </form>
+                        </Box>
+                      </Box>
                     )}
                     <Box
                       sx={{
@@ -746,7 +749,6 @@ export default function CreateShowModal({
                             background: activeStep === 0 ? "red" : "#777",
                             color: "white",
                           },
-                      
                         }}
                         onClick={activeStep === 0 ? handleClose : handleBack}
                       >
@@ -761,15 +763,16 @@ export default function CreateShowModal({
                             ? "primary"
                             : "success"
                         }
-                        disabled={
-                          activeStep === 0
-                            ? !correctRatio
-                            : activeStep === 1
-                            ? false
-                            : activeStep === 2
-                            ? !(name && description,extraInfo.author)
-                            : false
-                        }
+                        // disabled={
+                        //   activeStep === 0
+                        //     ? !correctRatio
+                        //     : activeStep === 1
+                        //     ? false
+                        //     : activeStep === 2
+                        //     ? !(name && description,extraInfo.author)
+                        //     : false
+                        // }
+                        disabled={false}
                         variant="outlined"
                         sx={{
                           "&:hover": {

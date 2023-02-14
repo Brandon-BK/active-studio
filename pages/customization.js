@@ -8,12 +8,12 @@ import Typography from "@mui/material/Typography";
 import UploadBanners from "../component/customization/upload-banners";
 import ProfilePictures from "../component/customization/profile-pictures";
 import { LoginBackground } from "../component/customization/login-background";
-import { CategoriesSort } from "../component/customization/categories-sort";
 import { PaymentConfig } from "../component/customization/payment-config";
 import FeaturedShow from "../component/customization/featured-show";
 import EpisodeBanner from "../component/customization/episode-banner";
 import { AppContext } from "../component/context/AppContext";
 import { AppConfigContext } from "../component/context/AppConfigContext";
+import AppCategories from "../component/customization/app-categories";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -86,7 +86,9 @@ const Customization = () => {
           <UploadBanners />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <CategoriesSort />
+          <AppCategories 
+          propValues = {configuration, configSync, setConfigSync, loading, setLoading}
+          />
         </TabPanel>
         <TabPanel value={value} index={3}>
           <PaymentConfig />

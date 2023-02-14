@@ -53,7 +53,7 @@ export default function EpisodeModal(props) {
     setVideoFiles,
     episodes,
     dashboard,
-  } = props;
+    } = props;
   const {
     singleShowData,
     setShowJsonData,
@@ -124,7 +124,7 @@ export default function EpisodeModal(props) {
   //CREATE EPISODE BUTTON HANDLER
   const handleSetFiles = (file) => {
     setFiles(file);
-    setFiles(file);
+    
   };
   const handleSetVideoFiles = (file) => {
     console.log({ video: file });

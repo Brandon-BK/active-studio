@@ -1,41 +1,39 @@
 import * as React from "react";
 import {
   Box,
-  Avatar,
   Grid,
-  Drawer,
-  Paper,
   Typography,
   TextField,
   Button,
+  SpeedDial,
 } from "@mui/material";
-import {withSnackbar} from 'notistack'
-import EditIcon from "@mui/icons-material/Edit";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { withSnackbar } from "notistack";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import axios from "axios";
-import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import UploadIcon from "@mui/icons-material/Upload";
-import CloseIcon from "@mui/icons-material/Close";
 import { ProduceThatItem } from "../component/produce-that/produceThatItem";
-import { CreateProduceThatModal } from "../component/produce-that/createProduceThatModal";
 import { EditProduceThatModal } from "../component/produce-that/editProduceThatModal";
 import { API_INSTANCE } from "../app-config";
+import ProduceThatShowModal from "../component/produce-that/produce-that-show-modal";
+import ProduceThatTrailerModal from "../component/produce-that/produce-that-trailer-modal";
 
-const Greenlight = () => {
+const ProduceThat = (props) => {
   const [shows, setShows] = React.useState([]);
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
   const [openEditShow, setOpenEditShow] = React.useState({});
+  const [openTrailerModal,setOpenTrailerModal] = React.useState(false)
+
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [sync,setSync] = React.useState(false)
+  const [sync, setSync] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
     async function getData() {
       const response = await axios.get(API_INSTANCE + "/get-pt-shows");
-      const results = response.data.produceThatShows ? response.data.produceThatShows : response.data.shows;
+      const results = response.data.produceThatShows
+        ? response.data.produceThatShows
+        : response.data.shows;
       setShows(results);
     }
     getData();
@@ -45,6 +43,9 @@ const Greenlight = () => {
 
   let searchResults = [];
 
+  const handleOpen = () => {
+    setOpenDrawer(true);
+  };
   shows?.map((item) => {
     if (item.Title.toLowerCase().includes(searchTerm.toLowerCase())) {
       searchResults.push(item);
@@ -114,15 +115,25 @@ const Greenlight = () => {
         <Box>
           {shows.map((item, index) => {
             return (
-              <ProduceThatItem
-                setOpenEditShow={setOpenEditShow}
-                setOpenEdit={setOpenEdit}
-                openEdit={openEdit}
-                setOpenDrawer={setOpenDrawer}
-                key={item.Title}
-                show={item}
-                progress={progresses[index]}
-              />
+              <>
+                <ProduceThatItem
+                  setOpenEditShow={setOpenEditShow}
+                  setOpenEdit={setOpenEdit}
+                  openEdit={openEdit}
+                  setOpen={setOpenTrailerModal}
+                  key={item.Title}
+                  show={item}
+                  progress={progresses[index]}
+                />
+                <ProduceThatTrailerModal
+                  open={openTrailerModal}
+                  setOpen={setOpenTrailerModal}
+                  sync={sync}
+                  setSync={setSync}
+                  show = {item}
+                  enqueueSnackbar = {props.enqueueSnackbar}
+                />
+              </>
             );
           })}
         </Box>
@@ -144,7 +155,16 @@ const Greenlight = () => {
         </Box>
       )}
 
-      <CreateProduceThatModal actions={{ openDrawer, setOpenDrawer }} sync = {sync} setSync = {setSync} />
+      <ProduceThatShowModal
+        modalOpen={openDrawer}
+        setModalOpen={setOpenDrawer}
+        loadingOnModal={loading}
+        setLoadingOnModal={setLoading}
+        enqueueSnackbar={props.enqueueSnackbar}
+        sync={sync}
+        setSync={setSync}
+      />
+
       <EditProduceThatModal
         show={openEditShow}
         actions={{ openEdit, setOpenEdit }}
@@ -153,4 +173,4 @@ const Greenlight = () => {
   );
 };
 
-export default withSnackbar(Greenlight);
+export default withSnackbar(ProduceThat);

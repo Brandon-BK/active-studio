@@ -15,6 +15,7 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import CreateShowModal from "../component/Popup/Modal";
 import EpisodeModal from "../component/episodes/episodeModal";
 import {withSnackbar} from 'notistack'
+import {useRouter} from 'next/router'
 
 const Home = (props) => {
   
@@ -29,7 +30,7 @@ const Home = (props) => {
   const [loading, setLoading] = React.useState(true);
 
   const [loadingOnModal, setLoadingOnModal] = React.useState(false);
-
+  const router = useRouter()
   
   let monthlySubscribers = 0;
 
@@ -74,7 +75,7 @@ const Home = (props) => {
       sx={{
         height: "100vh",
         width: "100%",
-        padding: "5rem",
+        padding: "24px 5rem",
       }}
     >
       <Grid container>
@@ -92,7 +93,7 @@ const Home = (props) => {
               justifyContent: "center",
               width: "100%",
               height: "100%",
-              padding: "21px",
+              padding: "4px 21px",
             }}
           >
             <Box
@@ -237,6 +238,7 @@ const Home = (props) => {
                   padding: "16px 0",
                   width: "100%",
                 }}
+                onClick = {()=>router.push('/analytics')}
               >
                 View Analytics
               </Button>
@@ -270,6 +272,7 @@ const Home = (props) => {
                 justifyContent: "",
                 width: "100%",
                 height: "100%",
+                overflowY : 'auto',
                 padding: "21px",
                 border: "",
               }}
@@ -283,6 +286,7 @@ const Home = (props) => {
               {users.map((user) => {
                 return (
                   <Box
+                  key={user.email}
                     sx={{
                       borderBottom: "1px solid rgba(255,255,255,.4)",
                       display: "flex",
@@ -296,11 +300,13 @@ const Home = (props) => {
                     <Avatar src={user.imageProfile} alt={user.email} />
                     <Typography
                       sx={{
-                        fontSize: "21px",
-                        textAlign: "center",
+                        fontSize: "18px",
+                        textAlign: "flex-start",
                         width: "100%",
                         fontWeight: 300,
+                        marginLeft:'12px'
                       }}
+                      noWrap={true}
                     >
                       {" "}
                       {user.email}{" "}
