@@ -31,7 +31,7 @@ const Home = (props) => {
 
   const [loadingOnModal, setLoadingOnModal] = React.useState(false);
   const router = useRouter()
-  
+
   let monthlySubscribers = 0;
 
   users.map((user) => {
@@ -73,7 +73,7 @@ const Home = (props) => {
   return (
     <Box
       sx={{
-        height: "100vh",
+        // height: "100vh",
         width: "100%",
         padding: "24px 5rem",
       }}
@@ -189,45 +189,36 @@ const Home = (props) => {
                 {" "}
                 Analytics{" "}
               </Typography>
-              <Typography sx={{ margin: "12px 0", fontSize: "16px" }}>
+              <Typography sx={{ fontSize: "16px", marginTop:"28px" }}>
                 {" "}
                 Current Subscribers{" "}
               </Typography>
-              <Typography sx={{ margin: "12px 0", fontSize: "32px" }}>
-                {" "}
-                {users.length}
-              </Typography>
-              <Divider sx={{ marginBottom: "21px" }} />
+              <Typography sx={{ fontSize: "20px" }}> {users.length}</Typography>
+              <Divider sx={{ marginBottom: "10px" }} />
 
-              <Typography sx={{ margin: "12px 0", fontSize: "16px" }}>
+              <Typography sx={{ fontSize: "16px" }}>
                 {" "}
                 Monthly Subscribers{" "}
               </Typography>
-              <Typography sx={{ margin: "12px 0", fontSize: "32px" }}>
+              <Typography sx={{ fontSize: "20px" }}>
                 {" "}
                 {monthlySubscribers}
               </Typography>
-              <Divider sx={{ marginBottom: "21px" }} />
+              <Divider sx={{ marginBottom: "10px" }} />
 
-              <Typography sx={{ margin: "12px 0", fontSize: "16px" }}>
+              <Typography sx={{ fontSize: "16px" }}>
                 {" "}
                 Yearly Subscribers{" "}
               </Typography>
-              <Typography sx={{ margin: "12px 0", fontSize: "32px" }}>
+              <Typography sx={{ fontSize: "20px" }}>
                 {" "}
                 {yearlySubscribers}
               </Typography>
-              <Divider sx={{ marginBottom: "21px" }} />
+              <Divider sx={{ marginBottom: "10px" }} />
 
-              <Typography sx={{ margin: "12px 0", fontSize: "16px" }}>
-                {" "}
-                Total Views{" "}
-              </Typography>
-              <Typography sx={{ margin: "12px 0", fontSize: "32px" }}>
-                {" "}
-                {views}
-              </Typography>
-              <Divider sx={{ marginBottom: "21px" }} />
+              <Typography sx={{ fontSize: "16px" }}> Total Views </Typography>
+              <Typography sx={{ fontSize: "20px" }}> {views}</Typography>
+              <Divider sx={{ marginBottom: "10px" }} />
 
               <Button
                 sx={{
@@ -261,6 +252,7 @@ const Home = (props) => {
               width: "100%",
               height: "100%",
               padding: "21px",
+              overflowY: "auto",
             }}
           >
             <Box
@@ -278,7 +270,7 @@ const Home = (props) => {
               }}
             >
               <Typography
-                sx={{ margin: "0", fontSize: "32px", fontWeight: 600 }}
+                sx={{marginBottom:"10px", fontSize: "32px", fontWeight: 600 }}
               >
                 {" "}
                 New Users{" "}
@@ -295,13 +287,18 @@ const Home = (props) => {
                       height: "80px",
                       background: "",
                       margin: "12px 0",
+                      paddingBottom: "12px",
                     }}
                   >
                     <Avatar src={user.imageProfile} alt={user.email} />
                     <Typography
                       sx={{
+
+                        fontSize: "12px",
+                        marginLeft: "10px",
                         fontSize: "18px",
                         textAlign: "flex-start",
+
                         width: "100%",
                         fontWeight: 300,
                         marginLeft:'12px'

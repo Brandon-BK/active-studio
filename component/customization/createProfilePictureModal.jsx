@@ -61,6 +61,9 @@ const img = {
   width: "100%",
   height: "100%",
   objectFit: "cover",
+  // backgroundSize: "cover",
+  // backgroundRepeat: "no-repeat",
+  // backgroundPosition:'center',
   // border: "1px solid white",
   // borderRadius: "10px",
 };
