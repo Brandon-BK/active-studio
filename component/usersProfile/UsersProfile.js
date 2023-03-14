@@ -28,9 +28,11 @@ const container = {
   justifyContent: "space-between",
   cursor: "pointer",
   paddingBottom: "5px",
+  opacity: "0.6",
   "&:hover": {
     transform: "scale(1.05)",
     transition: "0.2s",
+    opacity: "0.9"
   },
 };
 
