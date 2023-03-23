@@ -19,8 +19,8 @@ import CreateEpisodeCoverArt from "./create-episode-coverArt";
 import { AppContext } from "../context/AppContext";
 import { ModalLoader } from "../loader";
 import { API_INSTANCE, MEDIA_URL_INSTANCE } from "../../app-config";
-import { useRouter } from "next/router";
-const axios = require("axios");
+import axios from "axios";
+import VideoSlider from "./video-slider";
 // const ffmpeg = require("fluent-ffmpeg");
 
 const style = {
@@ -53,18 +53,17 @@ export default function EpisodeModal(props) {
     setVideoFiles,
     episodes,
     dashboard,
-    } = props;
+  } = props;
   const {
     singleShowData,
-    setShowJsonData,
+
     showJson,
     setShowJson,
     jsonEpisodes,
     shows,
-    setEpisodes,
+
     setSingleShowData,
   } = React.useContext(AppContext);
-  console.log("json episodes", jsonEpisodes);
 
   const handleClose = () => setOpen(false);
 
@@ -90,6 +89,7 @@ export default function EpisodeModal(props) {
 
   const ratioRef = React.useRef(undefined);
   const [correctRatio, setCorrectRatio] = useState(false);
+  const videoRef = React.useRef();
   function determineRatio(ratio) {
     console.log("ratio ref", ratio);
     if (ratio) {
@@ -124,7 +124,6 @@ export default function EpisodeModal(props) {
   //CREATE EPISODE BUTTON HANDLER
   const handleSetFiles = (file) => {
     setFiles(file);
-    
   };
   const handleSetVideoFiles = (file) => {
     console.log({ video: file });
@@ -151,7 +150,6 @@ export default function EpisodeModal(props) {
 
         if ((dashboard, selectedShow)) {
           const fetchShow = async () => {
-          
             setLoading(true);
             const res = await axios.get(
               `${API_INSTANCE}/get-show/${selectedShow}`
@@ -161,10 +159,10 @@ export default function EpisodeModal(props) {
 
             setSingleShowData(show.showItem.Item);
             setShowJson(show.showJson);
-            setEpisodes(show.showJson.episodes);
+            // setEpisodes(show.showJson.episodes);
             setLoading(false);
           };
-          fetchShow();
+          fetchShow();  
         }
 
         const showDetails = { name, description, file: files[0] };
@@ -178,8 +176,6 @@ export default function EpisodeModal(props) {
           Title: name.replace(/ /g, "-"),
           episodeName: name,
           showTitle: singleShowData.Title?.replace(/ /g, "-"), //this must be the show title,(not episode)
-          thumbnailFilename: showDetails.file.name,
-          videoFileName: videoFiles[0]?.name,
           description: description,
           timestamp: timestamp,
           author,
@@ -204,6 +200,7 @@ export default function EpisodeModal(props) {
         const { mediaUrls } = response.data;
 
         EpisodeObject["CoverArtLarge"] = mediaUrls.largeCoverArt;
+        EpisodeObject["videoUrl"] = mediaUrls.video;
 
         //posting the json data
         console.log("posting json data...");
@@ -225,14 +222,9 @@ export default function EpisodeModal(props) {
         };
 
         //for the episodes json on s3
-        const episodesConfig = {
-          method: "put",
-          url: allEpisodesSignedUrl,
-          headers: { "Content-Type": "application/json" },
-          data: [...jsonEpisodes.Episodes, EpisodeObject],
-        };
+        
         await axios(jsonDataConfig);
-        await axios(episodesConfig);
+        
         //posting the thumbnail
         const { largeCoverArt } = response.data;
 
@@ -496,7 +488,6 @@ export default function EpisodeModal(props) {
                       <Box
                         style={{
                           width: "100%",
-                          height: "45%",
                           padding: "10px",
                         }}
                       >
@@ -504,20 +495,26 @@ export default function EpisodeModal(props) {
                           videoFiles={videoFiles}
                           handleSetVideoFiles={handleSetVideoFiles}
                           img={"logo.svg"}
+                          videoRef={videoRef}
                         ></BasicVideo>
+                        
                       </Box>
-                      <Typography
-                        id="transition-modal-title"
-                        sx={{
-                          margin: "0px 0 0 10px",
-                          textTransform: "uppercase",
-                          fontSize: "11px",
-                          textAlign: "center",
-                        }}
-                      >
-                        Start sharing your story and connect with viewers.
-                        Videos that you upload will show up here
-                      </Typography>
+                      {videoFiles.length ? (
+                        <></>
+                      ) : (
+                        <Typography
+                          id="transition-modal-title"
+                          sx={{
+                            margin: "0px 0 0 10px",
+                            textTransform: "uppercase",
+                            fontSize: "11px",
+                            textAlign: "center",
+                          }}
+                        >
+                          Start sharing your story and connect with viewers.
+                          Videos that you upload will show up here
+                        </Typography>
+                      )}
                     </>
                   )}
                 </>
@@ -544,9 +541,12 @@ export default function EpisodeModal(props) {
               >
                 <Button
                   variant="outlined"
-                  color={activeStep === 0 ? "error" : 'info'}
+                  color={activeStep === 0 ? "error" : "info"}
                   sx={{
-                    "&:hover": { background: activeStep === 0 ? "red" : '#777', color: "white" },
+                    "&:hover": {
+                      background: activeStep === 0 ? "red" : "#777",
+                      color: "white",
+                    },
                     marginTop: "50px",
                   }}
                   onClick={activeStep === 0 ? handleClose : handleBack}
@@ -563,7 +563,10 @@ export default function EpisodeModal(props) {
                     activeStep === 0
                       ? !correctRatio
                       : activeStep === 1
-                      ? !(name, description, author, dashboard ? selectedShow : episodeType)
+                      ? !(name,
+                        description,
+                        author,
+                        dashboard ? selectedShow : episodeType)
                       : activeStep === 2
                       ? false
                       : false
@@ -579,7 +582,6 @@ export default function EpisodeModal(props) {
                     activeStep !== steps.length - 1 ? handleNext : handleSubmit
                   }
                 >
-                
                   {activeStep !== steps.length - 1 ? "next" : "create"}
                 </Button>
               </Box>

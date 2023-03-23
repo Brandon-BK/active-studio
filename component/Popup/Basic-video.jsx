@@ -41,6 +41,7 @@ const container = {
   backgroundPosition: "center",
   backgroundSize: "70px 70px",
   backgroundRepeat: "no-repeat",
+  
 };
 
 const absolute = {
@@ -56,12 +57,15 @@ function Previews(props) {
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: "video/mp4",
-    onClick: (acceptedFiles) =>
-      acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      ),
+    onClick: (acceptedFiles) => {
+      props.handleSetVideoFiles(
+        acceptedFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        )
+      );
+    },
 
     // my drag and drop functionality
     onDrop: (acceptedFiles) => {
@@ -86,6 +90,7 @@ function Previews(props) {
           url={props.videoFiles[0].preview}
           style={img}
           controls={true}
+          ref = {props.videoRef}
         />
       </Box>
     </Box>

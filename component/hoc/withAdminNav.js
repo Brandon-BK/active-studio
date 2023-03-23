@@ -18,11 +18,12 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import HandymanIcon from "@mui/icons-material/Handyman";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
-import ChurchIcon from '@mui/icons-material/Church';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import {withSnackbar} from 'notistack'
+import ChurchIcon from "@mui/icons-material/Church";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { withSnackbar } from "notistack";
+import AccountMenu from "../auth-user/account-menu";
 const drawerWidth = 240;
-
+import { useRouter } from "next/router";
 const tabs = [
   {
     title: "DASHBOARD",
@@ -60,23 +61,24 @@ const tabs = [
     icon: <LocalMoviesIcon />,
   },
   {
-    title : 'ACTIVE CHURCH',
+    title: "ACTIVE CHURCH",
     route: "/active-church-studio",
-    icon : <ChurchIcon />
-  },{
+    icon: <ChurchIcon />,
+  },
+  {
     title: "USERS",
     route: "/users",
     icon: <AccountCircleIcon />,
   },
-
 ];
 
-const withAdminNav = ({children}) => {
-  
+const withAdminNav = ({ children }) => {
+  const router = useRouter();
+  return (
+    <Box sx={{ display: "flex", pl: 0 }}>
+      <CssBaseline />
 
-    return (
-      <Box sx={{ display: "flex", pl: 0 }}>
-        <CssBaseline />
+      {!router.pathname.includes("/login") && (
         <AppBar
           position="fixed"
           sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, pl: 0 }}
@@ -112,45 +114,63 @@ const withAdminNav = ({children}) => {
                 ACTIVE STUDIO{" "}
               </Box>{" "}
             </Typography>
+            <AccountMenu />
           </Toolbar>
         </AppBar>
-        <Drawer
-          variant="permanent"
+      )}
+
+      {router.pathname.includes("login") ? (
+        <Box
+          component="main"
           sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            [`& .MuiDrawer-paper`]: {
-              width: drawerWidth,
-              boxSizing: "border-box",
-            },
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            background: "#333",
           }}
         >
-          <Toolbar />
-          <Box sx={{ overflow: "auto" }}>
-            <List>
-              {tabs.map((tab) => {
-                return (
-                  <Link href={tab.route} key={tab.title}>
-                    <ListItem button >
-                      <ListItemIcon> {tab.icon} </ListItemIcon>
-                      <ListItemText primary={tab.title} />
-                    </ListItem>
-                  </Link>
-                );
-              })}
-            </List>
-
-            <Divider />
-          </Box>{" "}
-        </Drawer>{" "}
-        <Box component="main" sx={{ flexGrow: 1,}}>
-          <Toolbar />
-
           {children}
         </Box>
-      </Box>
-    );
-  };
+      ) : (
+        <>
+          <Drawer
+            variant="permanent"
+            sx={{
+              width: drawerWidth,
+              flexShrink: 0,
+              [`& .MuiDrawer-paper`]: {
+                width: drawerWidth,
+                boxSizing: "border-box",
+              },
+            }}
+          >
+            <Toolbar />
+            <Box sx={{ overflow: "auto" }}>
+              <List>
+                {tabs.map((tab) => {
+                  return (
+                    <Link href={tab.route} key={tab.title}>
+                      <ListItem button>
+                        <ListItemIcon> {tab.icon} </ListItemIcon>
+                        <ListItemText primary={tab.title} />
+                      </ListItem>
+                    </Link>
+                  );
+                })}
+              </List>
 
+              <Divider />
+            </Box>{" "}
+          </Drawer>{" "}
+          <Box component="main" sx={{ flexGrow: 1 }}>
+            <Toolbar />
 
-export default withAdminNav
+            {children}
+          </Box>
+        </>
+      )}
+    </Box>
+  );
+};
+
+export default withAdminNav;
