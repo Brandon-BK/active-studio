@@ -49,7 +49,7 @@ const Home = (props) => {
   });
   let views = 0;
   shows.forEach((show) => {
-    console.log(show.views);
+    
     if (show.views === undefined || show.views === null) {
       return;
     } else {
@@ -58,7 +58,7 @@ const Home = (props) => {
     }
   });
 
-  console.log("views", views);
+  
   
 
   React.useEffect(async () => {
@@ -66,7 +66,7 @@ const Home = (props) => {
       "https://p6x7b95wcd.execute-api.us-east-2.amazonaws.com/Prod/get-users"
     );
     const results = response.data;
-    console.log(results);
+    
     setUsers(results.users);
   }, []);
 
@@ -275,10 +275,10 @@ const Home = (props) => {
                 {" "}
                 New Users{" "}
               </Typography>
-              {users.map((user) => {
+              {users.map((user,i) => {
                 return (
                   <Box
-                  key={user.email}
+                  key={user.email + i}
                     sx={{
                       borderBottom: "1px solid rgba(255,255,255,.4)",
                       display: "flex",

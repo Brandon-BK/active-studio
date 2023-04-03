@@ -11,8 +11,11 @@ import {
   initialConfigState,
 } from "../component/context/AppConfigContext";
 import Slide from "@mui/material/Slide";
-import {SnackbarProvider} from 'notistack'
-import AdminNavLayout  from '../component/hoc/withAdminNav'
+import { SnackbarProvider } from "notistack";
+import AdminNavLayout from "../component/hoc/withAdminNav";
+import { Auth, Amplify } from "aws-amplify";
+import { cognitoConfig } from "../utils/cognito-config";
+import { UserContextProvider } from "../component/context/User-Context";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -20,8 +23,9 @@ const darkTheme = createTheme({
 });
 
 function MyApp({ Component, pageProps }) {
-  const [banners, setBanners] = useState([]);
-  const [categories, setCategories] = useState({});
+  Amplify.configure(cognitoConfig);
+  Auth.configure();
+
   const [configuration, setConfiguration] = useState(initialConfigState);
   const [showsDetails, setShowsDetails] = useState({
     title: "",
@@ -56,7 +60,7 @@ function MyApp({ Component, pageProps }) {
   const [bannerSync, setBannerSync] = useState(false);
   const [shows, setShows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [jsonEpisodes,setJsonEpisodes] = useState([])
+  const [jsonEpisodes, setJsonEpisodes] = useState([]);
   const getConfig = async () => {
     const request = await axios.get(`${API_INSTANCE}/get-config`);
     const configRequest = await axios.get(request.data.configJsonData);
@@ -72,34 +76,33 @@ function MyApp({ Component, pageProps }) {
       },
       ...configData,
     });
-    setLoading(false)
+    setLoading(false);
   };
 
   const getShows = async () => {
-    const res = await axios.get(API_INSTANCE + '/get-shows');
+    const res = await axios.get(API_INSTANCE + "/get-shows");
     setShows(res.data);
   };
-  const getJsonEpisodes = async ()=>{
-    const res = await axios.get(API_INSTANCE + '/get-episodes');
-    setJsonEpisodes(res.data)
-  }
+  const getJsonEpisodes = async () => {
+    const res = await axios.get(API_INSTANCE + "/get-episodes");
+    setJsonEpisodes(res.data);
+  };
   useEffect(() => {
-    getJsonEpisodes()
+    getJsonEpisodes();
   }, []);
-  
+
   const [showsSync, setShowsSync] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     getShows();
-
-  },[showsSync])
+  }, [showsSync]);
   const [configSync, setConfigSync] = useState(false);
   useEffect(() => {
     getConfig();
   }, [configSync]);
   return (
     <SnackbarProvider
-      maxSnack = {3}
+      maxSnack={3}
       PreventDuplicate
       utoHideDuration={5000}
       TransitionComponent={Slide}
@@ -107,45 +110,48 @@ function MyApp({ Component, pageProps }) {
         vertical: "bottom",
         horizontal: "center",
       }}
-    
     >
-    <AppConfigContext.Provider
-      value={{
-        configuration,
-        setConfiguration,
-        configSync,
-        setConfigSync,
-        loading,
-        setLoading,
-      }}
-    >
-      <AppContext.Provider
-        value={{
-          showsDetails,
-          setShowsDetails,
-          DisplayShowDetails,
-          singleShowData,
-          setSingleShowData,
-          showJsonData,
-          setShowJsonData,
-          showJson,
-          setShowJson,
-          bannerSync,
-          setBannerSync,
-          shows,
-          jsonEpisodes,
-          configSync, setConfigSync,
-          showsSync, setShowsSync
-        }}
-      >
-        <ThemeProvider theme={darkTheme}>
-        <RouterIdicator />
-        <AdminNavLayout>
-          <Component {...pageProps} />
-        </AdminNavLayout>
-        </ThemeProvider>
-      </AppContext.Provider>
-    </AppConfigContext.Provider>
+      <UserContextProvider>
+        <AppConfigContext.Provider
+          value={{
+            configuration,
+            setConfiguration,
+            configSync,
+            setConfigSync,
+            loading,
+            setLoading,
+          }}
+        >
+          <AppContext.Provider
+            value={{
+              showsDetails,
+              setShowsDetails,
+              DisplayShowDetails,
+              singleShowData,
+              setSingleShowData,
+              showJsonData,
+              setShowJsonData,
+              showJson,
+              setShowJson,
+              bannerSync,
+              setBannerSync,
+              shows,
+              jsonEpisodes,
+              configSync,
+              setConfigSync,
+              showsSync,
+              setShowsSync,
+            }}
+          >
+            <ThemeProvider theme={darkTheme}>
+              <RouterIdicator />
+              <AdminNavLayout>
+                <Component {...pageProps} />
+              </AdminNavLayout>
+            </ThemeProvider>
+          </AppContext.Provider>
+        </AppConfigContext.Provider>
+      </UserContextProvider>
     </SnackbarProvider>
   );
 }
