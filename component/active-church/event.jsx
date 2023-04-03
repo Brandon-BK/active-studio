@@ -3,6 +3,8 @@ import { Box, Typography } from "@mui/material";
 import EventModal from "./event-modal";
 import Image from "next/image";
 import InfoModal from "./infoModal";
+
+
 function Event(props) {
   const { open, handleOpen, setOpen } = props;
   const EVENT = props.EVENTS[0];
@@ -48,10 +50,10 @@ function Event(props) {
       >
         <Image
           width={400}
-          height={400}
+          height={300}
           src={EVENT?.thumbnail}
           loader={() => EVENT?.thumbnail}
-          sx={style.mainImg}
+          style={style.mainImg}
           alt="NO IMAGE"
         />
       </Box>
@@ -65,10 +67,12 @@ function Event(props) {
             setCurrentEvent(item)
           }}>
             <Image
+            
               src={item?.thumbnail}
               loader={() => item?.thumbnail}
               width={250}
-              height={250}
+              height={200}
+              sx={{objectFit:'cover'}}
             />
       <InfoModal open = {openInfoModal} setOpen = {setOpenInfoModal} />
           </Box>
@@ -92,9 +96,10 @@ const style = {
     position: "relative",
   },
   mainImg: {
-    background: "red",
-    height: "400px",
+    // background: "red",
+    height: "300px",
     width: "400px",
+    objectFit:'fill'
   },
   ucText: {
     margin: "24px 0px",

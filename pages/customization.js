@@ -86,8 +86,10 @@ const Customization = () => {
           <UploadBanners />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <AppCategories 
-          propValues = {configuration, configSync, setConfigSync, loading, setLoading}
+          <AppCategories
+            propValues={
+              (configuration, configSync, setConfigSync, loading, setLoading)
+            }
           />
         </TabPanel>
         <TabPanel value={value} index={3}>

@@ -113,6 +113,9 @@ function EpisodeBanner({
                             height: "100%",
                             marginLeft: "auto",
                             borderRadius: "10px",
+                            backgroundSize: "cover",
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition:'center',
                           }}
                         />
                       </Box>

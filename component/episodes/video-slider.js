@@ -144,6 +144,10 @@ function VideoSlider({ videoFiles, videoRef, activeStep }) {
     await ffmpeg.run(
       "-i",
       name,
+      "-s",
+      "480x320",
+      "-r",
+      "3",
       "-t",
       convertToHHMMSS(en),
       "-ss",
@@ -173,7 +177,7 @@ function VideoSlider({ videoFiles, videoRef, activeStep }) {
           <br />
           {gifUrl && (
             <>
-            <img src={gifUrl}  height={200} width={526}/>
+            <img src={gifUrl}  height={200} width={526} style={{border:"1px solid blue"}}/>
               {/* <ReactPlayer
                 playing
                 height={200}

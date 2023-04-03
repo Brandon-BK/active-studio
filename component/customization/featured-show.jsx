@@ -68,8 +68,9 @@ function FeaturedShow() {
               sx={{
                 ...style.show,
                 background: `url(${show.CoverArtLarge})`,
-                backgroundSize: "100% 100%",
+                backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
+                backgroundPosition:'center',
                 border: switchSelect(show, "2px solid gray", "none"),
               }}
               onClick={() => selectShow(show)}
