@@ -162,7 +162,7 @@ export default function EpisodeModal(props) {
             // setEpisodes(show.showJson.episodes);
             setLoading(false);
           };
-          fetchShow();  
+          fetchShow();
         }
 
         const showDetails = { name, description, file: files[0] };
@@ -222,9 +222,9 @@ export default function EpisodeModal(props) {
         };
 
         //for the episodes json on s3
-        
+
         await axios(jsonDataConfig);
-        
+
         //posting the thumbnail
         const { largeCoverArt } = response.data;
 
@@ -497,7 +497,11 @@ export default function EpisodeModal(props) {
                           img={"logo.svg"}
                           videoRef={videoRef}
                         ></BasicVideo>
-                        
+                        <VideoSlider
+                          videoRef={videoRef}
+                          videoFiles={videoFiles}
+                          activeStep = {activeStep}
+                        />
                       </Box>
                       {videoFiles.length ? (
                         <></>

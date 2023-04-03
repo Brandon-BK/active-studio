@@ -187,16 +187,16 @@ const Login = (props) => {
             fullWidth
             variant="contained"
             color="primary"
-            sx={{ mt: 3, mb: 2, gap: 2 }}
+            sx={{ mt: 3, mb: 2}}
             type="submit"
           >
             {loading ? (
-              <>
+              <Box sx={{width:"180px",display:"flex",justifyContent:"center"}}>
                 <MoonLoader size={20} color="#fff" />
                 Signing in
-              </>
+              </Box>
             ) : (
-              <>Sign In</>
+              <Box sx={{width:"180px",display:"flex",justifyContent:"center"}}>Sign In</Box>
             )}
           </Button>
         </form>
